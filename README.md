@@ -2,37 +2,89 @@
 
 Public releases for Artifactiq Core - the high-performance AI-powered visual intelligence engine.
 
+## Quick Install
+
+**One-liner install (recommended):**
+
+```bash
+curl -fsSL https://artifactiq.io/install.sh | sh
+```
+
+This automatically detects your platform and installs to `~/.local/bin`.
+
+### Install Options
+
+```bash
+# Install specific version
+ARTIFACTIQ_VERSION=v1.0.0-alpha.5 curl -fsSL https://artifactiq.io/install.sh | sh
+
+# Install to custom directory
+ARTIFACTIQ_INSTALL_DIR=/usr/local/bin curl -fsSL https://artifactiq.io/install.sh | sh
+```
+
 ## Downloads
 
-See [Releases](https://github.com/ARTIFACTIQ/releases/releases) for the latest binaries.
+See [Releases](https://github.com/ARTIFACTIQ/releases/releases) for all binaries.
 
 ### Available Platforms
 
 | Platform | Architecture | File |
 |----------|-------------|------|
 | Linux | x86_64 | `artifactiq-linux-amd64.tar.gz` |
-| macOS | Intel (x86_64) | `artifactiq-darwin-amd64.tar.gz` |
 | macOS | Apple Silicon (arm64) | `artifactiq-darwin-arm64.tar.gz` |
 
-### Installation
+### Manual Installation
 
 ```bash
-# Download using gh CLI (recommended)
+# Download using gh CLI
 gh release download --repo ARTIFACTIQ/releases --pattern "*arm64*"
 
-# Or using curl
+# Or using curl (macOS Apple Silicon)
 curl -LO https://github.com/ARTIFACTIQ/releases/releases/latest/download/artifactiq-darwin-arm64.tar.gz
 curl -LO https://github.com/ARTIFACTIQ/releases/releases/latest/download/artifactiq-darwin-arm64.tar.gz.sha256
 
+# Or Linux x86_64
+curl -LO https://github.com/ARTIFACTIQ/releases/releases/latest/download/artifactiq-linux-amd64.tar.gz
+curl -LO https://github.com/ARTIFACTIQ/releases/releases/latest/download/artifactiq-linux-amd64.tar.gz.sha256
+
 # Verify checksum
-shasum -a 256 -c artifactiq-darwin-arm64.tar.gz.sha256
+shasum -a 256 -c *.sha256
 
 # Extract and run
-tar xzf artifactiq-darwin-arm64.tar.gz
+tar xzf artifactiq-*.tar.gz
 ./artifactiq --help
 ```
 
-### Verification
+## Getting Started
+
+```bash
+# Show version and feature info
+artifactiq info
+
+# List available models
+artifactiq models
+
+# Download a detection model
+artifactiq download --model yolov8n
+
+# Analyze an image
+artifactiq analyze --input image.jpg --model yolov8n
+```
+
+### Model Management
+
+Artifactiq integrates with [mlOS Axon](https://github.com/mlOS-foundation/axon) for model management. If Axon is installed, models are automatically managed through it.
+
+```bash
+# With Axon installed
+axon install hf/ultralytics/yolov8n
+artifactiq analyze --input image.jpg --model yolov8n
+
+# Without Axon - direct download
+artifactiq download --model yolov8n
+```
+
+## Verification
 
 All releases include SHA256 checksums (`.sha256` files) for verification.
 
