@@ -5,7 +5,7 @@ set -e
 # Works on Linux (x64) and macOS (ARM64)
 #
 # Usage:
-#   curl -fsSL https://artifactiq.io/install.sh | sh
+#   curl -fsSL https://artifactiq.ai/install.sh | sh
 #
 # Environment variables:
 #   ARTIFACTIQ_VERSION     - Specific version to install (default: latest)

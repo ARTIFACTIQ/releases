@@ -7,7 +7,7 @@ Public releases for Artifactiq Core - the high-performance AI-powered visual int
 **One-liner install (recommended):**
 
 ```bash
-curl -fsSL https://artifactiq.io/install.sh | sh
+curl -fsSL https://artifactiq.ai/install.sh | sh
 ```
 
 This automatically detects your platform and installs to `~/.local/bin`.
@@ -16,10 +16,10 @@ This automatically detects your platform and installs to `~/.local/bin`.
 
 ```bash
 # Install specific version
-ARTIFACTIQ_VERSION=v1.0.0-alpha.5 curl -fsSL https://artifactiq.io/install.sh | sh
+ARTIFACTIQ_VERSION=v1.0.0-alpha.5 curl -fsSL https://artifactiq.ai/install.sh | sh
 
 # Install to custom directory
-ARTIFACTIQ_INSTALL_DIR=/usr/local/bin curl -fsSL https://artifactiq.io/install.sh | sh
+ARTIFACTIQ_INSTALL_DIR=/usr/local/bin curl -fsSL https://artifactiq.ai/install.sh | sh
 ```
 
 ## Downloads

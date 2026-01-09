@@ -143,7 +143,7 @@
         <div class="install-section">
             <h2>Quick Install</h2>
             <div class="code-block" id="install-cmd">
-                curl -fsSL https://artifactiq.io/install.sh | sh
+                curl -fsSL https://artifactiq.ai/install.sh | sh
                 <button class="copy-btn" onclick="copyCommand()">Copy</button>
             </div>
         </div>
@@ -177,7 +177,7 @@
 
     <script>
         function copyCommand() {
-            const cmd = 'curl -fsSL https://artifactiq.io/install.sh | sh';
+            const cmd = 'curl -fsSL https://artifactiq.ai/install.sh | sh';
             navigator.clipboard.writeText(cmd).then(() => {
                 const btn = document.querySelector('.copy-btn');
                 btn.textContent = 'Copied!';
