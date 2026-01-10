@@ -71,7 +71,8 @@ esac
 # Get latest version if not specified
 if [ "$VERSION" = "latest" ]; then
     info "Fetching latest version..."
-    VERSION=$(curl -sL https://api.github.com/repos/ARTIFACTIQ/releases/releases/latest | grep '"tag_name"' | cut -d'"' -f4)
+    # Use releases list (not /latest) to include prereleases
+    VERSION=$(curl -sL https://api.github.com/repos/ARTIFACTIQ/releases/releases | grep '"tag_name"' | head -1 | cut -d'"' -f4)
     if [ -z "$VERSION" ]; then
         error "Failed to fetch latest version. Check your internet connection."
     fi
