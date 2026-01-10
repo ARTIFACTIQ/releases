@@ -4,15 +4,23 @@ Public releases for Artifactiq Core - the high-performance AI-powered visual int
 
 ## Prerequisites
 
-**mlOS Axon** is required for model management:
+**mlOS Axon** is **required** for model management. Install it first:
 
 ```bash
-curl -fsSL https://get.mlos.ai | sh
+curl -sSL axon.mlosfoundation.org | sh
 ```
 
-## Quick Install
+Learn more at [mlosfoundation.org](https://mlosfoundation.org)
 
-**One-liner install (recommended):**
+## Quick Start
+
+### Step 1: Install Axon (Required)
+
+```bash
+curl -sSL axon.mlosfoundation.org | sh
+```
+
+### Step 2: Install Artifactiq
 
 ```bash
 curl -fsSL https://artifactiq.ai/install.sh | sh
@@ -20,71 +28,116 @@ curl -fsSL https://artifactiq.ai/install.sh | sh
 
 This automatically detects your platform and installs to `~/.local/bin`.
 
-### Install Options
-
-```bash
-# Install specific version
-ARTIFACTIQ_VERSION=v1.0.0-alpha.5 curl -fsSL https://artifactiq.ai/install.sh | sh
-
-# Install to custom directory
-ARTIFACTIQ_INSTALL_DIR=/usr/local/bin curl -fsSL https://artifactiq.ai/install.sh | sh
-```
-
-## Getting Started
-
-### 1. Install a Detection Model
+### Step 3: Download a Model
 
 ```bash
 # Install YOLOv8 nano (fastest, 6MB)
 axon install hf/ultralytics/yolov8n
-
-# Or larger models for better accuracy
-axon install hf/ultralytics/yolov8s   # 22MB, fast
-axon install hf/ultralytics/yolov8m   # 52MB, balanced
 ```
 
-### 2. Analyze Images
+### Step 4: Analyze an Image
 
 ```bash
-# Analyze an image
 artifactiq analyze --input photo.jpg --model yolov8n
-
-# JSON output for programmatic use
-artifactiq analyze --input photo.jpg --model yolov8n --format json
-
-# With merchandise detection enabled
-artifactiq analyze --input photo.jpg --model yolov8n --merchandise
 ```
 
-### 3. Check System Info
+## Validate Your Installation
+
+After installation, run these commands to verify everything is working:
 
 ```bash
-# Show version and prerequisites status
-artifactiq info
+# Check Artifactiq version
+artifactiq --version
+# Expected: artifactiq 1.0.0-alpha.7
 
-# List available models
+# Check model backend status
 artifactiq models
+# Should show Axon is configured
 
 # List installed models
-artifactiq models --installed
+axon list
+# Should show yolov8n if you installed it
+
+# Test with a sample image (download a test image first)
+curl -o test.jpg https://ultralytics.com/images/bus.jpg
+artifactiq analyze --input test.jpg --model yolov8n
+# Should detect: bus, person, etc.
 ```
 
-## Example Output
+### Expected Output
 
 ```
 Analysis Results
 ================
 
-Detected 3 objects:
+Detected 4 objects:
   - person (95.2%)
-  - handbag (88.1%)
-  - car (72.3%)
-
-Merchandise Opportunities: 2
-  - Designer Handbag: https://shop.example.com/handbag-123
-  - Similar Outfit: https://shop.example.com/outfit-456
+  - person (91.7%)
+  - bus (89.3%)
+  - person (85.1%)
 
 Processing time: 47ms
+```
+
+## Install Options
+
+```bash
+# Install specific version
+ARTIFACTIQ_VERSION=v1.0.0-alpha.7 curl -fsSL https://artifactiq.ai/install.sh | sh
+
+# Install to custom directory
+ARTIFACTIQ_INSTALL_DIR=/usr/local/bin curl -fsSL https://artifactiq.ai/install.sh | sh
+```
+
+## Available Models
+
+Use Axon to install detection models:
+
+| Model | Size | Speed | Accuracy | Install Command |
+|-------|------|-------|----------|-----------------|
+| yolov8n | 6 MB | Fastest | Good | `axon install hf/ultralytics/yolov8n` |
+| yolov8s | 22 MB | Fast | Better | `axon install hf/ultralytics/yolov8s` |
+| yolov8m | 52 MB | Medium | Great | `axon install hf/ultralytics/yolov8m` |
+| yolov8l | 87 MB | Slower | Excellent | `axon install hf/ultralytics/yolov8l` |
+| yolov8x | 136 MB | Slowest | Best | `axon install hf/ultralytics/yolov8x` |
+
+## Usage Examples
+
+```bash
+# Basic detection
+artifactiq analyze --input photo.jpg --model yolov8n
+
+# JSON output for programmatic use
+artifactiq analyze --input photo.jpg --model yolov8n --format json
+
+# Process multiple images
+artifactiq analyze --input ./images/ --model yolov8n
+
+# With merchandise detection enabled
+artifactiq analyze --input photo.jpg --model yolov8n --merchandise
+
+# Set confidence threshold
+artifactiq analyze --input photo.jpg --model yolov8n --confidence 0.5
+```
+
+## CLI Reference
+
+```bash
+# Show help
+artifactiq --help
+
+# Show version and system info
+artifactiq info
+
+# List available/installed models
+artifactiq models
+artifactiq models --installed
+
+# Download a model (via Axon)
+artifactiq download --model yolov8n
+
+# Analyze images
+artifactiq analyze --input <path> --model <model>
 ```
 
 ## Downloads
@@ -113,14 +166,15 @@ curl -LO https://github.com/ARTIFACTIQ/releases/releases/latest/download/artifac
 # Verify checksum
 shasum -a 256 -c *.sha256
 
-# Extract and run
+# Extract and install
 tar xzf artifactiq-*.tar.gz
-./artifactiq --help
+chmod +x artifactiq
+sudo mv artifactiq /usr/local/bin/
 ```
 
 ## Model Management with Axon
 
-[mlOS Axon](https://github.com/mlOS-foundation/axon) handles model downloads, caching, and format conversions.
+[mlOS Axon](https://mlosfoundation.org) handles model downloads, caching, and format conversions.
 
 ```bash
 # Search for models
@@ -134,25 +188,59 @@ axon list
 
 # Get model info
 axon info yolov8n
+
+# Update models
+axon update
 ```
-
-### Available Detection Models
-
-| Model | Size | Speed | Accuracy | Install Command |
-|-------|------|-------|----------|-----------------|
-| yolov8n | 6 MB | Fastest | Good | `axon install hf/ultralytics/yolov8n` |
-| yolov8s | 22 MB | Fast | Better | `axon install hf/ultralytics/yolov8s` |
-| yolov8m | 52 MB | Medium | Great | `axon install hf/ultralytics/yolov8m` |
-| yolov8l | 87 MB | Slower | Excellent | `axon install hf/ultralytics/yolov8l` |
-| yolov8x | 136 MB | Slowest | Best | `axon install hf/ultralytics/yolov8x` |
 
 ## Verification
 
-All releases include SHA256 checksums (`.sha256` files) for verification.
+All releases include SHA256 checksums (`.sha256` files) for verification:
 
 ```bash
-shasum -a 256 -c <filename>.sha256
+shasum -a 256 -c artifactiq-*.sha256
 ```
+
+## Troubleshooting
+
+### "Model not found" error
+
+Ensure Axon is installed and the model is downloaded:
+```bash
+# Check Axon installation
+axon --version
+
+# Install the model
+axon install hf/ultralytics/yolov8n
+
+# Verify model is installed
+axon list
+```
+
+### "Axon not configured" error
+
+Install Axon first:
+```bash
+curl -sSL axon.mlosfoundation.org | sh
+```
+
+Then restart your terminal or run:
+```bash
+source ~/.bashrc  # or ~/.zshrc
+```
+
+### Permission denied
+
+Ensure the binary is executable:
+```bash
+chmod +x ~/.local/bin/artifactiq
+```
+
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/ARTIFACTIQ/releases/issues)
+- **Contact**: [dev@artifactiq.ai](mailto:dev@artifactiq.ai)
+- **Website**: [artifactiq.ai](https://artifactiq.ai)
 
 ## Source Code
 
