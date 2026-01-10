@@ -618,21 +618,21 @@
                     <div class="terminal-body">
                         <div class="terminal-line">
                             <span class="prompt">$</span>
-                            <span class="cmd">artifactiq analyze --input photo.jpg</span>
+                            <span class="cmd">axon install hf/ultralytics/yolov8n</span>
                         </div>
-                        <div class="terminal-output">Analyzing image...</div>
-                        <div class="terminal-output highlight">Detected 3 objects:</div>
-                        <div class="terminal-output">  - person (confidence: 0.94)</div>
-                        <div class="terminal-output">  - car (confidence: 0.89)</div>
-                        <div class="terminal-output">  - traffic_light (confidence: 0.87)</div>
+                        <div class="terminal-output">Installing yolov8n... done</div>
                         <div class="terminal-output">&nbsp;</div>
                         <div class="terminal-line">
                             <span class="prompt">$</span>
-                            <span class="cmd">artifactiq analyze --merchandise</span>
+                            <span class="cmd">artifactiq analyze --input photo.jpg --model yolov8n</span>
                         </div>
-                        <div class="terminal-output highlight">Products identified: 5</div>
-                        <div class="terminal-output">  - Nike Air Max (apparel)</div>
-                        <div class="terminal-output">  - Ray-Ban Aviator (accessories)</div>
+                        <div class="terminal-output highlight">Detected 3 objects:</div>
+                        <div class="terminal-output">  - person (95.2%)</div>
+                        <div class="terminal-output">  - handbag (88.1%)</div>
+                        <div class="terminal-output">  - car (72.3%)</div>
+                        <div class="terminal-output">&nbsp;</div>
+                        <div class="terminal-output highlight">Merchandise Opportunities: 2</div>
+                        <div class="terminal-output">  - Designer Handbag: shop.example.com</div>
                     </div>
                 </div>
             </div>
@@ -689,23 +689,23 @@
             <div class="steps">
                 <div class="step">
                     <div class="step-number">1</div>
-                    <h4>Install</h4>
+                    <h4>Install Artifactiq</h4>
                     <p>One command installs the binary to your system</p>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
-                    <h4>Download Model</h4>
-                    <p>Auto-fetch YOLOv8 models from HuggingFace</p>
+                    <h4>Install Axon</h4>
+                    <p>Model manager for YOLOv8 and other ONNX models</p>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
-                    <h4>Analyze</h4>
-                    <p>Run detection on images with a single command</p>
+                    <h4>Download Model</h4>
+                    <p>Use Axon to install YOLOv8 detection models</p>
                 </div>
                 <div class="step">
                     <div class="step-number">4</div>
-                    <h4>Integrate</h4>
-                    <p>Use JSON output in your pipelines and apps</p>
+                    <h4>Analyze</h4>
+                    <p>Run detection and merchandise matching on images</p>
                 </div>
             </div>
         </div>
