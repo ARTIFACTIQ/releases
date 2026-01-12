@@ -748,7 +748,7 @@
                 <div class="prereq-banner">
                     <div class="icon">&#9888;&#65039;</div>
                     <div class="text">
-                        <strong>Prerequisite:</strong> Artifactiq requires <strong>mlOS Axon</strong> for model management.
+                        <strong>Prerequisite:</strong> Artifactiq requires <strong>mlOS Axon v3.3.0+</strong> for YOLO ONNX model support.
                         <a href="https://mlosfoundation.org" target="_blank">Learn more about Axon</a>
                     </div>
                 </div>
@@ -782,9 +782,9 @@
                         <div class="terminal-comment"># Step 2: Install a detection model</div>
                         <div class="terminal-line">
                             <span class="prompt">$</span>
-                            <span class="cmd">axon install hf/ultralytics/yolov8n</span>
+                            <span class="cmd">axon install hf/ultralytics/yolov8n --format onnx</span>
                         </div>
-                        <div class="terminal-output">Downloading yolov8n.onnx... 6.3 MB</div>
+                        <div class="terminal-output">Converting to ONNX... yolov8n.onnx (6.3 MB)</div>
                         <div class="terminal-output success">Model installed!</div>
                         <div class="terminal-output">&nbsp;</div>
                         <div class="terminal-comment"># Step 3: Analyze an image</div>
@@ -857,15 +857,15 @@
                     <div class="code-block">
                         <div class="code-block-header">
                             <span>Terminal</span>
-                            <button class="copy-btn" onclick="copyCode('axon install hf/ultralytics/yolov8n')">Copy</button>
+                            <button class="copy-btn" onclick="copyCode('axon install hf/ultralytics/yolov8n --format onnx')">Copy</button>
                         </div>
                         <div class="code-block-body">
-                            <span class="comment"># YOLOv8 Nano (fastest, 6MB)</span><br>
-                            <span class="prompt">$ </span><span class="command">axon install hf/ultralytics/yolov8n</span><br><br>
+                            <span class="comment"># YOLOv8 Nano (fastest, 6MB) - requires Axon v3.3.0+</span><br>
+                            <span class="prompt">$ </span><span class="command">axon install hf/ultralytics/yolov8n --format onnx</span><br><br>
                             <span class="comment"># YOLOv8 Small (balanced, 22MB)</span><br>
-                            <span class="prompt">$ </span><span class="command">axon install hf/ultralytics/yolov8s</span><br><br>
+                            <span class="prompt">$ </span><span class="command">axon install hf/ultralytics/yolov8s --format onnx</span><br><br>
                             <span class="comment"># YOLOv8 Medium (accurate, 52MB)</span><br>
-                            <span class="prompt">$ </span><span class="command">axon install hf/ultralytics/yolov8m</span>
+                            <span class="prompt">$ </span><span class="command">axon install hf/ultralytics/yolov8m --format onnx</span>
                         </div>
                     </div>
                 </div>
@@ -1066,15 +1066,15 @@
                     <div class="code-block" style="max-width: 700px; margin: 0 auto;">
                         <div class="code-block-header">
                             <span>Quick Start</span>
-                            <button class="copy-btn" onclick="copyCode('curl -sSL axon.mlosfoundation.org | sh && curl -fsSL https://artifactiq.ai/install.sh | sh && axon install hf/ultralytics/yolov8n')">Copy All</button>
+                            <button class="copy-btn" onclick="copyCode('curl -sSL axon.mlosfoundation.org | sh && curl -fsSL https://artifactiq.ai/install.sh | sh && axon install hf/ultralytics/yolov8n --format onnx')">Copy All</button>
                         </div>
                         <div class="code-block-body">
-                            <span class="comment"># Install Axon (model manager)</span><br>
+                            <span class="comment"># Install Axon v3.3.0+ (model manager)</span><br>
                             <span class="prompt">$ </span><span class="command">curl -sSL axon.mlosfoundation.org | sh</span><br><br>
                             <span class="comment"># Install Artifactiq</span><br>
                             <span class="prompt">$ </span><span class="command">curl -fsSL https://artifactiq.ai/install.sh | sh</span><br><br>
-                            <span class="comment"># Download a model</span><br>
-                            <span class="prompt">$ </span><span class="command">axon install hf/ultralytics/yolov8n</span><br><br>
+                            <span class="comment"># Download a model with ONNX conversion</span><br>
+                            <span class="prompt">$ </span><span class="command">axon install hf/ultralytics/yolov8n --format onnx</span><br><br>
                             <span class="comment"># Analyze an image!</span><br>
                             <span class="prompt">$ </span><span class="command">artifactiq analyze --input photo.jpg --model yolov8n</span>
                         </div>
