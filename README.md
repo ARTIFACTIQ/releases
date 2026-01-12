@@ -4,7 +4,7 @@ Public releases for Artifactiq Core - the high-performance AI-powered visual int
 
 ## Prerequisites
 
-**mlOS Axon** is **required** for model management. Install it first:
+**mlOS Axon v3.3.0+** is **required** for model management with YOLO ONNX support. Install it first:
 
 ```bash
 curl -sSL axon.mlosfoundation.org | sh
@@ -31,8 +31,8 @@ This automatically detects your platform and installs to `~/.local/bin`.
 ### Step 3: Download a Model
 
 ```bash
-# Install YOLOv8 nano (fastest, 6MB)
-axon install hf/ultralytics/yolov8n
+# Install YOLOv8 nano (fastest, 6MB) with ONNX conversion
+axon install hf/ultralytics/yolov8n --format onnx
 ```
 
 ### Step 4: Analyze an Image
@@ -48,7 +48,7 @@ After installation, run these commands to verify everything is working:
 ```bash
 # Check Artifactiq version
 artifactiq --version
-# Expected: artifactiq 1.0.0-alpha.7
+# Expected: artifactiq 1.0.0-alpha.8
 
 # Check model backend status
 artifactiq models
@@ -83,7 +83,7 @@ Processing time: 47ms
 
 ```bash
 # Install specific version
-ARTIFACTIQ_VERSION=v1.0.0-alpha.7 curl -fsSL https://artifactiq.ai/install.sh | sh
+ARTIFACTIQ_VERSION=v1.0.0-alpha.8 curl -fsSL https://artifactiq.ai/install.sh | sh
 
 # Install to custom directory
 ARTIFACTIQ_INSTALL_DIR=/usr/local/bin curl -fsSL https://artifactiq.ai/install.sh | sh
@@ -91,15 +91,15 @@ ARTIFACTIQ_INSTALL_DIR=/usr/local/bin curl -fsSL https://artifactiq.ai/install.s
 
 ## Available Models
 
-Use Axon to install detection models:
+Use Axon to install detection models (requires Axon v3.3.0+ for ONNX conversion):
 
 | Model | Size | Speed | Accuracy | Install Command |
 |-------|------|-------|----------|-----------------|
-| yolov8n | 6 MB | Fastest | Good | `axon install hf/ultralytics/yolov8n` |
-| yolov8s | 22 MB | Fast | Better | `axon install hf/ultralytics/yolov8s` |
-| yolov8m | 52 MB | Medium | Great | `axon install hf/ultralytics/yolov8m` |
-| yolov8l | 87 MB | Slower | Excellent | `axon install hf/ultralytics/yolov8l` |
-| yolov8x | 136 MB | Slowest | Best | `axon install hf/ultralytics/yolov8x` |
+| yolov8n | 6 MB | Fastest | Good | `axon install hf/ultralytics/yolov8n --format onnx` |
+| yolov8s | 22 MB | Fast | Better | `axon install hf/ultralytics/yolov8s --format onnx` |
+| yolov8m | 52 MB | Medium | Great | `axon install hf/ultralytics/yolov8m --format onnx` |
+| yolov8l | 87 MB | Slower | Excellent | `axon install hf/ultralytics/yolov8l --format onnx` |
+| yolov8x | 136 MB | Slowest | Best | `axon install hf/ultralytics/yolov8x --format onnx` |
 
 ## Usage Examples
 
@@ -180,8 +180,8 @@ sudo mv artifactiq /usr/local/bin/
 # Search for models
 axon search yolo
 
-# Install a model
-axon install hf/ultralytics/yolov8n
+# Install a model with ONNX conversion
+axon install hf/ultralytics/yolov8n --format onnx
 
 # List installed models
 axon list
@@ -205,13 +205,13 @@ shasum -a 256 -c artifactiq-*.sha256
 
 ### "Model not found" error
 
-Ensure Axon is installed and the model is downloaded:
+Ensure Axon v3.3.0+ is installed and the model is downloaded:
 ```bash
-# Check Axon installation
+# Check Axon installation (requires v3.3.0+ for YOLO ONNX)
 axon --version
 
-# Install the model
-axon install hf/ultralytics/yolov8n
+# Install the model with ONNX conversion
+axon install hf/ultralytics/yolov8n --format onnx
 
 # Verify model is installed
 axon list
