@@ -790,10 +790,10 @@
                         <div class="terminal-comment"># Step 3: Analyze an image</div>
                         <div class="terminal-line">
                             <span class="prompt">$</span>
-                            <span class="cmd">artifactiq analyze --input photo.jpg --model yolov8n</span>
+                            <span class="cmd">artifactiq analyze --input bus.jpg --model yolov8n</span>
                         </div>
-                        <div class="terminal-output highlight">Detected 3 objects:</div>
-                        <div class="terminal-output">  person (95.2%) | handbag (88.1%) | car (72.3%)</div>
+                        <div class="terminal-output highlight">Detected 4 objects:</div>
+                        <div class="terminal-output">  person (89.3%) | person (88.1%) | person (86.8%) | bus (83.8%)</div>
                     </div>
                 </div>
             </div>
@@ -898,38 +898,36 @@
     <section class="showcase" id="showcase">
         <div class="container">
             <div class="section-header">
-                <h2>CLI Output Example</h2>
-                <p>See what Artifactiq detection looks like in your terminal</p>
+                <h2>Live Detection Demo</h2>
+                <p>Real object detection results from YOLOv8 on a sample image</p>
             </div>
             <div class="showcase-grid">
                 <div class="showcase-demo">
-                    <div class="showcase-demo-header">Terminal Output</div>
+                    <div class="showcase-demo-header">Sample Image & Detection Results</div>
                     <div class="showcase-demo-body">
-                        <div class="terminal-window" style="box-shadow: none; margin: 0;">
-                            <div class="terminal-header">
-                                <span class="terminal-dot red"></span>
-                                <span class="terminal-dot yellow"></span>
-                                <span class="terminal-dot green"></span>
+                        <div class="sample-image" style="padding: 0; background: none;">
+                            <img src="images/sample_detection.jpg" alt="Sample detection image showing a bus and people" style="width: 100%; border-radius: 8px; border: 1px solid var(--border);">
+                        </div>
+                        <div class="detection-results">
+                            <div style="color: var(--primary); font-weight: 600; margin-bottom: 0.75rem;">Detected 4 objects:</div>
+                            <div class="detection-item">
+                                <span class="label">person</span>
+                                <span class="confidence">89.3%</span>
                             </div>
-                            <div class="terminal-body" style="font-size: 0.8rem;">
-                                <div class="terminal-line">
-                                    <span class="prompt">$</span>
-                                    <span class="cmd">artifactiq analyze --input photo.jpg --model yolov8n</span>
-                                </div>
-                                <div class="terminal-output" style="color: #6a737d; margin-top: 0.5rem;">Loading model: yolov8n.onnx</div>
-                                <div class="terminal-output" style="color: #6a737d;">Analyzing: photo.jpg</div>
-                                <div class="terminal-output" style="margin-top: 1rem;">&nbsp;</div>
-                                <div class="terminal-output highlight" style="font-weight: 600;">Analysis Results</div>
-                                <div class="terminal-output highlight">================</div>
-                                <div class="terminal-output" style="margin-top: 0.5rem;">&nbsp;</div>
-                                <div class="terminal-output">Detected <span style="color: var(--success);">4</span> objects:</div>
-                                <div class="terminal-output" style="margin-top: 0.5rem;">&nbsp;</div>
-                                <div class="terminal-output">  person    <span style="color: var(--success);">95.2%</span></div>
-                                <div class="terminal-output">  handbag   <span style="color: var(--success);">88.1%</span></div>
-                                <div class="terminal-output">  car       <span style="color: var(--success);">72.3%</span></div>
-                                <div class="terminal-output">  bicycle   <span style="color: var(--success);">67.8%</span></div>
-                                <div class="terminal-output" style="margin-top: 1rem;">&nbsp;</div>
-                                <div class="terminal-output" style="color: #6a737d;">Processing time: 32ms</div>
+                            <div class="detection-item">
+                                <span class="label">person</span>
+                                <span class="confidence">88.1%</span>
+                            </div>
+                            <div class="detection-item">
+                                <span class="label">person</span>
+                                <span class="confidence">86.8%</span>
+                            </div>
+                            <div class="detection-item">
+                                <span class="label">bus</span>
+                                <span class="confidence">83.8%</span>
+                            </div>
+                            <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem;">
+                                Processing time: 42ms (CPU)
                             </div>
                         </div>
                     </div>
@@ -962,17 +960,12 @@
                         <div class="code-block-body" style="font-size: 0.8rem;">
 <pre style="margin: 0; color: var(--text-muted);">{
   "detections": [
-    {
-      "class": "person",
-      "confidence": 0.952,
-      "bbox": [120, 45, 280, 420]
-    },
-    {
-      "class": "handbag",
-      "confidence": 0.881,
-      "bbox": [200, 320, 260, 400]
-    }
-  ]
+    {"class": "person", "confidence": 0.893},
+    {"class": "person", "confidence": 0.881},
+    {"class": "person", "confidence": 0.868},
+    {"class": "bus", "confidence": 0.838}
+  ],
+  "processing_time_ms": 42
 }</pre>
                         </div>
                     </div>
