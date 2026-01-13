@@ -881,6 +881,7 @@
             <ul class="nav-links">
                 <li><a href="#getting-started">Getting Started</a></li>
                 <li><a href="#showcase">Showcase</a></li>
+                <li><a href="#training">Training</a></li>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#use-cases">Use Cases</a></li>
                 <li><a href="https://github.com/ARTIFACTIQ/releases/releases">Downloads</a></li>
@@ -1185,6 +1186,131 @@
   ],
   "processing_time_ms": 42
 }</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Custom Model Training Section -->
+    <section class="training" id="training" style="padding: 6rem 0; background: linear-gradient(180deg, rgba(123, 44, 191, 0.05) 0%, var(--bg-dark) 100%);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Custom Model Training</h2>
+                <p>Fine-tune YOLOv8 for specialized merchandise and landmark detection</p>
+            </div>
+
+            <div class="showcase-grid">
+                <div class="showcase-demo">
+                    <div class="showcase-demo-header">Training Results - artifactiq-merch-v1</div>
+                    <div class="showcase-demo-body">
+                        <!-- Training Progress Chart -->
+                        <div style="background: var(--code-bg); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">mAP@50 Improvement Over 10 Epochs</span>
+                                <span style="color: var(--success); font-size: 0.85rem; font-weight: 600;">+11.6%</span>
+                            </div>
+                            <!-- Progress bars for each epoch -->
+                            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Epoch 1</span>
+                                    <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 14px; overflow: hidden;">
+                                        <div style="width: 60%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px;"></div>
+                                    </div>
+                                    <span style="width: 45px; font-size: 0.7rem; color: var(--text-muted);">0.600</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Epoch 5</span>
+                                    <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 14px; overflow: hidden;">
+                                        <div style="width: 65%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px;"></div>
+                                    </div>
+                                    <span style="width: 45px; font-size: 0.7rem; color: var(--text-muted);">0.649</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Epoch 10</span>
+                                    <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 14px; overflow: hidden;">
+                                        <div style="width: 67%; height: 100%; background: linear-gradient(90deg, var(--success), var(--primary)); border-radius: 2px;"></div>
+                                    </div>
+                                    <span style="width: 45px; font-size: 0.7rem; color: var(--success); font-weight: 600;">0.669</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Training Stats -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="background: var(--code-bg); border-radius: 8px; padding: 1rem; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">10</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Epochs</div>
+                            </div>
+                            <div style="background: var(--code-bg); border-radius: 8px; padding: 1rem; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);">2m 44s</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Training Time</div>
+                            </div>
+                            <div style="background: var(--code-bg); border-radius: 8px; padding: 1rem; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">12.3MB</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">ONNX Model</div>
+                            </div>
+                        </div>
+
+                        <!-- Detection Results -->
+                        <div class="detection-results">
+                            <div style="margin-bottom: 0.75rem; color: var(--text-muted); font-size: 0.8rem;">Trained Model Inference (sample_detection.jpg)</div>
+                            <div class="detection-item">
+                                <span class="label">person</span>
+                                <span class="confidence">90.7%</span>
+                            </div>
+                            <div class="detection-item">
+                                <span class="label">person</span>
+                                <span class="confidence">90.2%</span>
+                            </div>
+                            <div class="detection-item">
+                                <span class="label">person</span>
+                                <span class="confidence">88.3%</span>
+                            </div>
+                            <div class="detection-item">
+                                <span class="label">bus</span>
+                                <span class="confidence">76.8%</span>
+                            </div>
+                            <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.8rem;">
+                                <span style="color: var(--text-muted);">5 objects detected</span>
+                                <span style="color: var(--primary);">38ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="showcase-info">
+                    <h3>Train Custom Models</h3>
+                    <p>Fine-tune YOLOv8 for your specific use case. Our custom merchandise/landmark model targets 75 specialized classes for e-commerce and tourism applications.</p>
+                    <ul>
+                        <li>
+                            <span class="check">&#10003;</span>
+                            <span><strong>45 merchandise classes</strong> - Apparel, accessories, electronics, vehicles</span>
+                        </li>
+                        <li>
+                            <span class="check">&#10003;</span>
+                            <span><strong>20 landmark classes</strong> - Eiffel Tower, Taj Mahal, mountains, beaches</span>
+                        </li>
+                        <li>
+                            <span class="check">&#10003;</span>
+                            <span><strong>10 scene contexts</strong> - Skyline, street market, museum, plaza</span>
+                        </li>
+                        <li>
+                            <span class="check">&#10003;</span>
+                            <span><strong>Mac ARM optimized</strong> - Train on Apple Silicon with MPS acceleration</span>
+                        </li>
+                    </ul>
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <span>Use Custom Model</span>
+                        </div>
+                        <div class="code-block-body">
+                            <span class="comment"># Train custom model (10 epochs)</span><br>
+                            <span class="prompt">$ </span><span class="command">python train_demo.py</span><br><br>
+                            <span class="comment"># Use trained model with Artifactiq</span><br>
+                            <span class="prompt">$ </span><span class="command">artifactiq analyze --input photo.jpg \</span><br>
+                            <span class="command">    --model ./models/artifactiq-merch-v1.onnx</span>
                         </div>
                     </div>
                 </div>
