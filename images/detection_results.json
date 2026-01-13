@@ -1,0 +1,121 @@
+[
+  {
+    "filename": "detected_backpacker.jpg",
+    "original": "backpacker.jpg",
+    "count": 1,
+    "processing_time": 40,
+    "detections": [
+      {
+        "label": "person",
+        "confidence": 0.90866077
+      }
+    ]
+  },
+  {
+    "filename": "detected_retail_store.jpg",
+    "original": "retail_store.jpg",
+    "count": 0,
+    "processing_time": 33,
+    "detections": []
+  },
+  {
+    "filename": "detected_sports.jpg",
+    "original": "sports.jpg",
+    "count": 1,
+    "processing_time": 35,
+    "detections": [
+      {
+        "label": "person",
+        "confidence": 0.7772361
+      }
+    ]
+  },
+  {
+    "filename": "detected_person_casual.jpg",
+    "original": "person_casual.jpg",
+    "count": 1,
+    "processing_time": 40,
+    "detections": [
+      {
+        "label": "person",
+        "confidence": 0.8923105
+      }
+    ]
+  },
+  {
+    "filename": "detected_traffic.jpg",
+    "original": "traffic.jpg",
+    "count": 1,
+    "processing_time": 34,
+    "detections": [
+      {
+        "label": "motorcycle",
+        "confidence": 0.93068135
+      }
+    ]
+  },
+  {
+    "filename": "detected_street_scene.jpg",
+    "original": "street_scene.jpg",
+    "count": 4,
+    "processing_time": 34,
+    "detections": [
+      {
+        "label": "person",
+        "confidence": 0.7136816
+      },
+      {
+        "label": "umbrella",
+        "confidence": 0.6189788
+      },
+      {
+        "label": "umbrella",
+        "confidence": 0.6029761
+      },
+      {
+        "label": "person",
+        "confidence": 0.51272416
+      }
+    ]
+  },
+  {
+    "filename": "detected_zidane.jpg",
+    "original": "zidane.jpg",
+    "count": 2,
+    "processing_time": 41,
+    "detections": [
+      {
+        "label": "person",
+        "confidence": 0.8273258
+      },
+      {
+        "label": "person",
+        "confidence": 0.82135224
+      }
+    ]
+  },
+  {
+    "filename": "detected_bus.jpg",
+    "original": "bus.jpg",
+    "count": 4,
+    "processing_time": 42,
+    "detections": [
+      {
+        "label": "person",
+        "confidence": 0.89309573
+      },
+      {
+        "label": "person",
+        "confidence": 0.8814708
+      },
+      {
+        "label": "person",
+        "confidence": 0.86789644
+      },
+      {
+        "label": "bus",
+        "confidence": 0.8381486
+      }
+    ]
+  }
+]

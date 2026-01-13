@@ -425,6 +425,156 @@
             background: rgba(0, 212, 255, 0.02);
         }
 
+        /* Gallery Styles */
+        .gallery-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .gallery-scroll {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding: 1rem 0.5rem 1.5rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--bg-card);
+        }
+
+        .gallery-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .gallery-scroll::-webkit-scrollbar-track {
+            background: var(--bg-card);
+            border-radius: 4px;
+        }
+
+        .gallery-scroll::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .gallery-card {
+            flex: 0 0 320px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            scroll-snap-align: start;
+            transition: all 0.3s;
+        }
+
+        .gallery-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 212, 255, 0.15);
+        }
+
+        .gallery-card-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background: var(--code-bg);
+        }
+
+        .gallery-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .gallery-card:hover .gallery-card-image img {
+            transform: scale(1.05);
+        }
+
+        .gallery-card-content {
+            padding: 1rem 1.25rem;
+        }
+
+        .gallery-card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .gallery-card-detections {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .detection-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .detection-tag.person {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--primary);
+        }
+
+        .detection-tag.vehicle {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--axon-color);
+        }
+
+        .detection-tag.accessory {
+            background: rgba(126, 231, 135, 0.2);
+            color: var(--success);
+        }
+
+        .gallery-card-scene {
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .gallery-card-attributes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .attr-tag {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            background: rgba(123, 44, 191, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(123, 44, 191, 0.3);
+        }
+
+        .gallery-card-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .gallery-hint {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .gallery-card {
+                flex: 0 0 280px;
+            }
+        }
+
         .showcase-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -898,40 +1048,134 @@
     <section class="showcase" id="showcase">
         <div class="container">
             <div class="section-header">
-                <h2>Live Detection Demo</h2>
-                <p>Real object detection results from YOLOv8 on a sample image</p>
+                <h2>Live Detection Gallery</h2>
+                <p>Real object detection results from YOLOv8 with bounding boxes</p>
             </div>
-            <div class="showcase-grid">
-                <div class="showcase-demo">
-                    <div class="showcase-demo-header">Sample Image & Detection Results</div>
-                    <div class="showcase-demo-body">
-                        <div class="sample-image" style="padding: 0; background: none;">
-                            <img src="images/sample_detection.jpg" alt="Sample detection image showing a bus and people" style="width: 100%; border-radius: 8px; border: 1px solid var(--border);">
+
+            <!-- Scrollable Card Gallery -->
+            <div class="gallery-container">
+                <div class="gallery-scroll">
+                    <!-- Card 1: Bus Scene - Vehicles -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-image">
+                            <img src="images/detected_bus.jpg" alt="Public transit bus detection">
                         </div>
-                        <div class="detection-results">
-                            <div style="color: var(--primary); font-weight: 600; margin-bottom: 0.75rem;">Detected 4 objects:</div>
-                            <div class="detection-item">
-                                <span class="label">person</span>
-                                <span class="confidence">89.3%</span>
+                        <div class="gallery-card-content">
+                            <div class="gallery-card-title">Public Transit</div>
+                            <div class="gallery-card-scene">Scene: Urban Street</div>
+                            <div class="gallery-card-detections">
+                                <span class="detection-tag vehicle">bus 84%</span>
                             </div>
-                            <div class="detection-item">
-                                <span class="label">person</span>
-                                <span class="confidence">88.1%</span>
+                            <div class="gallery-card-attributes">
+                                <span class="attr-tag">Large Vehicle</span>
+                                <span class="attr-tag">Public Transport</span>
                             </div>
-                            <div class="detection-item">
-                                <span class="label">person</span>
-                                <span class="confidence">86.8%</span>
+                            <div class="gallery-card-meta">42ms processing</div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Street Scene - Accessories -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-image">
+                            <img src="images/detected_street_scene.jpg" alt="Street market with umbrellas">
+                        </div>
+                        <div class="gallery-card-content">
+                            <div class="gallery-card-title">Street Market</div>
+                            <div class="gallery-card-scene">Scene: Outdoor Market</div>
+                            <div class="gallery-card-detections">
+                                <span class="detection-tag accessory">umbrella 62%</span>
+                                <span class="detection-tag accessory">umbrella 60%</span>
                             </div>
-                            <div class="detection-item">
-                                <span class="label">bus</span>
-                                <span class="confidence">83.8%</span>
+                            <div class="gallery-card-attributes">
+                                <span class="attr-tag">Rain Gear</span>
+                                <span class="attr-tag">Outdoor Accessories</span>
                             </div>
-                            <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem;">
-                                Processing time: 42ms (CPU)
+                            <div class="gallery-card-meta">34ms processing</div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Traffic - Motorcycle -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-image">
+                            <img src="images/detected_traffic.jpg" alt="Urban traffic with motorcycle">
+                        </div>
+                        <div class="gallery-card-content">
+                            <div class="gallery-card-title">Urban Mobility</div>
+                            <div class="gallery-card-scene">Scene: City Traffic</div>
+                            <div class="gallery-card-detections">
+                                <span class="detection-tag vehicle">motorcycle 93%</span>
                             </div>
+                            <div class="gallery-card-attributes">
+                                <span class="attr-tag">Two-Wheeler</span>
+                                <span class="attr-tag">Personal Transport</span>
+                            </div>
+                            <div class="gallery-card-meta">34ms processing</div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Sports Scene -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-image">
+                            <img src="images/detected_zidane.jpg" alt="Sports action scene">
+                        </div>
+                        <div class="gallery-card-content">
+                            <div class="gallery-card-title">Sports Action</div>
+                            <div class="gallery-card-scene">Scene: Football Match</div>
+                            <div class="gallery-card-detections">
+                                <span class="detection-tag person">athlete 83%</span>
+                                <span class="detection-tag person">athlete 82%</span>
+                            </div>
+                            <div class="gallery-card-attributes">
+                                <span class="attr-tag">Sportswear</span>
+                                <span class="attr-tag">Athletic Gear</span>
+                            </div>
+                            <div class="gallery-card-meta">41ms processing</div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Backpacker - Travel -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-image">
+                            <img src="images/detected_backpacker.jpg" alt="Traveler with backpack">
+                        </div>
+                        <div class="gallery-card-content">
+                            <div class="gallery-card-title">Travel & Adventure</div>
+                            <div class="gallery-card-scene">Scene: Mountain Trail</div>
+                            <div class="gallery-card-detections">
+                                <span class="detection-tag person">traveler 91%</span>
+                            </div>
+                            <div class="gallery-card-attributes">
+                                <span class="attr-tag">Backpack</span>
+                                <span class="attr-tag">Outdoor Gear</span>
+                                <span class="attr-tag">Hiking</span>
+                            </div>
+                            <div class="gallery-card-meta">40ms processing</div>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: Casual Portrait -->
+                    <div class="gallery-card">
+                        <div class="gallery-card-image">
+                            <img src="images/detected_person_casual.jpg" alt="Casual portrait">
+                        </div>
+                        <div class="gallery-card-content">
+                            <div class="gallery-card-title">Fashion Portrait</div>
+                            <div class="gallery-card-scene">Scene: Portrait Studio</div>
+                            <div class="gallery-card-detections">
+                                <span class="detection-tag person">subject 89%</span>
+                            </div>
+                            <div class="gallery-card-attributes">
+                                <span class="attr-tag">Casual Wear</span>
+                                <span class="attr-tag">Portrait</span>
+                            </div>
+                            <div class="gallery-card-meta">40ms processing</div>
                         </div>
                     </div>
                 </div>
+                <div class="gallery-hint">Scroll to see more examples &rarr;</div>
+            </div>
+
+            <div class="showcase-grid" style="margin-top: 3rem;">
                 <div class="showcase-info">
                     <h3>Real-Time Object Detection</h3>
                     <p>Artifactiq uses YOLOv8 models to detect 80+ object classes with high accuracy. The detection pipeline is optimized for both speed and precision.</p>
