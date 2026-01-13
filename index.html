@@ -748,7 +748,7 @@
                 <div class="prereq-banner">
                     <div class="icon">&#9888;&#65039;</div>
                     <div class="text">
-                        <strong>Prerequisite:</strong> Artifactiq requires <strong>mlOS Axon v3.3.0+</strong> for YOLO ONNX model support.
+                        <strong>Prerequisite:</strong> Artifactiq requires <strong>mlOS Axon v3.4.3+</strong> for YOLO ONNX model support.
                         <a href="https://mlosfoundation.org" target="_blank">Learn more about Axon</a>
                     </div>
                 </div>
@@ -860,7 +860,7 @@
                             <button class="copy-btn" onclick="copyCode('axon install hf/ultralytics/yolov8n --format onnx')">Copy</button>
                         </div>
                         <div class="code-block-body">
-                            <span class="comment"># YOLOv8 Nano (fastest, 6MB) - requires Axon v3.3.0+</span><br>
+                            <span class="comment"># YOLOv8 Nano (fastest, 6MB) - requires Axon v3.4.3+</span><br>
                             <span class="prompt">$ </span><span class="command">axon install hf/ultralytics/yolov8n --format onnx</span><br><br>
                             <span class="comment"># YOLOv8 Small (balanced, 22MB)</span><br>
                             <span class="prompt">$ </span><span class="command">axon install hf/ultralytics/yolov8s --format onnx</span><br><br>
@@ -898,34 +898,38 @@
     <section class="showcase" id="showcase">
         <div class="container">
             <div class="section-header">
-                <h2>Sample Showcase</h2>
-                <p>See Artifactiq in action with real-world examples</p>
+                <h2>CLI Output Example</h2>
+                <p>See what Artifactiq detection looks like in your terminal</p>
             </div>
             <div class="showcase-grid">
                 <div class="showcase-demo">
-                    <div class="showcase-demo-header">Detection Example</div>
+                    <div class="showcase-demo-header">Terminal Output</div>
                     <div class="showcase-demo-body">
-                        <div class="sample-image">
-                            <div class="sample-image-placeholder">&#128722;</div>
-                            <div class="sample-image-label">street-scene.jpg</div>
-                        </div>
-                        <div class="detection-results">
-                            <div style="color: var(--primary); margin-bottom: 0.75rem; font-weight: 600;">Detected Objects:</div>
-                            <div class="detection-item">
-                                <span class="label">&#128100; person</span>
-                                <span class="confidence">95.2%</span>
+                        <div class="terminal-window" style="box-shadow: none; margin: 0;">
+                            <div class="terminal-header">
+                                <span class="terminal-dot red"></span>
+                                <span class="terminal-dot yellow"></span>
+                                <span class="terminal-dot green"></span>
                             </div>
-                            <div class="detection-item">
-                                <span class="label">&#128092; handbag</span>
-                                <span class="confidence">88.1%</span>
-                            </div>
-                            <div class="detection-item">
-                                <span class="label">&#128663; car</span>
-                                <span class="confidence">72.3%</span>
-                            </div>
-                            <div class="detection-item">
-                                <span class="label">&#128690; bicycle</span>
-                                <span class="confidence">67.8%</span>
+                            <div class="terminal-body" style="font-size: 0.8rem;">
+                                <div class="terminal-line">
+                                    <span class="prompt">$</span>
+                                    <span class="cmd">artifactiq analyze --input photo.jpg --model yolov8n</span>
+                                </div>
+                                <div class="terminal-output" style="color: #6a737d; margin-top: 0.5rem;">Loading model: yolov8n.onnx</div>
+                                <div class="terminal-output" style="color: #6a737d;">Analyzing: photo.jpg</div>
+                                <div class="terminal-output" style="margin-top: 1rem;">&nbsp;</div>
+                                <div class="terminal-output highlight" style="font-weight: 600;">Analysis Results</div>
+                                <div class="terminal-output highlight">================</div>
+                                <div class="terminal-output" style="margin-top: 0.5rem;">&nbsp;</div>
+                                <div class="terminal-output">Detected <span style="color: var(--success);">4</span> objects:</div>
+                                <div class="terminal-output" style="margin-top: 0.5rem;">&nbsp;</div>
+                                <div class="terminal-output">  person    <span style="color: var(--success);">95.2%</span></div>
+                                <div class="terminal-output">  handbag   <span style="color: var(--success);">88.1%</span></div>
+                                <div class="terminal-output">  car       <span style="color: var(--success);">72.3%</span></div>
+                                <div class="terminal-output">  bicycle   <span style="color: var(--success);">67.8%</span></div>
+                                <div class="terminal-output" style="margin-top: 1rem;">&nbsp;</div>
+                                <div class="terminal-output" style="color: #6a737d;">Processing time: 32ms</div>
                             </div>
                         </div>
                     </div>
@@ -953,7 +957,7 @@
                     </ul>
                     <div class="code-block">
                         <div class="code-block-header">
-                            <span>JSON Output</span>
+                            <span>JSON Output (--output json)</span>
                         </div>
                         <div class="code-block-body" style="font-size: 0.8rem;">
 <pre style="margin: 0; color: var(--text-muted);">{
@@ -1069,7 +1073,7 @@
                             <button class="copy-btn" onclick="copyCode('curl -sSL axon.mlosfoundation.org | sh && curl -fsSL https://artifactiq.ai/install.sh | sh && axon install hf/ultralytics/yolov8n --format onnx')">Copy All</button>
                         </div>
                         <div class="code-block-body">
-                            <span class="comment"># Install Axon v3.3.0+ (model manager)</span><br>
+                            <span class="comment"># Install Axon v3.4.3+ (model manager)</span><br>
                             <span class="prompt">$ </span><span class="command">curl -sSL axon.mlosfoundation.org | sh</span><br><br>
                             <span class="comment"># Install Artifactiq</span><br>
                             <span class="prompt">$ </span><span class="command">curl -fsSL https://artifactiq.ai/install.sh | sh</span><br><br>
@@ -1098,7 +1102,7 @@
                 <a href="mailto:dev@artifactiq.ai">Contact</a>
             </div>
             <div class="footer-info">
-                <span>v1.0.0-alpha.7</span> &middot; <span>Linux x64, macOS ARM64</span>
+                <span>v1.0.0-alpha.9</span> &middot; <span>Linux x64, macOS ARM64</span>
             </div>
         </div>
     </footer>
