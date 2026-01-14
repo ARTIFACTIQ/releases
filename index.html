@@ -1217,41 +1217,41 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
         <div class="container">
             <div class="section-header">
                 <h2>Custom Model Training</h2>
-                <p>Fine-tune YOLOv8 for specialized merchandise and landmark detection</p>
+                <p>Fine-tuned YOLOv8n on Open Images for merchandise detection - trained locally on Mac</p>
             </div>
 
             <div class="showcase-grid">
                 <div class="showcase-demo">
-                    <div class="showcase-demo-header">Training Results - artifactiq-merch-v1</div>
+                    <div class="showcase-demo-header">Training Results - artifactiq-v1.0.0</div>
                     <div class="showcase-demo-body">
                         <!-- Training Progress Chart -->
                         <div style="background: var(--code-bg); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                                <span style="color: var(--text-muted); font-size: 0.85rem;">mAP@50 Improvement Over 10 Epochs</span>
-                                <span style="color: var(--success); font-size: 0.85rem; font-weight: 600;">+11.6%</span>
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">mAP@50 Improvement Over 20 Epochs</span>
+                                <span style="color: var(--success); font-size: 0.85rem; font-weight: 600;">+64%</span>
                             </div>
                             <!-- Progress bars for each epoch -->
                             <div style="display: flex; flex-direction: column; gap: 0.35rem;">
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                                     <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Epoch 1</span>
                                     <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 14px; overflow: hidden;">
-                                        <div style="width: 60%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px;"></div>
+                                        <div style="width: 25%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px;"></div>
                                     </div>
-                                    <span style="width: 45px; font-size: 0.7rem; color: var(--text-muted);">0.600</span>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Epoch 5</span>
-                                    <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 14px; overflow: hidden;">
-                                        <div style="width: 65%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px;"></div>
-                                    </div>
-                                    <span style="width: 45px; font-size: 0.7rem; color: var(--text-muted);">0.649</span>
+                                    <span style="width: 45px; font-size: 0.7rem; color: var(--text-muted);">0.247</span>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                                     <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Epoch 10</span>
                                     <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 14px; overflow: hidden;">
-                                        <div style="width: 67%; height: 100%; background: linear-gradient(90deg, var(--success), var(--primary)); border-radius: 2px;"></div>
+                                        <div style="width: 40%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px;"></div>
                                     </div>
-                                    <span style="width: 45px; font-size: 0.7rem; color: var(--success); font-weight: 600;">0.669</span>
+                                    <span style="width: 45px; font-size: 0.7rem; color: var(--text-muted);">0.404</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Epoch 20</span>
+                                    <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 14px; overflow: hidden;">
+                                        <div style="width: 41%; height: 100%; background: linear-gradient(90deg, var(--success), var(--primary)); border-radius: 2px;"></div>
+                                    </div>
+                                    <span style="width: 45px; font-size: 0.7rem; color: var(--success); font-weight: 600;">0.406</span>
                                 </div>
                             </div>
                         </div>
@@ -1259,79 +1259,89 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                         <!-- Training Stats -->
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
                             <div style="background: var(--code-bg); border-radius: 8px; padding: 1rem; text-align: center;">
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">10</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">20</div>
                                 <div style="font-size: 0.75rem; color: var(--text-muted);">Epochs</div>
                             </div>
                             <div style="background: var(--code-bg); border-radius: 8px; padding: 1rem; text-align: center;">
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);">2m 44s</div>
-                                <div style="font-size: 0.75rem; color: var(--text-muted);">Training Time</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);">~4.8h</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Training (CPU)</div>
                             </div>
                             <div style="background: var(--code-bg); border-radius: 8px; padding: 1rem; text-align: center;">
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">12.3MB</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">12MB</div>
                                 <div style="font-size: 0.75rem; color: var(--text-muted);">ONNX Model</div>
                             </div>
                         </div>
 
-                        <!-- Detection Results -->
+                        <!-- Dataset Info -->
+                        <div style="background: var(--code-bg); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Dataset: Open Images v7 (via FiftyOne)</div>
+                            <div style="display: flex; gap: 1.5rem; font-size: 0.85rem;">
+                                <div><span style="color: var(--primary); font-weight: 600;">4,416</span> <span style="color: var(--text-muted);">train</span></div>
+                                <div><span style="color: var(--primary); font-weight: 600;">493</span> <span style="color: var(--text-muted);">val</span></div>
+                                <div><span style="color: var(--primary); font-weight: 600;">39</span> <span style="color: var(--text-muted);">classes</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Final Metrics -->
                         <div class="detection-results">
-                            <div style="margin-bottom: 0.75rem; color: var(--text-muted); font-size: 0.8rem;">Trained Model Inference (sample_detection.jpg)</div>
+                            <div style="margin-bottom: 0.75rem; color: var(--text-muted); font-size: 0.8rem;">Final Validation Metrics</div>
                             <div class="detection-item">
-                                <span class="label">person</span>
-                                <span class="confidence">90.7%</span>
+                                <span class="label">mAP@50</span>
+                                <span class="confidence">40.6%</span>
                             </div>
                             <div class="detection-item">
-                                <span class="label">person</span>
-                                <span class="confidence">90.2%</span>
+                                <span class="label">mAP@50-95</span>
+                                <span class="confidence">30.4%</span>
                             </div>
                             <div class="detection-item">
-                                <span class="label">person</span>
-                                <span class="confidence">88.3%</span>
+                                <span class="label">Precision</span>
+                                <span class="confidence">73.0%</span>
                             </div>
                             <div class="detection-item">
-                                <span class="label">bus</span>
-                                <span class="confidence">76.8%</span>
-                            </div>
-                            <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.8rem;">
-                                <span style="color: var(--text-muted);">5 objects detected</span>
-                                <span style="color: var(--primary);">38ms</span>
+                                <span class="label">Recall</span>
+                                <span class="confidence">32.7%</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="showcase-info">
-                    <h3>Train Custom Models</h3>
-                    <p>Fine-tune YOLOv8 for your specific use case. Our custom merchandise/landmark model targets 75 specialized classes for e-commerce and tourism applications.</p>
+                    <h3>Train Your Own Model</h3>
+                    <p>The v1.0.0 model was trained locally on a Mac (CPU) using Open Images data. You can fine-tune for your specific use case with the same pipeline.</p>
                     <ul>
                         <li>
                             <span class="check">&#10003;</span>
-                            <span><strong>45 merchandise classes</strong> - Apparel, accessories, electronics, vehicles</span>
+                            <span><strong>39 merchandise classes</strong> - Clothing, footwear, bags, accessories, electronics, vehicles</span>
                         </li>
                         <li>
                             <span class="check">&#10003;</span>
-                            <span><strong>20 landmark classes</strong> - Eiffel Tower, Taj Mahal, mountains, beaches</span>
+                            <span><strong>Open Images dataset</strong> - Downloaded via FiftyOne with automatic YOLO conversion</span>
                         </li>
                         <li>
                             <span class="check">&#10003;</span>
-                            <span><strong>10 scene contexts</strong> - Skyline, street market, museum, plaza</span>
+                            <span><strong>YOLOv8n base</strong> - Transfer learning from pretrained nano model (6MB)</span>
                         </li>
                         <li>
                             <span class="check">&#10003;</span>
-                            <span><strong>Mac ARM optimized</strong> - Train on Apple Silicon with MPS acceleration</span>
+                            <span><strong>Mac compatible</strong> - Trained on Apple Silicon M-series (CPU mode for stability)</span>
                         </li>
                     </ul>
                     <div class="code-block">
                         <div class="code-block-header">
-                            <span>Use Custom Model</span>
+                            <span>Training Pipeline</span>
                         </div>
                         <div class="code-block-body">
-                            <span class="comment"># Train custom model (10 epochs)</span><br>
-                            <span class="prompt">$ </span><span class="command">python train_demo.py</span><br><br>
-                            <span class="comment"># Use trained model with Artifactiq</span><br>
-                            <span class="prompt">$ </span><span class="command">artifactiq analyze --input photo.jpg \</span><br>
-                            <span class="command">    --model ./models/artifactiq-merch-v1.onnx</span>
+                            <span class="comment"># 1. Download dataset via FiftyOne</span><br>
+                            <span class="prompt">$ </span><span class="command">python scripts/download_openimages.py</span><br><br>
+                            <span class="comment"># 2. Train YOLOv8n (20 epochs)</span><br>
+                            <span class="prompt">$ </span><span class="command">python scripts/train_yolo.py --epochs 20</span><br><br>
+                            <span class="comment"># 3. Export to ONNX</span><br>
+                            <span class="prompt">$ </span><span class="command">yolo export model=best.pt format=onnx</span>
                         </div>
                     </div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">
+                        <a href="https://github.com/ARTIFACTIQ/ml-models" style="color: var(--primary);">View training code on GitHub &rarr;</a>
+                    </p>
                 </div>
             </div>
         </div>
