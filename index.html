@@ -884,6 +884,7 @@
                 <li><a href="#training">Training</a></li>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#use-cases">Use Cases</a></li>
+                <li><a href="#tools">Tools</a></li>
                 <li><a href="https://github.com/ARTIFACTIQ/releases/releases">Downloads</a></li>
                 <li><a href="https://github.com/ARTIFACTIQ/releases">GitHub</a></li>
             </ul>
@@ -1421,6 +1422,83 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                     <div>
                         <h4>Automation & Robotics</h4>
                         <p>Visual perception for autonomous systems. Identify objects, obstacles, and navigation targets.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="tools" id="tools" style="padding: 6rem 0;">
+        <div class="container">
+            <div class="section-header">
+                <h2>Open Source Tools</h2>
+                <p>We build and maintain tools for the ML community</p>
+            </div>
+
+            <div style="max-width: 900px; margin: 0 auto;">
+                <div style="background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 44, 191, 0.1)); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; display: flex; gap: 2rem; align-items: flex-start;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <h3 style="font-size: 1.75rem; background: linear-gradient(90deg, var(--primary), var(--success)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">mlgpu</h3>
+                            <span style="background: rgba(126, 231, 135, 0.2); color: var(--success); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">MIT</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Apple Silicon GPU monitor for ML training. Track GPU utilization, memory, and training progress in real-time. Supports Create ML, PyTorch, and HuggingFace.</p>
+
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                            <div style="background: var(--code-bg); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem;">
+                                <span style="color: var(--text-muted);">Platform:</span> <span style="color: var(--text);">Apple Silicon (M1-M4)</span>
+                            </div>
+                            <div style="background: var(--code-bg); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem;">
+                                <span style="color: var(--text-muted);">Frameworks:</span> <span style="color: var(--text);">Create ML, PyTorch, HuggingFace</span>
+                            </div>
+                        </div>
+
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <span>Install</span>
+                                <button class="copy-btn" onclick="copyCode('curl -fsSL https://raw.githubusercontent.com/artifactiq/mlgpu/main/install.sh | bash')">Copy</button>
+                            </div>
+                            <div class="code-block-body">
+                                <span class="prompt">$ </span><span class="command">curl -fsSL https://raw.githubusercontent.com/artifactiq/mlgpu/main/install.sh | bash</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1.5rem;">
+                            <a href="https://github.com/ARTIFACTIQ/mlgpu" class="btn btn-secondary" style="padding: 0.75rem 1.5rem;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
+                                View on GitHub
+                            </a>
+                        </div>
+                    </div>
+
+                    <div style="width: 280px; flex-shrink: 0;">
+                        <div class="terminal-window" style="font-size: 0.7rem;">
+                            <div class="terminal-header">
+                                <span class="terminal-dot red"></span>
+                                <span class="terminal-dot yellow"></span>
+                                <span class="terminal-dot green"></span>
+                            </div>
+                            <div class="terminal-body" style="padding: 1rem; line-height: 1.5;">
+                                <div style="color: var(--text-muted); margin-bottom: 0.5rem;">mlgpu v1.0.0</div>
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                                    <span style="color: var(--text-muted);">GPU</span>
+                                    <span style="color: var(--success);">78%</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                                    <span style="color: var(--text-muted);">Memory</span>
+                                    <span style="color: var(--primary);">12.4GB</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                                    <span style="color: var(--text-muted);">Iteration</span>
+                                    <span style="color: var(--text);">4470/101K</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="color: var(--text-muted);">Loss</span>
+                                    <span style="color: var(--warning);">7.2</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
