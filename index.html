@@ -891,6 +891,22 @@
         </div>
     </nav>
 
+    <!-- Announcements Section -->
+    <section class="announcements" id="news" style="padding-top: 100px; padding-bottom: 2rem;">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 600;">Latest News</h2>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button onclick="scrollNews(-1)" class="news-nav-btn" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; color: var(--text-muted);">&larr;</button>
+                    <button onclick="scrollNews(1)" class="news-nav-btn" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; color: var(--text-muted);">&rarr;</button>
+                </div>
+            </div>
+            <div class="news-scroll" id="news-container" style="display: flex; gap: 1.5rem; overflow-x: auto; padding-bottom: 1rem; scroll-snap-type: x mandatory; scrollbar-width: thin;">
+                <!-- News items loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
     <section class="hero">
         <div class="container">
             <div class="hero-content">
@@ -1218,41 +1234,51 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
         <div class="container">
             <div class="section-header">
                 <h2>Custom Model Training</h2>
-                <p>Fine-tuned YOLOv8n on Open Images for merchandise detection - trained locally on Mac</p>
+                <p>v1.1.0 trained with Apple Create ML - 101K iterations on M4 Max GPU</p>
             </div>
 
             <div class="showcase-grid">
                 <div class="showcase-demo">
-                    <div class="showcase-demo-header">Training Results - artifactiq-v1.0.0</div>
+                    <div class="showcase-demo-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Training Results - artifactiq-v1.1.0</span>
+                        <span style="background: rgba(126, 231, 135, 0.2); color: var(--success); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600;">NEW</span>
+                    </div>
                     <div class="showcase-demo-body">
                         <!-- Training Progress Chart -->
                         <div style="background: var(--code-bg); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                                <span style="color: var(--text-muted); font-size: 0.85rem;">mAP@50 Improvement Over 20 Epochs</span>
-                                <span style="color: var(--success); font-size: 0.85rem; font-weight: 600;">+64%</span>
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">Loss Improvement Over 101K Iterations</span>
+                                <span style="color: var(--success); font-size: 0.85rem; font-weight: 600;">-69%</span>
                             </div>
-                            <!-- Progress bars for each epoch -->
+                            <!-- Progress bars for iterations -->
                             <div style="display: flex; flex-direction: column; gap: 0.35rem;">
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Epoch 1</span>
+                                    <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Start</span>
                                     <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 14px; overflow: hidden;">
-                                        <div style="width: 25%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px;"></div>
+                                        <div style="width: 100%; height: 100%; background: linear-gradient(90deg, var(--axon-color), var(--warning)); border-radius: 2px;"></div>
                                     </div>
-                                    <span style="width: 45px; font-size: 0.7rem; color: var(--text-muted);">0.247</span>
+                                    <span style="width: 45px; font-size: 0.7rem; color: var(--axon-color);">15.34</span>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Epoch 10</span>
+                                    <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">50K</span>
                                     <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 14px; overflow: hidden;">
-                                        <div style="width: 40%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px;"></div>
+                                        <div style="width: 34%; height: 100%; background: linear-gradient(90deg, var(--warning), var(--primary)); border-radius: 2px;"></div>
                                     </div>
-                                    <span style="width: 45px; font-size: 0.7rem; color: var(--text-muted);">0.404</span>
+                                    <span style="width: 45px; font-size: 0.7rem; color: var(--text-muted);">5.15</span>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Epoch 20</span>
+                                    <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">82K</span>
                                     <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 14px; overflow: hidden;">
-                                        <div style="width: 41%; height: 100%; background: linear-gradient(90deg, var(--success), var(--primary)); border-radius: 2px;"></div>
+                                        <div style="width: 27%; height: 100%; background: linear-gradient(90deg, var(--success), var(--primary)); border-radius: 2px;"></div>
                                     </div>
-                                    <span style="width: 45px; font-size: 0.7rem; color: var(--success); font-weight: 600;">0.406</span>
+                                    <span style="width: 45px; font-size: 0.7rem; color: var(--success); font-weight: 600;">4.12</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">101K</span>
+                                    <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 14px; overflow: hidden;">
+                                        <div style="width: 31%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px;"></div>
+                                    </div>
+                                    <span style="width: 45px; font-size: 0.7rem; color: var(--primary);">4.71</span>
                                 </div>
                             </div>
                         </div>
@@ -1260,88 +1286,87 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                         <!-- Training Stats -->
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
                             <div style="background: var(--code-bg); border-radius: 8px; padding: 1rem; text-align: center;">
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">20</div>
-                                <div style="font-size: 0.75rem; color: var(--text-muted);">Epochs</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">101K</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Iterations</div>
                             </div>
                             <div style="background: var(--code-bg); border-radius: 8px; padding: 1rem; text-align: center;">
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);">~4.8h</div>
-                                <div style="font-size: 0.75rem; color: var(--text-muted);">Training (CPU)</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);">~6h</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Training (M4 GPU)</div>
                             </div>
                             <div style="background: var(--code-bg); border-radius: 8px; padding: 1rem; text-align: center;">
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">12MB</div>
-                                <div style="font-size: 0.75rem; color: var(--text-muted);">ONNX Model</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">31MB</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">CoreML Model</div>
                             </div>
                         </div>
 
                         <!-- Dataset Info -->
                         <div style="background: var(--code-bg); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Dataset: Open Images v7 (via FiftyOne)</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Dataset: Open Images (Create ML format)</div>
                             <div style="display: flex; gap: 1.5rem; font-size: 0.85rem;">
-                                <div><span style="color: var(--primary); font-weight: 600;">4,416</span> <span style="color: var(--text-muted);">train</span></div>
-                                <div><span style="color: var(--primary); font-weight: 600;">493</span> <span style="color: var(--text-muted);">val</span></div>
+                                <div><span style="color: var(--primary); font-weight: 600;">18,000</span> <span style="color: var(--text-muted);">images</span></div>
+                                <div><span style="color: var(--primary); font-weight: 600;">103,835</span> <span style="color: var(--text-muted);">annotations</span></div>
                                 <div><span style="color: var(--primary); font-weight: 600;">39</span> <span style="color: var(--text-muted);">classes</span></div>
                             </div>
                         </div>
 
                         <!-- Final Metrics -->
                         <div class="detection-results">
-                            <div style="margin-bottom: 0.75rem; color: var(--text-muted); font-size: 0.8rem;">Final Validation Metrics</div>
+                            <div style="margin-bottom: 0.75rem; color: var(--text-muted); font-size: 0.8rem;">Training Metrics</div>
                             <div class="detection-item">
-                                <span class="label">mAP@50</span>
-                                <span class="confidence">40.6%</span>
+                                <span class="label">Final Loss</span>
+                                <span class="confidence">4.71</span>
                             </div>
                             <div class="detection-item">
-                                <span class="label">mAP@50-95</span>
-                                <span class="confidence">30.4%</span>
+                                <span class="label">Best Loss</span>
+                                <span class="confidence" style="color: var(--success);">4.12</span>
                             </div>
                             <div class="detection-item">
-                                <span class="label">Precision</span>
-                                <span class="confidence">73.0%</span>
+                                <span class="label">Loss Reduction</span>
+                                <span class="confidence">69.3%</span>
                             </div>
                             <div class="detection-item">
-                                <span class="label">Recall</span>
-                                <span class="confidence">32.7%</span>
+                                <span class="label">Input Size</span>
+                                <span class="confidence">416x416</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="showcase-info">
-                    <h3>Train Your Own Model</h3>
-                    <p>The v1.0.0 model was trained locally on a Mac (CPU) using Open Images data. You can fine-tune for your specific use case with the same pipeline.</p>
+                    <h3>Native Apple Silicon Training</h3>
+                    <p>The v1.1.0 model was trained using Apple Create ML on M4 Max, leveraging the 40-core GPU for accelerated training. Perfect for iOS/macOS deployment.</p>
                     <ul>
                         <li>
                             <span class="check">&#10003;</span>
-                            <span><strong>39 merchandise classes</strong> - Clothing, footwear, bags, accessories, electronics, vehicles</span>
+                            <span><strong>39 merchandise classes</strong> - People, clothing, vehicles, accessories, electronics</span>
                         </li>
                         <li>
                             <span class="check">&#10003;</span>
-                            <span><strong>Open Images dataset</strong> - Downloaded via FiftyOne with automatic YOLO conversion</span>
+                            <span><strong>Apple Create ML</strong> - Native Object Detection architecture optimized for Apple Silicon</span>
                         </li>
                         <li>
                             <span class="check">&#10003;</span>
-                            <span><strong>YOLOv8n base</strong> - Transfer learning from pretrained nano model (6MB)</span>
+                            <span><strong>CoreML output</strong> - Direct deployment to iOS/macOS apps without conversion</span>
                         </li>
                         <li>
                             <span class="check">&#10003;</span>
-                            <span><strong>Mac compatible</strong> - Trained on Apple Silicon M-series (CPU mode for stability)</span>
+                            <span><strong>M4 Max GPU</strong> - Full GPU acceleration with 128GB unified memory</span>
                         </li>
                     </ul>
                     <div class="code-block">
                         <div class="code-block-header">
-                            <span>Training Pipeline</span>
+                            <span>Using the CoreML Model</span>
                         </div>
                         <div class="code-block-body">
-                            <span class="comment"># 1. Download dataset via FiftyOne</span><br>
-                            <span class="prompt">$ </span><span class="command">python scripts/download_openimages.py</span><br><br>
-                            <span class="comment"># 2. Train YOLOv8n (20 epochs)</span><br>
-                            <span class="prompt">$ </span><span class="command">python scripts/train_yolo.py --epochs 20</span><br><br>
-                            <span class="comment"># 3. Export to ONNX</span><br>
-                            <span class="prompt">$ </span><span class="command">yolo export model=best.pt format=onnx</span>
+                            <span class="comment"># Python with coremltools</span><br>
+                            <span class="prompt">$ </span><span class="command">pip install coremltools pillow</span><br><br>
+                            <span class="comment"># Load and run inference</span><br>
+                            <span style="color: var(--text-muted);">model = ct.models.MLModel("ArtifactiqV1.1.mlmodel")</span><br>
+                            <span style="color: var(--text-muted);">result = model.predict({"imagePath": img})</span>
                         </div>
                     </div>
                     <p style="margin-top: 1rem; font-size: 0.9rem;">
-                        <a href="https://github.com/ARTIFACTIQ/ml-models" style="color: var(--primary);">View training code on GitHub &rarr;</a>
+                        <a href="https://github.com/ARTIFACTIQ/ml-models/blob/main/docs/MODEL_V1.1.0_RELEASE_NOTES.md" style="color: var(--primary);">View v1.1.0 release notes &rarr;</a>
                     </p>
                 </div>
             </div>
@@ -1546,6 +1571,77 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 }
             });
         });
+
+        // News loader - fetches from JSON file like MLOS pattern
+        const fallbackNews = [
+            {
+                id: "model-v1.1.0-training-complete",
+                date: "2026-01-16",
+                badge: "NEW MODEL",
+                title: "Model v1.1.0 Training Complete",
+                summary: "Custom-trained Create ML Object Detection model completed 101K iterations with 69% loss improvement.",
+                highlights: [
+                    { label: "Iterations", value: "101,000" },
+                    { label: "Final Loss", value: "4.71" },
+                    { label: "Classes", value: "39" }
+                ],
+                links: {
+                    primary: { label: "Release Notes", url: "#training" }
+                }
+            }
+        ];
+
+        function renderNews(newsItems) {
+            const container = document.getElementById('news-container');
+            if (!container) return;
+
+            const badgeColors = {
+                'NEW MODEL': 'var(--success)',
+                'OPEN SOURCE': 'var(--primary)',
+                'ALPHA': 'var(--warning)',
+                'STABLE': 'var(--success)',
+                'BETA': 'var(--accent)'
+            };
+
+            container.innerHTML = newsItems.map(item => `
+                <div style="flex: 0 0 340px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; scroll-snap-align: start;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <span style="background: ${badgeColors[item.badge] || 'var(--primary)'}22; color: ${badgeColors[item.badge] || 'var(--primary)'}; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600;">${item.badge}</span>
+                        <span style="color: var(--text-muted); font-size: 0.75rem;">${item.date}</span>
+                    </div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.75rem;">${item.title}</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;">${item.summary}</p>
+                    ${item.highlights ? `
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                            ${item.highlights.map(h => `
+                                <div style="background: var(--code-bg); padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.75rem;">
+                                    <span style="color: var(--text-muted);">${h.label}:</span> <span style="color: var(--text); font-weight: 500;">${h.value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    <div style="display: flex; gap: 0.75rem;">
+                        ${item.links.primary ? `<a href="${item.links.primary.url}" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">${item.links.primary.label} &rarr;</a>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function scrollNews(direction) {
+            const container = document.getElementById('news-container');
+            if (container) {
+                container.scrollBy({ left: direction * 360, behavior: 'smooth' });
+            }
+        }
+
+        // Load news from JSON file
+        fetch('/src/data/news/all-news.json')
+            .then(r => r.json())
+            .then(data => {
+                const sorted = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+                renderNews(sorted);
+            })
+            .catch(() => renderNews(fallbackNews));
     </script>
 </body>
 </html>

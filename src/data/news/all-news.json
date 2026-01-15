@@ -1,0 +1,69 @@
+[
+  {
+    "id": "model-v1.1.0-training-complete",
+    "date": "2026-01-16",
+    "badge": "NEW MODEL",
+    "title": "Model v1.1.0 Training Complete",
+    "summary": "Custom-trained Create ML Object Detection model completed 101K iterations with 69% loss improvement. Now available for iOS/macOS deployment.",
+    "highlights": [
+      { "label": "Iterations", "value": "101,000" },
+      { "label": "Final Loss", "value": "4.71" },
+      { "label": "Classes", "value": "39" },
+      { "label": "Improvement", "value": "69%" }
+    ],
+    "links": {
+      "primary": {
+        "label": "View Release Notes",
+        "url": "https://github.com/ARTIFACTIQ/ml-models/blob/main/docs/MODEL_V1.1.0_RELEASE_NOTES.md"
+      },
+      "secondary": {
+        "label": "Download Model",
+        "url": "https://github.com/ARTIFACTIQ/ml-models/releases"
+      }
+    }
+  },
+  {
+    "id": "mlgpu-v1.0.0-release",
+    "date": "2026-01-15",
+    "badge": "OPEN SOURCE",
+    "title": "mlgpu - Apple Silicon GPU Monitor",
+    "summary": "Released mlgpu, a lightweight htop-style CLI for monitoring GPU utilization and ML training progress on Apple Silicon Macs.",
+    "highlights": [
+      { "label": "Platform", "value": "Apple Silicon" },
+      { "label": "License", "value": "MIT" },
+      { "label": "Frameworks", "value": "Create ML, PyTorch, HF" }
+    ],
+    "links": {
+      "primary": {
+        "label": "View on GitHub",
+        "url": "https://github.com/ARTIFACTIQ/mlgpu"
+      },
+      "secondary": {
+        "label": "Install",
+        "url": "https://github.com/ARTIFACTIQ/mlgpu#installation"
+      }
+    }
+  },
+  {
+    "id": "artifactiq-alpha-10",
+    "date": "2026-01-12",
+    "badge": "ALPHA",
+    "title": "Artifactiq v1.0.0-alpha.10",
+    "summary": "Auto-download default model on first use. No manual setup required - just install and analyze.",
+    "highlights": [
+      { "label": "Feature", "value": "Auto-download" },
+      { "label": "Model", "value": "12MB ONNX" },
+      { "label": "Platforms", "value": "Linux, macOS" }
+    ],
+    "links": {
+      "primary": {
+        "label": "Download",
+        "url": "https://github.com/ARTIFACTIQ/releases/releases"
+      },
+      "secondary": {
+        "label": "Changelog",
+        "url": "https://github.com/ARTIFACTIQ/releases/releases/tag/v1.0.0-alpha.10"
+      }
+    }
+  }
+]
