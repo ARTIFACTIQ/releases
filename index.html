@@ -569,6 +569,146 @@
             margin-top: 0.5rem;
         }
 
+        /* Batch Modal Styles */
+        .batch-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            overflow-y: auto;
+        }
+
+        .batch-modal.active {
+            display: block;
+        }
+
+        .batch-modal-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .batch-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .batch-modal-header h2 {
+            color: var(--success);
+            font-size: 1.5rem;
+        }
+
+        .batch-modal-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+
+        .batch-modal-close:hover {
+            color: var(--primary);
+        }
+
+        .batch-modal-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .batch-stat {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .batch-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .batch-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .batch-images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .batch-image-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .batch-image-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .batch-image-info {
+            padding: 1rem;
+        }
+
+        .batch-image-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .batch-image-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .batch-image-detections {
+            margin-top: 0.5rem;
+        }
+
+        .batch-image-detections .detection-tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+        }
+
+        .clickable-card {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .clickable-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(126, 231, 135, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .batch-modal-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 640px) {
             .gallery-card {
                 flex: 0 0 280px;
@@ -1184,12 +1324,12 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                     </div>
 
                     <!-- Card 7: Batch Processing Example - NEW in alpha.12 -->
-                    <div class="gallery-card" style="border: 2px solid var(--success); background: linear-gradient(180deg, rgba(126, 231, 135, 0.05), var(--bg-card));">
+                    <div class="gallery-card clickable-card" onclick="openBatchModal()" style="border: 2px solid var(--success); background: linear-gradient(180deg, rgba(126, 231, 135, 0.05), var(--bg-card));">
                         <div class="gallery-card-image" style="background: var(--code-bg); display: flex; align-items: center; justify-content: center; padding: 1rem;">
                             <div style="text-align: center;">
                                 <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📁</div>
                                 <div style="color: var(--success); font-weight: 600; font-size: 0.9rem;">Batch Processing</div>
-                                <div style="color: var(--text-muted); font-size: 0.75rem;">NEW in v1.0.0-alpha.12</div>
+                                <div style="color: var(--text-muted); font-size: 0.75rem;">Click to view all images</div>
                             </div>
                         </div>
                         <div class="gallery-card-content">
@@ -1661,6 +1801,183 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 renderNews(sorted);
             })
             .catch(() => renderNews(fallbackNews));
+
+        // Batch Modal Functions
+        function openBatchModal() {
+            document.getElementById('batchModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBatchModal() {
+            document.getElementById('batchModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeBatchModal();
+        });
+
+        // Close modal on background click
+        document.getElementById('batchModal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'batchModal') closeBatchModal();
+        });
     </script>
+
+    <!-- Batch Processing Modal -->
+    <div id="batchModal" class="batch-modal">
+        <div class="batch-modal-content">
+            <div class="batch-modal-header">
+                <h2>Batch Processing Results</h2>
+                <button class="batch-modal-close" onclick="closeBatchModal()">&times;</button>
+            </div>
+
+            <div class="batch-modal-summary">
+                <div class="batch-stat">
+                    <div class="batch-stat-value">8</div>
+                    <div class="batch-stat-label">Images</div>
+                </div>
+                <div class="batch-stat">
+                    <div class="batch-stat-value">515ms</div>
+                    <div class="batch-stat-label">Total Time</div>
+                </div>
+                <div class="batch-stat">
+                    <div class="batch-stat-value">64ms</div>
+                    <div class="batch-stat-label">Avg/Image</div>
+                </div>
+                <div class="batch-stat">
+                    <div class="batch-stat-value">3</div>
+                    <div class="batch-stat-label">Objects Found</div>
+                </div>
+            </div>
+
+            <div class="batch-images-grid">
+                <!-- Image 1: Backpacker -->
+                <div class="batch-image-card">
+                    <img src="images/detected_backpacker.jpg" alt="Backpacker detection">
+                    <div class="batch-image-info">
+                        <div class="batch-image-name">detected_backpacker.jpg</div>
+                        <div class="batch-image-stats">
+                            <span>82ms</span>
+                            <span>0 objects</span>
+                        </div>
+                        <div class="batch-image-detections">
+                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image 2: Bus -->
+                <div class="batch-image-card">
+                    <img src="images/detected_bus.jpg" alt="Bus detection">
+                    <div class="batch-image-info">
+                        <div class="batch-image-name">detected_bus.jpg</div>
+                        <div class="batch-image-stats">
+                            <span>91ms</span>
+                            <span>1 object</span>
+                        </div>
+                        <div class="batch-image-detections">
+                            <span class="detection-tag vehicle">bus</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image 3: Person Casual -->
+                <div class="batch-image-card">
+                    <img src="images/detected_person_casual.jpg" alt="Person casual detection">
+                    <div class="batch-image-info">
+                        <div class="batch-image-name">detected_person_casual.jpg</div>
+                        <div class="batch-image-stats">
+                            <span>70ms</span>
+                            <span>0 objects</span>
+                        </div>
+                        <div class="batch-image-detections">
+                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image 4: Retail Store -->
+                <div class="batch-image-card">
+                    <img src="images/detected_retail_store.jpg" alt="Retail store detection">
+                    <div class="batch-image-info">
+                        <div class="batch-image-name">detected_retail_store.jpg</div>
+                        <div class="batch-image-stats">
+                            <span>52ms</span>
+                            <span>0 objects</span>
+                        </div>
+                        <div class="batch-image-detections">
+                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image 5: Sports -->
+                <div class="batch-image-card">
+                    <img src="images/detected_sports.jpg" alt="Sports detection">
+                    <div class="batch-image-info">
+                        <div class="batch-image-name">detected_sports.jpg</div>
+                        <div class="batch-image-stats">
+                            <span>50ms</span>
+                            <span>0 objects</span>
+                        </div>
+                        <div class="batch-image-detections">
+                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image 6: Street Scene -->
+                <div class="batch-image-card">
+                    <img src="images/detected_street_scene.jpg" alt="Street scene detection">
+                    <div class="batch-image-info">
+                        <div class="batch-image-name">detected_street_scene.jpg</div>
+                        <div class="batch-image-stats">
+                            <span>49ms</span>
+                            <span>0 objects</span>
+                        </div>
+                        <div class="batch-image-detections">
+                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image 7: Traffic -->
+                <div class="batch-image-card">
+                    <img src="images/detected_traffic.jpg" alt="Traffic detection">
+                    <div class="batch-image-info">
+                        <div class="batch-image-name">detected_traffic.jpg</div>
+                        <div class="batch-image-stats">
+                            <span>49ms</span>
+                            <span>1 object</span>
+                        </div>
+                        <div class="batch-image-detections">
+                            <span class="detection-tag accessory">skis 93.2%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image 8: Zidane -->
+                <div class="batch-image-card">
+                    <img src="images/detected_zidane.jpg" alt="Zidane detection">
+                    <div class="batch-image-info">
+                        <div class="batch-image-name">detected_zidane.jpg</div>
+                        <div class="batch-image-stats">
+                            <span>72ms</span>
+                            <span>1 object</span>
+                        </div>
+                        <div class="batch-image-detections">
+                            <span class="detection-tag accessory">baseball glove 55.3%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; padding: 1rem; background: var(--code-bg); border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
+                <div style="color: var(--text-muted); margin-bottom: 0.5rem;"># Command used:</div>
+                <div style="color: var(--primary);">artifactiq analyze --input ./images/</div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
