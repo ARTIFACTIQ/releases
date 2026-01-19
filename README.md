@@ -48,7 +48,7 @@ After installation, run these commands to verify everything is working:
 ```bash
 # Check Artifactiq version
 artifactiq --version
-# Expected: artifactiq 1.0.0-alpha.12
+# Expected: artifactiq 1.0.0-alpha.13
 
 # Check model backend status
 artifactiq models
@@ -79,7 +79,7 @@ Detected 4 objects:
 Processing time: 47ms
 ```
 
-## Batch Processing (NEW in v1.0.0-alpha.12)
+## Batch Processing (NEW in v1.0.0-alpha.13)
 
 Process entire directories of images with a single command:
 
@@ -116,13 +116,38 @@ Batch Summary
 
 ### Supported Formats
 
-jpg, jpeg, png, **webp** (new!), bmp, gif, tiff, tif
+jpg, jpeg, png, **webp**, bmp, gif, tiff, tif
+
+## CoreML Support for Apple Silicon (NEW in v1.0.0-alpha.13)
+
+On Apple Silicon Macs, use the `--coreml` flag to run inference with the custom v1.1.0 model featuring 39 merchandise-focused classes and 3.4x faster performance:
+
+```bash
+# On Apple Silicon (recommended)
+artifactiq analyze --input photos/ --coreml
+
+# Check if CoreML is available
+artifactiq info
+```
+
+### Performance Comparison
+
+| Backend | Model | Avg Inference | Classes |
+|---------|-------|---------------|---------|
+| ONNX | v1.0.0 | 24ms | 80 (COCO) |
+| CoreML | v1.1.0 | **7ms** | 39 (Custom) |
+
+### Custom Model Classes
+
+Person, Man, Woman, Footwear, Clothing, Handbag, Hat, Sunglasses, Backpack, Jeans, Jacket, Coat, Dress, Camera, Mobile phone, Laptop, Watch, and more.
+
+> **Note:** The v1.1.0 custom model is currently CoreML-only (macOS/iOS). Cross-platform ONNX export is on the roadmap.
 
 ## Install Options
 
 ```bash
 # Install specific version
-ARTIFACTIQ_VERSION=v1.0.0-alpha.12 curl -fsSL https://artifactiq.ai/install.sh | sh
+ARTIFACTIQ_VERSION=v1.0.0-alpha.13 curl -fsSL https://artifactiq.ai/install.sh | sh
 
 # Install to custom directory
 ARTIFACTIQ_INSTALL_DIR=/usr/local/bin curl -fsSL https://artifactiq.ai/install.sh | sh
