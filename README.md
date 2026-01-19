@@ -48,7 +48,7 @@ After installation, run these commands to verify everything is working:
 ```bash
 # Check Artifactiq version
 artifactiq --version
-# Expected: artifactiq 1.0.0-alpha.8
+# Expected: artifactiq 1.0.0-alpha.11
 
 # Check model backend status
 artifactiq models
@@ -83,7 +83,7 @@ Processing time: 47ms
 
 ```bash
 # Install specific version
-ARTIFACTIQ_VERSION=v1.0.0-alpha.8 curl -fsSL https://artifactiq.ai/install.sh | sh
+ARTIFACTIQ_VERSION=v1.0.0-alpha.11 curl -fsSL https://artifactiq.ai/install.sh | sh
 
 # Install to custom directory
 ARTIFACTIQ_INSTALL_DIR=/usr/local/bin curl -fsSL https://artifactiq.ai/install.sh | sh
