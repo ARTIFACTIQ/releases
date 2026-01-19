@@ -1240,8 +1240,8 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                     <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">Process entire directories of images with a single command. Now with WebP support!</p>
                 </div>
                 <div style="text-align: right;">
-                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">10 images</div>
-                    <div style="color: var(--text-muted); font-size: 0.85rem;">297ms total · 24ms avg</div>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">12 images</div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem;">92ms total · 7ms avg <span style="color: var(--success); font-size: 0.7rem;">(CoreML)</span></div>
                 </div>
                 <div style="color: var(--text-muted); font-size: 1.5rem;">→</div>
             </div>
@@ -1529,14 +1529,25 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                             <span><strong>M4 Max GPU</strong> - Full GPU acceleration with 128GB unified memory</span>
                         </li>
                     </ul>
+                    <!-- Platform Note -->
+                    <div style="background: linear-gradient(135deg, rgba(240, 180, 41, 0.15), rgba(123, 44, 191, 0.1)); border: 1px solid rgba(240, 180, 41, 0.3); border-radius: 8px; padding: 1rem; margin: 1rem 0;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <span style="font-size: 1.2rem;"></span>
+                            <strong style="color: var(--warning);">Platform Note</strong>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+                            v1.1.0 custom model is currently <strong style="color: var(--text);">CoreML-only</strong> (macOS/iOS). Cross-platform ONNX export is on the roadmap. Use <code style="background: var(--code-bg); padding: 0.1rem 0.3rem; border-radius: 3px;">--coreml</code> flag with the CLI on Apple Silicon.
+                        </p>
+                    </div>
                     <div class="code-block">
                         <div class="code-block-header">
                             <span>Using the CoreML Model</span>
                         </div>
                         <div class="code-block-body">
-                            <span class="comment"># Python with coremltools</span><br>
-                            <span class="prompt">$ </span><span class="command">pip install coremltools pillow</span><br><br>
-                            <span class="comment"># Load and run inference</span><br>
+                            <span class="comment"># CLI with --coreml flag (macOS)</span><br>
+                            <span class="prompt">$ </span><span class="command">artifactiq analyze --input photos/ --coreml</span><br><br>
+                            <span class="comment"># Or Python with coremltools</span><br>
+                            <span class="prompt">$ </span><span class="command">pip install coremltools pillow</span><br>
                             <span style="color: var(--text-muted);">model = ct.models.MLModel("ArtifactiqV1.1.mlmodel")</span><br>
                             <span style="color: var(--text-muted);">result = model.predict({"imagePath": img})</span>
                         </div>
@@ -1851,22 +1862,25 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
 
             <div class="batch-modal-summary">
                 <div class="batch-stat">
-                    <div class="batch-stat-value">10</div>
-                    <div class="batch-stat-label">WebP Images</div>
+                    <div class="batch-stat-value">12</div>
+                    <div class="batch-stat-label">Images</div>
                 </div>
                 <div class="batch-stat">
-                    <div class="batch-stat-value">297ms</div>
+                    <div class="batch-stat-value">92ms</div>
                     <div class="batch-stat-label">Total Time</div>
                 </div>
                 <div class="batch-stat">
-                    <div class="batch-stat-value">24ms</div>
+                    <div class="batch-stat-value">7ms</div>
                     <div class="batch-stat-label">Avg/Image</div>
                 </div>
                 <div class="batch-stat">
-                    <div class="batch-stat-value">2</div>
+                    <div class="batch-stat-value">30+</div>
                     <div class="batch-stat-label">Objects Found</div>
                 </div>
             </div>
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+                <span style="color: var(--warning);"></span> Results from v1.1.0 CoreML model (39 merchandise classes) on Apple Silicon
+            </p>
 
             <div class="batch-images-grid">
                 <!-- Image 1: Alpine Hikers -->
@@ -1875,41 +1889,45 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                     <div class="batch-image-info">
                         <div class="batch-image-name">alpine-hikers.webp</div>
                         <div class="batch-image-stats">
-                            <span>34ms</span>
-                            <span>0 objects</span>
+                            <span>6ms</span>
+                            <span>5 objects</span>
                         </div>
                         <div class="batch-image-detections">
-                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                            <span class="detection-tag person">Person 72%</span>
+                            <span class="detection-tag person">Person 68%</span>
+                            <span class="detection-tag accessory">Footwear 29%</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Image 2: Beach Accessories -->
+                <!-- Image 2: Mountain Trek -->
                 <div class="batch-image-card">
-                    <img src="images/beach-accessories.webp" alt="Beach accessories">
+                    <img src="images/mountain-trek.webp" alt="Mountain trek">
                     <div class="batch-image-info">
-                        <div class="batch-image-name">beach-accessories.webp</div>
+                        <div class="batch-image-name">mountain-trek.webp</div>
                         <div class="batch-image-stats">
-                            <span>25ms</span>
-                            <span>0 objects</span>
+                            <span>7ms</span>
+                            <span>8 objects</span>
                         </div>
                         <div class="batch-image-detections">
-                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                            <span class="detection-tag person">Person 68%</span>
+                            <span class="detection-tag accessory">Footwear 61%</span>
+                            <span class="detection-tag accessory">Footwear 45%</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Image 3: Beach Scene -->
+                <!-- Image 3: Lake Trekking -->
                 <div class="batch-image-card">
-                    <img src="images/beach-scene.webp" alt="Beach scene">
+                    <img src="images/lake-trekking.webp" alt="Lake trekking">
                     <div class="batch-image-info">
-                        <div class="batch-image-name">beach-scene.webp</div>
+                        <div class="batch-image-name">lake-trekking.webp</div>
                         <div class="batch-image-stats">
-                            <span>23ms</span>
-                            <span>0 objects</span>
+                            <span>5ms</span>
+                            <span>1 object</span>
                         </div>
                         <div class="batch-image-detections">
-                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                            <span class="detection-tag accessory">Clothing 44%</span>
                         </div>
                     </div>
                 </div>
@@ -1920,11 +1938,12 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                     <div class="batch-image-info">
                         <div class="batch-image-name">rocky-hiker.webp</div>
                         <div class="batch-image-stats">
-                            <span>22ms</span>
-                            <span>0 objects</span>
+                            <span>5ms</span>
+                            <span>2 objects</span>
                         </div>
                         <div class="batch-image-detections">
-                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                            <span class="detection-tag person">Person 44%</span>
+                            <span class="detection-tag person">Person 28%</span>
                         </div>
                     </div>
                 </div>
@@ -1935,7 +1954,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                     <div class="batch-image-info">
                         <div class="batch-image-name">ocean-balcony.webp</div>
                         <div class="batch-image-stats">
-                            <span>22ms</span>
+                            <span>5ms</span>
                             <span>0 objects</span>
                         </div>
                         <div class="batch-image-detections">
@@ -1944,74 +1963,73 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                     </div>
                 </div>
 
-                <!-- Image 6: Mountain Trek -->
-                <div class="batch-image-card">
-                    <img src="images/mountain-trek.webp" alt="Mountain trek">
-                    <div class="batch-image-info">
-                        <div class="batch-image-name">mountain-trek.webp</div>
-                        <div class="batch-image-stats">
-                            <span>23ms</span>
-                            <span>2 objects</span>
-                        </div>
-                        <div class="batch-image-detections">
-                            <span class="detection-tag vehicle">train 84.1%</span>
-                            <span class="detection-tag vehicle">train 57.5%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Image 7: Angkor Ruins -->
+                <!-- Image 6: Angkor Ruins -->
                 <div class="batch-image-card">
                     <img src="images/angkor-ruins.webp" alt="Angkor ruins explorer">
                     <div class="batch-image-info">
                         <div class="batch-image-name">angkor-ruins.webp</div>
                         <div class="batch-image-stats">
-                            <span>24ms</span>
-                            <span>0 objects</span>
+                            <span>16ms</span>
+                            <span>1 object</span>
                         </div>
                         <div class="batch-image-detections">
-                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                            <span class="detection-tag person">Person 26%</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Image 8: Lake Trekking -->
-                <div class="batch-image-card">
-                    <img src="images/lake-trekking.webp" alt="Lake trekking">
-                    <div class="batch-image-info">
-                        <div class="batch-image-name">lake-trekking.webp</div>
-                        <div class="batch-image-stats">
-                            <span>22ms</span>
-                            <span>0 objects</span>
-                        </div>
-                        <div class="batch-image-detections">
-                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Image 9: Binoculars Mountain -->
-                <div class="batch-image-card">
-                    <img src="images/binoculars-mountain.webp" alt="Binoculars mountain view">
-                    <div class="batch-image-info">
-                        <div class="batch-image-name">binoculars-mountain.webp</div>
-                        <div class="batch-image-stats">
-                            <span>23ms</span>
-                            <span>0 objects</span>
-                        </div>
-                        <div class="batch-image-detections">
-                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Image 10: Temple Explorer -->
+                <!-- Image 7: Temple Explorer -->
                 <div class="batch-image-card">
                     <img src="images/temple-explorer.webp" alt="Temple explorer">
                     <div class="batch-image-info">
                         <div class="batch-image-name">temple-explorer.webp</div>
                         <div class="batch-image-stats">
-                            <span>33ms</span>
+                            <span>7ms</span>
+                            <span>0 objects</span>
+                        </div>
+                        <div class="batch-image-detections">
+                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image 8: Binoculars Mountain -->
+                <div class="batch-image-card">
+                    <img src="images/binoculars-mountain.webp" alt="Binoculars mountain view">
+                    <div class="batch-image-info">
+                        <div class="batch-image-name">binoculars-mountain.webp</div>
+                        <div class="batch-image-stats">
+                            <span>5ms</span>
+                            <span>0 objects</span>
+                        </div>
+                        <div class="batch-image-detections">
+                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image 9: Beach Accessories -->
+                <div class="batch-image-card">
+                    <img src="images/beach-accessories.webp" alt="Beach accessories">
+                    <div class="batch-image-info">
+                        <div class="batch-image-name">beach-accessories.webp</div>
+                        <div class="batch-image-stats">
+                            <span>20ms</span>
+                            <span>0 objects</span>
+                        </div>
+                        <div class="batch-image-detections">
+                            <span class="detection-tag" style="background: var(--text-muted);">No detections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image 10: Beach Scene -->
+                <div class="batch-image-card">
+                    <img src="images/beach-scene.webp" alt="Beach scene">
+                    <div class="batch-image-info">
+                        <div class="batch-image-name">beach-scene.webp</div>
+                        <div class="batch-image-stats">
+                            <span>5ms</span>
                             <span>0 objects</span>
                         </div>
                         <div class="batch-image-detections">
