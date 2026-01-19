@@ -1229,6 +1229,23 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 <p>Real object detection results from YOLOv8 with bounding boxes</p>
             </div>
 
+            <!-- Featured: Batch Processing - NEW in alpha.12 -->
+            <div onclick="openBatchModal()" style="cursor: pointer; margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(126, 231, 135, 0.1), rgba(0, 212, 255, 0.05)); border: 2px solid var(--success); border-radius: 16px; display: flex; align-items: center; gap: 2rem; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(126, 231, 135, 0.2)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                <div style="font-size: 3rem;">📁</div>
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                        <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">Batch Processing</span>
+                        <span style="background: var(--success); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">NEW in v1.0.0-alpha.12</span>
+                    </div>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">Process entire directories of images with a single command. Now with WebP support!</p>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">10 images</div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem;">297ms total · 24ms avg</div>
+                </div>
+                <div style="color: var(--text-muted); font-size: 1.5rem;">→</div>
+            </div>
+
             <!-- Scrollable Card Gallery - All data from actual YOLOv8 inference (detection_results.json) -->
             <div class="gallery-container">
                 <div class="gallery-scroll">
