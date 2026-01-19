@@ -1054,10 +1054,10 @@
                 <p class="tagline">High-performance AI engine for object detection, scene analysis, and visual understanding. Built with Rust for speed, powered by ONNX Runtime.</p>
 
                 <div class="prereq-banner" style="background: linear-gradient(135deg, rgba(126, 231, 135, 0.15), rgba(0, 212, 255, 0.15)); border-color: rgba(126, 231, 135, 0.3);">
-                    <div class="icon">&#10024;</div>
+                    <div class="icon"></div>
                     <div class="text">
-                        <strong style="color: var(--success);">New in v1.0.0-alpha.12:</strong> Batch process directories & WebP support!
-                        <a href="#showcase">See batch processing examples</a>
+                        <strong style="color: var(--success);">New in v1.0.0-alpha.13:</strong> CoreML support for Apple Silicon with custom v1.1.0 model (39 classes, 3.4x faster)!
+                        <a href="#showcase">See detection examples</a>
                     </div>
                 </div>
 
@@ -1229,13 +1229,13 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 <p>Real object detection results from YOLOv8 with bounding boxes</p>
             </div>
 
-            <!-- Featured: Batch Processing - NEW in alpha.12 -->
+            <!-- Featured: Batch Processing - NEW in alpha.13 -->
             <div onclick="openBatchModal()" style="cursor: pointer; margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(126, 231, 135, 0.1), rgba(0, 212, 255, 0.05)); border: 2px solid var(--success); border-radius: 16px; display: flex; align-items: center; gap: 2rem; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(126, 231, 135, 0.2)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
                 <div style="font-size: 3rem;">📁</div>
                 <div style="flex: 1;">
                     <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
                         <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">Batch Processing</span>
-                        <span style="background: var(--success); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">NEW in v1.0.0-alpha.12</span>
+                        <span style="background: var(--success); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">NEW in v1.0.0-alpha.13</span>
                     </div>
                     <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">Process entire directories of images with a single command. Now with WebP support!</p>
                 </div>
@@ -1340,7 +1340,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                         </div>
                     </div>
 
-                    <!-- Card 7: Batch Processing Example - NEW in alpha.12 -->
+                    <!-- Card 7: Batch Processing Example - NEW in alpha.13 -->
                     <div class="gallery-card clickable-card" onclick="openBatchModal()" style="border: 2px solid var(--success); background: linear-gradient(180deg, rgba(126, 231, 135, 0.05), var(--bg-card));">
                         <div class="gallery-card-image" style="background: var(--code-bg); display: flex; align-items: center; justify-content: center; padding: 1rem;">
                             <div style="text-align: center;">
@@ -1734,7 +1734,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 <a href="mailto:dev@artifactiq.ai">Contact</a>
             </div>
             <div class="footer-info">
-                <span>v1.0.0-alpha.12</span> &middot; <span>Linux x64, macOS ARM64</span>
+                <span>v1.0.0-alpha.13</span> &middot; <span>Linux x64, macOS ARM64</span>
             </div>
         </div>
     </footer>
