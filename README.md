@@ -48,7 +48,7 @@ After installation, run these commands to verify everything is working:
 ```bash
 # Check Artifactiq version
 artifactiq --version
-# Expected: artifactiq 1.0.0-alpha.11
+# Expected: artifactiq 1.0.0-alpha.12
 
 # Check model backend status
 artifactiq models
@@ -79,11 +79,50 @@ Detected 4 objects:
 Processing time: 47ms
 ```
 
+## Batch Processing (NEW in v1.0.0-alpha.12)
+
+Process entire directories of images with a single command:
+
+```bash
+# Analyze all images in a directory
+artifactiq analyze --input ./my-images/
+
+# JSON output for batch results
+artifactiq analyze --input ./my-images/ --format json
+```
+
+### Batch Output
+
+```
+=== photo1.jpg ===
+Detected 3 objects:
+  - person (92.1%)
+  - car (87.5%)
+  - dog (76.3%)
+Processing time: 42ms
+
+=== photo2.webp ===
+Detected 1 objects:
+  - person (89.2%)
+Processing time: 38ms
+
+================
+Batch Summary
+================
+  Images processed: 2/2
+  Total time: 80ms
+  Avg per image: 40ms
+```
+
+### Supported Formats
+
+jpg, jpeg, png, **webp** (new!), bmp, gif, tiff, tif
+
 ## Install Options
 
 ```bash
 # Install specific version
-ARTIFACTIQ_VERSION=v1.0.0-alpha.11 curl -fsSL https://artifactiq.ai/install.sh | sh
+ARTIFACTIQ_VERSION=v1.0.0-alpha.12 curl -fsSL https://artifactiq.ai/install.sh | sh
 
 # Install to custom directory
 ARTIFACTIQ_INSTALL_DIR=/usr/local/bin curl -fsSL https://artifactiq.ai/install.sh | sh

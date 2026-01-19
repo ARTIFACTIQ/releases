@@ -1,5 +1,27 @@
 [
   {
+    "id": "artifactiq-alpha-12-batch-processing",
+    "date": "2026-01-19",
+    "badge": "ALPHA",
+    "title": "v1.0.0-alpha.12: Batch Processing & WebP Support",
+    "summary": "Analyze entire directories of images with batch processing. Now supports WebP format with performance summaries.",
+    "highlights": [
+      { "label": "Feature", "value": "Batch Processing" },
+      { "label": "Format", "value": "+ WebP Support" },
+      { "label": "Output", "value": "Batch Summary" }
+    ],
+    "links": {
+      "primary": {
+        "label": "Download",
+        "url": "https://github.com/ARTIFACTIQ/releases/releases"
+      },
+      "secondary": {
+        "label": "See Examples",
+        "url": "#showcase"
+      }
+    }
+  },
+  {
     "id": "model-v1.1.0-training-complete",
     "date": "2026-01-16",
     "badge": "NEW MODEL",
