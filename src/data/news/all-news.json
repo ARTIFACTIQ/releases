@@ -1,5 +1,28 @@
 [
   {
+    "id": "model-v2-training-progress",
+    "date": "2026-01-21",
+    "badge": "NEW MODEL",
+    "title": "Artifactiq v2: Domain-Specific Detection Breakthrough",
+    "summary": "Custom YOLOv8 model detects apparel, accessories, and footwear that stock models cannot. Stock YOLOv8n: 0 apparel detections. Artifactiq v2: 40+ detections.",
+    "highlights": [
+      { "label": "Apparel", "value": "40 vs 0" },
+      { "label": "Accessories", "value": "14 vs 0" },
+      { "label": "Footwear", "value": "9 vs 0" },
+      { "label": "mAP50", "value": "12.9%" }
+    ],
+    "links": {
+      "primary": {
+        "label": "View Training Report",
+        "url": "https://github.com/ARTIFACTIQ/ml-models/blob/main/docs/MODEL_V2_TRAINING_REPORT.md"
+      },
+      "secondary": {
+        "label": "Comparison Data",
+        "url": "https://github.com/ARTIFACTIQ/ml-models/blob/main/docs/model_comparison_v2.json"
+      }
+    }
+  },
+  {
     "id": "artifactiq-alpha-12-batch-processing",
     "date": "2026-01-19",
     "badge": "ALPHA",
