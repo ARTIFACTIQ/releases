@@ -19,6 +19,13 @@
             --success: #7ee787;
             --warning: #f0b429;
             --axon-color: #ff6b6b;
+            /* Model comparison colors - consistent with site theme */
+            --stock-color: #888;          /* Muted gray for stock/baseline */
+            --stock-bg: rgba(136, 136, 136, 0.1);
+            --artifactiq-color: #00d4ff;  /* Primary cyan for Artifactiq */
+            --artifactiq-bg: rgba(0, 212, 255, 0.1);
+            --detection-person: #888;      /* Muted - person not a target */
+            --detection-product: #7ee787;  /* Green - merchandisable items */
         }
 
         * {
@@ -1908,20 +1915,20 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
 
             <!-- Comparison Summary -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-                <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 12px; padding: 1rem;">
-                    <div style="font-weight: 600; color: #ff6b6b; margin-bottom: 0.5rem;">Stock YOLOv8n (COCO)</div>
+                <div style="background: var(--stock-bg); border: 1px solid rgba(136, 136, 136, 0.3); border-radius: 12px; padding: 1rem;">
+                    <div style="font-weight: 600; color: var(--stock-color); margin-bottom: 0.5rem;">Stock YOLOv8n (COCO)</div>
                     <div style="font-size: 0.8rem; color: var(--text-muted);">80 generic classes · Fully trained</div>
-                    <div style="font-size: 0.7rem; color: #ff6b6b; margin-top: 0.5rem;">
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem;">
                         Has: person, backpack, car, bench, chair, handbag, cup...<br>
-                        <strong>Missing: Clothing, Shorts, Dress, Jacket, Footwear, Man, Woman, Boy, Girl</strong>
+                        <span style="color: var(--warning);">Missing: Clothing, Shorts, Dress, Jacket, Footwear</span>
                     </div>
                 </div>
-                <div style="background: rgba(126, 231, 135, 0.1); border: 1px solid rgba(126, 231, 135, 0.3); border-radius: 12px; padding: 1rem;">
-                    <div style="font-weight: 600; color: var(--success); margin-bottom: 0.5rem;">Artifactiq v2 (ONNX)</div>
+                <div style="background: var(--artifactiq-bg); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 1rem;">
+                    <div style="font-weight: 600; color: var(--artifactiq-color); margin-bottom: 0.5rem;">Artifactiq v2 (ONNX)</div>
                     <div style="font-size: 0.8rem; color: var(--text-muted);">39 domain classes · Epoch 18/100</div>
-                    <div style="font-size: 0.7rem; color: var(--success); margin-top: 0.5rem;">
-                        Has: Person, Man, Woman, Clothing, Shorts, Dress, Jacket, Footwear, Boot, Backpack, Handbag, Sunglasses, Hat, Watch...<br>
-                        <strong>Fashion & merchandise detection focus</strong>
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem;">
+                        Has: Clothing, Shorts, Dress, Jacket, Footwear, Boot, Backpack, Handbag, Sunglasses, Hat, Watch...<br>
+                        <span style="color: var(--detection-product);">Fashion & merchandise detection focus</span>
                     </div>
                 </div>
             </div>
@@ -1931,91 +1938,89 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
 
             <div class="batch-images-grid">
                 <!-- Image 1: Alpine Hikers - Shows domain-specific detection -->
-                <div class="batch-image-card" style="border: 2px solid var(--success);">
+                <div class="batch-image-card" style="border: 2px solid var(--primary);">
                     <img src="images/alpine-hikers.webp" alt="Alpine hikers">
                     <div class="batch-image-info">
-                        <div class="batch-image-name">alpine-hikers.webp <span style="color: var(--success); font-size: 0.7rem;">NEW CLASSES</span></div>
+                        <div class="batch-image-name">alpine-hikers.webp <span style="color: var(--detection-product); font-size: 0.7rem;">APPAREL DETECTED</span></div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
-                            <div style="background: rgba(255,107,107,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: #ff6b6b; font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (9 det)</div>
-                                <span class="detection-tag person" style="font-size: 0.6rem;">person 85.7%</span>
-                                <span class="detection-tag person" style="font-size: 0.6rem;">person 84.2%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">backpack 74.2%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">backpack 63%</span>
+                            <div style="background: var(--stock-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--stock-color); font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (9 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 85.7%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 84.2%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">backpack 74.2%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">backpack 63%</span>
                             </div>
-                            <div style="background: rgba(126,231,135,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--success); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (6 det)</div>
-                                <span class="detection-tag person" style="font-size: 0.6rem;">Person 26.2%</span>
-                                <span class="detection-tag person" style="font-size: 0.6rem;">Person 15.1%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--success);">Clothing 12.6%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--success);">Man 11.7%</span>
+                            <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (6 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">Person 26.2%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">Person 15.1%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-product); color: #000;">Clothing 12.6%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-product); color: #000;">Man 11.7%</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Image 2: Mountain Trek - Shows Shorts detection -->
-                <div class="batch-image-card" style="border: 2px solid var(--success);">
+                <div class="batch-image-card" style="border: 2px solid var(--primary);">
                     <img src="images/mountain-trek.webp" alt="Mountain trek">
                     <div class="batch-image-info">
-                        <div class="batch-image-name">mountain-trek.webp <span style="color: var(--success); font-size: 0.7rem;">NEW CLASSES</span></div>
+                        <div class="batch-image-name">mountain-trek.webp <span style="color: var(--detection-product); font-size: 0.7rem;">SHORTS DETECTED</span></div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
-                            <div style="background: rgba(255,107,107,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: #ff6b6b; font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (11 det)</div>
-                                <span class="detection-tag person" style="font-size: 0.6rem;">person 84.8%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">backpack 84.1%</span>
-                                <span class="detection-tag person" style="font-size: 0.6rem;">person 76.3%</span>
+                            <div style="background: var(--stock-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--stock-color); font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (11 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 84.8%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">backpack 84.1%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 76.3%</span>
                             </div>
-                            <div style="background: rgba(126,231,135,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--success); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (5 det)</div>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--success);">Shorts 18.4%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--success);">Shorts 11.4%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--success);">Footwear 5.9%</span>
+                            <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (5 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-product); color: #000;">Shorts 18.4%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-product); color: #000;">Shorts 11.4%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-product); color: #000;">Footwear 5.9%</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Image 3: Rocky Hiker -->
-                <div class="batch-image-card" style="border: 2px solid var(--success);">
+                <div class="batch-image-card" style="border: 2px solid var(--primary);">
                     <img src="images/rocky-hiker.webp" alt="Rocky terrain hiker">
                     <div class="batch-image-info">
-                        <div class="batch-image-name">rocky-hiker.webp <span style="color: var(--success); font-size: 0.7rem;">NEW CLASSES</span></div>
+                        <div class="batch-image-name">rocky-hiker.webp <span style="color: var(--detection-product); font-size: 0.7rem;">FOOTWEAR DETECTED</span></div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
-                            <div style="background: rgba(255,107,107,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: #ff6b6b; font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (5 det)</div>
-                                <span class="detection-tag person" style="font-size: 0.6rem;">person 89.8%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">backpack 57.8%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">sheep 20.1%</span>
+                            <div style="background: var(--stock-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--stock-color); font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (5 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 89.8%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">backpack 57.8%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">sheep 20.1%</span>
                             </div>
-                            <div style="background: rgba(126,231,135,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--success); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (4 det)</div>
-                                <span class="detection-tag person" style="font-size: 0.6rem;">Person 13.1%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--success);">Man 7.7%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--success);">Clothing 5.5%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--success);">Footwear 5.3%</span>
+                            <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (4 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">Person 13.1%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-product); color: #000;">Clothing 5.5%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-product); color: #000;">Footwear 5.3%</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Image 4: Angkor Ruins -->
-                <div class="batch-image-card" style="border: 2px solid var(--success);">
+                <div class="batch-image-card" style="border: 2px solid var(--primary);">
                     <img src="images/angkor-ruins.webp" alt="Angkor ruins explorer">
                     <div class="batch-image-info">
-                        <div class="batch-image-name">angkor-ruins.webp <span style="color: var(--success); font-size: 0.7rem;">NEW CLASSES</span></div>
+                        <div class="batch-image-name">angkor-ruins.webp <span style="color: var(--detection-product); font-size: 0.7rem;">CLOTHING DETECTED</span></div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
-                            <div style="background: rgba(255,107,107,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: #ff6b6b; font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (8 det)</div>
-                                <span class="detection-tag person" style="font-size: 0.6rem;">person 85.5%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">backpack 45.5%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">car 9.7%</span>
+                            <div style="background: var(--stock-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--stock-color); font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (8 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 85.5%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">backpack 45.5%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">car 9.7%</span>
                             </div>
-                            <div style="background: rgba(126,231,135,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--success); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (3 det)</div>
-                                <span class="detection-tag person" style="font-size: 0.6rem;">Person 9.9%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--success);">Clothing 8.6%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--success);">Man 6.5%</span>
+                            <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (3 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">Person 9.9%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-product); color: #000;">Clothing 8.6%</span>
                             </div>
                         </div>
                     </div>
@@ -2025,17 +2030,17 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 <div class="batch-image-card">
                     <img src="images/lake-trekking.webp" alt="Lake trekking">
                     <div class="batch-image-info">
-                        <div class="batch-image-name">lake-trekking.webp</div>
+                        <div class="batch-image-name">lake-trekking.webp <span style="font-size: 0.65rem; color: var(--text-muted);">landscape</span></div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
-                            <div style="background: rgba(255,107,107,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: #ff6b6b; font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (8 det)</div>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">cat 35.4%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">cat 21.9%</span>
-                                <span class="detection-tag person" style="font-size: 0.6rem;">person 14.6%</span>
+                            <div style="background: var(--stock-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--stock-color); font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (8 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">cat 35.4%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">cat 21.9%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 14.6%</span>
                             </div>
-                            <div style="background: rgba(126,231,135,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--success); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (0 det)</div>
-                                <span style="color: var(--text-muted); font-size: 0.65rem;">No detections @ 5%</span>
+                            <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (0 det)</div>
+                                <span style="color: var(--text-muted); font-size: 0.65rem;">No products @ 5%</span>
                             </div>
                         </div>
                     </div>
@@ -2047,14 +2052,14 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                     <div class="batch-image-info">
                         <div class="batch-image-name">temple-explorer.webp</div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
-                            <div style="background: rgba(255,107,107,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: #ff6b6b; font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (3 det)</div>
-                                <span class="detection-tag person" style="font-size: 0.6rem;">person 28.6%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">handbag 16.6%</span>
+                            <div style="background: var(--stock-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--stock-color); font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (3 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 28.6%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">handbag 16.6%</span>
                             </div>
-                            <div style="background: rgba(126,231,135,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--success); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (0 det)</div>
-                                <span style="color: var(--text-muted); font-size: 0.65rem;">No detections @ 5%</span>
+                            <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (0 det)</div>
+                                <span style="color: var(--text-muted); font-size: 0.65rem;">No products @ 5%</span>
                             </div>
                         </div>
                     </div>
@@ -2064,17 +2069,17 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 <div class="batch-image-card">
                     <img src="images/ocean-balcony.webp" alt="Ocean balcony view">
                     <div class="batch-image-info">
-                        <div class="batch-image-name">ocean-balcony.webp <span style="font-size: 0.65rem; color: var(--text-muted);">(no people)</span></div>
+                        <div class="batch-image-name">ocean-balcony.webp <span style="font-size: 0.65rem; color: var(--text-muted);">no people</span></div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
-                            <div style="background: rgba(255,107,107,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: #ff6b6b; font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (13 det)</div>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">bench 75.2%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">chair 44%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">chair 26%</span>
+                            <div style="background: var(--stock-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--stock-color); font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (13 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">bench 75.2%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">chair 44%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">chair 26%</span>
                             </div>
-                            <div style="background: rgba(126,231,135,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--success); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (0 det)</div>
-                                <span style="color: var(--text-muted); font-size: 0.65rem;">No people/fashion</span>
+                            <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (0 det)</div>
+                                <span style="color: var(--text-muted); font-size: 0.65rem;">No products</span>
                             </div>
                         </div>
                     </div>
@@ -2084,16 +2089,16 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 <div class="batch-image-card">
                     <img src="images/binoculars-mountain.webp" alt="Binoculars mountain view">
                     <div class="batch-image-info">
-                        <div class="batch-image-name">binoculars-mountain.webp <span style="font-size: 0.65rem; color: var(--text-muted);">(no people)</span></div>
+                        <div class="batch-image-name">binoculars-mountain.webp <span style="font-size: 0.65rem; color: var(--text-muted);">no people</span></div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
-                            <div style="background: rgba(255,107,107,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: #ff6b6b; font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (2 det)</div>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">fire hydrant 81.6%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">bench 6.5%</span>
+                            <div style="background: var(--stock-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--stock-color); font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (2 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">fire hydrant 81.6%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">bench 6.5%</span>
                             </div>
-                            <div style="background: rgba(126,231,135,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--success); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (0 det)</div>
-                                <span style="color: var(--text-muted); font-size: 0.65rem;">No people/fashion</span>
+                            <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (0 det)</div>
+                                <span style="color: var(--text-muted); font-size: 0.65rem;">No products</span>
                             </div>
                         </div>
                     </div>
@@ -2103,16 +2108,16 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 <div class="batch-image-card">
                     <img src="images/beach-accessories.webp" alt="Beach accessories">
                     <div class="batch-image-info">
-                        <div class="batch-image-name">beach-accessories.webp <span style="font-size: 0.65rem; color: var(--text-muted);">(no people)</span></div>
+                        <div class="batch-image-name">beach-accessories.webp <span style="font-size: 0.65rem; color: var(--text-muted);">no people</span></div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
-                            <div style="background: rgba(255,107,107,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: #ff6b6b; font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (3 det)</div>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">bird 11.1%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">handbag 10.5%</span>
+                            <div style="background: var(--stock-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--stock-color); font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (3 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">bird 11.1%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">handbag 10.5%</span>
                             </div>
-                            <div style="background: rgba(126,231,135,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--success); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (0 det)</div>
-                                <span style="color: var(--text-muted); font-size: 0.65rem;">Hat/Sunglasses below 5%</span>
+                            <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (0 det)</div>
+                                <span style="color: var(--text-muted); font-size: 0.65rem;">Hat/Sunglasses &lt;5%</span>
                             </div>
                         </div>
                     </div>
@@ -2122,17 +2127,17 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 <div class="batch-image-card">
                     <img src="images/beach-scene.webp" alt="Beach scene">
                     <div class="batch-image-info">
-                        <div class="batch-image-name">beach-scene.webp <span style="font-size: 0.65rem; color: var(--text-muted);">(no people)</span></div>
+                        <div class="batch-image-name">beach-scene.webp <span style="font-size: 0.65rem; color: var(--text-muted);">no people</span></div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
-                            <div style="background: rgba(255,107,107,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: #ff6b6b; font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (6 det)</div>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">bench 27.3%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">bench 23.7%</span>
-                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--text-muted);">cup 12.6%</span>
+                            <div style="background: var(--stock-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--stock-color); font-weight: 600; font-size: 0.65rem;">Stock YOLOv8n (6 det)</div>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">bench 27.3%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">bench 23.7%</span>
+                                <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">cup 12.6%</span>
                             </div>
-                            <div style="background: rgba(126,231,135,0.1); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--success); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (0 det)</div>
-                                <span style="color: var(--text-muted); font-size: 0.65rem;">No people/fashion</span>
+                            <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">Artifactiq v2 (0 det)</div>
+                                <span style="color: var(--text-muted); font-size: 0.65rem;">No products</span>
                             </div>
                         </div>
                     </div>
@@ -2140,12 +2145,12 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
             </div>
 
             <div style="margin-top: 2rem; padding: 1rem; background: var(--code-bg); border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
-                <div style="color: var(--text-muted); margin-bottom: 0.5rem;"># Model comparison test (conf=0.10):</div>
-                <div style="color: var(--primary); margin-bottom: 0.25rem;">artifactiq analyze --input ./images/ --model yolov8n  <span style="color: var(--text-muted);"># Stock COCO model</span></div>
-                <div style="color: var(--success);">artifactiq analyze --input ./images/ --model artifactiq:v2  <span style="color: var(--text-muted);"># Domain-specific model</span></div>
+                <div style="color: var(--text-muted); margin-bottom: 0.5rem;"># Model comparison test (conf=0.05):</div>
+                <div style="color: var(--stock-color); margin-bottom: 0.25rem;">artifactiq analyze --input ./images/ --model yolov8n  <span style="color: var(--text-muted);"># Stock COCO model</span></div>
+                <div style="color: var(--artifactiq-color);">artifactiq analyze --input ./images/ --model artifactiq:v2  <span style="color: var(--text-muted);"># Domain-specific model</span></div>
             </div>
-            <p style="text-align: center; color: var(--warning); font-size: 0.8rem; margin-top: 1rem;">
-                Note: Artifactiq v2 is at epoch 18/100. Confidence scores will improve with continued training. See <a href="images/batch_analysis_v2.json" style="color: var(--primary);">full JSON report</a>.
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 1rem;">
+                Note: Artifactiq v2 is at epoch 18/100 - training v3 with proper transfer learning. See <a href="images/batch_analysis_v2.json" style="color: var(--primary);">full JSON report</a>.
             </p>
         </div>
     </div>
