@@ -1,5 +1,28 @@
 [
   {
+    "id": "batch-analysis-v2-showcase",
+    "date": "2026-01-22",
+    "badge": "ANALYSIS",
+    "title": "Batch Analysis: Artifactiq v2 vs Stock YOLOv8n",
+    "summary": "Comparative analysis on 10 travel/fashion images shows Artifactiq v2 detects domain-specific classes (Clothing, Shorts) that stock models miss entirely. See the full breakdown.",
+    "highlights": [
+      { "label": "Images", "value": "10 Analyzed" },
+      { "label": "Apparel", "value": "4 vs 0" },
+      { "label": "Model Stage", "value": "Epoch 18/100" },
+      { "label": "Confidence", "value": "10% threshold" }
+    ],
+    "links": {
+      "primary": {
+        "label": "View Full Report",
+        "url": "/images/batch_analysis_v2.json"
+      },
+      "secondary": {
+        "label": "Sample Images",
+        "url": "#showcase"
+      }
+    }
+  },
+  {
     "id": "model-v2-training-progress",
     "date": "2026-01-21",
     "badge": "NEW MODEL",

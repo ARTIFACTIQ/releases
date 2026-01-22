@@ -1246,6 +1246,41 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 <div style="color: var(--text-muted); font-size: 1.5rem;">→</div>
             </div>
 
+            <!-- Model Comparison: Stock YOLOv8n vs Artifactiq v2 -->
+            <div style="margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(126, 231, 135, 0.05)); border: 2px solid var(--primary); border-radius: 16px;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                    <span style="color: var(--primary); font-weight: 700; font-size: 1.25rem;">Model Comparison</span>
+                    <span style="background: var(--primary); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">Artifactiq v2</span>
+                </div>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Stock YOLOv8n (COCO 80 classes) vs Artifactiq v2 (39 domain-specific classes) on travel/fashion images</p>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; text-align: center;">
+                    <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Apparel Detection</div>
+                        <div style="font-size: 1.5rem; font-weight: 700;"><span style="color: #ff6b6b;">0</span> <span style="color: var(--text-muted);">vs</span> <span style="color: var(--success);">4</span></div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Stock vs Artifactiq</div>
+                    </div>
+                    <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Domain Classes</div>
+                        <div style="font-size: 1.5rem; font-weight: 700;"><span style="color: #ff6b6b;">0</span> <span style="color: var(--text-muted);">vs</span> <span style="color: var(--success);">39</span></div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Apparel, Accessories, Footwear</div>
+                    </div>
+                    <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">New Detections</div>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">Clothing, Shorts</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Classes COCO doesn't have</div>
+                    </div>
+                    <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Training Progress</div>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--warning);">18/100</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Epochs (mAP50: 12.9%)</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: var(--text-muted); font-size: 0.8rem;">Images analyzed: alpine-hikers.webp, mountain-trek.webp, rocky-hiker.webp showing Clothing, Shorts, Person, Man detections</span>
+                    <a href="images/batch_analysis_v2.json" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">View full JSON report &rarr;</a>
+                </div>
+            </div>
+
             <!-- Scrollable Card Gallery - All data from actual YOLOv8 inference (detection_results.json) -->
             <div class="gallery-container">
                 <div class="gallery-scroll">
