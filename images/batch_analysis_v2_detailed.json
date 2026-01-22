@@ -1,0 +1,463 @@
+{
+  "test_info": {
+    "date": "2026-01-22",
+    "confidence_threshold": 0.05,
+    "num_images": 10,
+    "model_artifactiq": "best.onnx (epoch 18/100)",
+    "model_stock": "yolov8n.pt (COCO 80 classes)"
+  },
+  "per_image": [
+    {
+      "image": "alpine-hikers.webp",
+      "stock_yolov8n": {
+        "count": 9,
+        "detections": [
+          {
+            "class": "person",
+            "confidence": 0.857
+          },
+          {
+            "class": "person",
+            "confidence": 0.842
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.742
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.63
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.176
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.104
+          },
+          {
+            "class": "airplane",
+            "confidence": 0.089
+          },
+          {
+            "class": "kite",
+            "confidence": 0.073
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.059
+          }
+        ]
+      },
+      "artifactiq_v2": {
+        "count": 6,
+        "detections": [
+          {
+            "class": "Person",
+            "confidence": 0.262
+          },
+          {
+            "class": "Person",
+            "confidence": 0.151
+          },
+          {
+            "class": "Clothing",
+            "confidence": 0.126
+          },
+          {
+            "class": "Man",
+            "confidence": 0.117
+          },
+          {
+            "class": "Man",
+            "confidence": 0.092
+          },
+          {
+            "class": "Clothing",
+            "confidence": 0.09
+          }
+        ]
+      }
+    },
+    {
+      "image": "angkor-ruins.webp",
+      "stock_yolov8n": {
+        "count": 8,
+        "detections": [
+          {
+            "class": "person",
+            "confidence": 0.855
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.455
+          },
+          {
+            "class": "car",
+            "confidence": 0.097
+          },
+          {
+            "class": "car",
+            "confidence": 0.083
+          },
+          {
+            "class": "suitcase",
+            "confidence": 0.069
+          },
+          {
+            "class": "truck",
+            "confidence": 0.067
+          },
+          {
+            "class": "handbag",
+            "confidence": 0.058
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.051
+          }
+        ]
+      },
+      "artifactiq_v2": {
+        "count": 3,
+        "detections": [
+          {
+            "class": "Person",
+            "confidence": 0.099
+          },
+          {
+            "class": "Clothing",
+            "confidence": 0.086
+          },
+          {
+            "class": "Man",
+            "confidence": 0.065
+          }
+        ]
+      }
+    },
+    {
+      "image": "beach-accessories.webp",
+      "stock_yolov8n": {
+        "count": 3,
+        "detections": [
+          {
+            "class": "bird",
+            "confidence": 0.111
+          },
+          {
+            "class": "handbag",
+            "confidence": 0.105
+          },
+          {
+            "class": "banana",
+            "confidence": 0.076
+          }
+        ]
+      },
+      "artifactiq_v2": {
+        "count": 0,
+        "detections": []
+      }
+    },
+    {
+      "image": "beach-scene.webp",
+      "stock_yolov8n": {
+        "count": 6,
+        "detections": [
+          {
+            "class": "bench",
+            "confidence": 0.273
+          },
+          {
+            "class": "bench",
+            "confidence": 0.237
+          },
+          {
+            "class": "potted plant",
+            "confidence": 0.141
+          },
+          {
+            "class": "cup",
+            "confidence": 0.126
+          },
+          {
+            "class": "chair",
+            "confidence": 0.124
+          },
+          {
+            "class": "cup",
+            "confidence": 0.087
+          }
+        ]
+      },
+      "artifactiq_v2": {
+        "count": 0,
+        "detections": []
+      }
+    },
+    {
+      "image": "binoculars-mountain.webp",
+      "stock_yolov8n": {
+        "count": 2,
+        "detections": [
+          {
+            "class": "fire hydrant",
+            "confidence": 0.816
+          },
+          {
+            "class": "bench",
+            "confidence": 0.065
+          }
+        ]
+      },
+      "artifactiq_v2": {
+        "count": 0,
+        "detections": []
+      }
+    },
+    {
+      "image": "lake-trekking.webp",
+      "stock_yolov8n": {
+        "count": 8,
+        "detections": [
+          {
+            "class": "cat",
+            "confidence": 0.354
+          },
+          {
+            "class": "cat",
+            "confidence": 0.219
+          },
+          {
+            "class": "person",
+            "confidence": 0.146
+          },
+          {
+            "class": "person",
+            "confidence": 0.112
+          },
+          {
+            "class": "cup",
+            "confidence": 0.096
+          },
+          {
+            "class": "teddy bear",
+            "confidence": 0.091
+          },
+          {
+            "class": "cat",
+            "confidence": 0.075
+          },
+          {
+            "class": "cat",
+            "confidence": 0.068
+          }
+        ]
+      },
+      "artifactiq_v2": {
+        "count": 0,
+        "detections": []
+      }
+    },
+    {
+      "image": "mountain-trek.webp",
+      "stock_yolov8n": {
+        "count": 11,
+        "detections": [
+          {
+            "class": "person",
+            "confidence": 0.848
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.841
+          },
+          {
+            "class": "person",
+            "confidence": 0.763
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.19
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.121
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.101
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.097
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.072
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.066
+          },
+          {
+            "class": "parking meter",
+            "confidence": 0.057
+          }
+        ]
+      },
+      "artifactiq_v2": {
+        "count": 5,
+        "detections": [
+          {
+            "class": "Shorts",
+            "confidence": 0.184
+          },
+          {
+            "class": "Shorts",
+            "confidence": 0.114
+          },
+          {
+            "class": "Shorts",
+            "confidence": 0.108
+          },
+          {
+            "class": "Shorts",
+            "confidence": 0.066
+          },
+          {
+            "class": "Footwear",
+            "confidence": 0.059
+          }
+        ]
+      }
+    },
+    {
+      "image": "ocean-balcony.webp",
+      "stock_yolov8n": {
+        "count": 13,
+        "detections": [
+          {
+            "class": "bench",
+            "confidence": 0.752
+          },
+          {
+            "class": "chair",
+            "confidence": 0.44
+          },
+          {
+            "class": "chair",
+            "confidence": 0.26
+          },
+          {
+            "class": "chair",
+            "confidence": 0.193
+          },
+          {
+            "class": "chair",
+            "confidence": 0.121
+          },
+          {
+            "class": "chair",
+            "confidence": 0.088
+          },
+          {
+            "class": "chair",
+            "confidence": 0.077
+          },
+          {
+            "class": "chair",
+            "confidence": 0.074
+          },
+          {
+            "class": "bench",
+            "confidence": 0.063
+          },
+          {
+            "class": "chair",
+            "confidence": 0.054
+          }
+        ]
+      },
+      "artifactiq_v2": {
+        "count": 0,
+        "detections": []
+      }
+    },
+    {
+      "image": "rocky-hiker.webp",
+      "stock_yolov8n": {
+        "count": 5,
+        "detections": [
+          {
+            "class": "person",
+            "confidence": 0.898
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.578
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.287
+          },
+          {
+            "class": "sheep",
+            "confidence": 0.201
+          },
+          {
+            "class": "backpack",
+            "confidence": 0.163
+          }
+        ]
+      },
+      "artifactiq_v2": {
+        "count": 4,
+        "detections": [
+          {
+            "class": "Person",
+            "confidence": 0.131
+          },
+          {
+            "class": "Man",
+            "confidence": 0.077
+          },
+          {
+            "class": "Clothing",
+            "confidence": 0.055
+          },
+          {
+            "class": "Footwear",
+            "confidence": 0.053
+          }
+        ]
+      }
+    },
+    {
+      "image": "temple-explorer.webp",
+      "stock_yolov8n": {
+        "count": 3,
+        "detections": [
+          {
+            "class": "person",
+            "confidence": 0.286
+          },
+          {
+            "class": "handbag",
+            "confidence": 0.166
+          },
+          {
+            "class": "handbag",
+            "confidence": 0.065
+          }
+        ]
+      },
+      "artifactiq_v2": {
+        "count": 0,
+        "detections": []
+      }
+    }
+  ]
+}
