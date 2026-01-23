@@ -1,5 +1,28 @@
 [
   {
+    "id": "v3-auto-release-pipeline",
+    "date": "2026-01-23",
+    "badge": "NEW MODEL",
+    "title": "Artifactiq v3: Auto-Release Pipeline Live",
+    "summary": "New v3.0.x model series with automated CI/CD release pipeline. Models auto-publish to GitHub releases when committed. v3.0.1 (1 epoch) now available as baseline checkpoint.",
+    "highlights": [
+      { "label": "Schema", "value": "39 Classes" },
+      { "label": "Dataset", "value": "18,416 images" },
+      { "label": "Version", "value": "v3.0.1" },
+      { "label": "Pipeline", "value": "Auto-release" }
+    ],
+    "links": {
+      "primary": {
+        "label": "View Version Scheme",
+        "url": "https://github.com/ARTIFACTIQ/ml-models/blob/main/docs/VERSION_SCHEME.md"
+      },
+      "secondary": {
+        "label": "Download v3.0.1",
+        "url": "https://github.com/ARTIFACTIQ/releases/releases/tag/v3.0.1"
+      }
+    }
+  },
+  {
     "id": "batch-analysis-v2-showcase",
     "date": "2026-01-22",
     "badge": "ANALYSIS",
