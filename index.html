@@ -1283,39 +1283,103 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 <div style="color: var(--text-muted); font-size: 1.5rem;">→</div>
             </div>
 
-            <!-- Model Comparison: Stock YOLOv8n vs Artifactiq v3.0.1 -->
+            <!-- Model Comparison: Stock vs v3 vs v4 -->
             <div style="margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(126, 231, 135, 0.05)); border: 2px solid var(--primary); border-radius: 16px;">
-                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
-                    <span style="color: var(--primary); font-weight: 700; font-size: 1.25rem;">Model Comparison</span>
-                    <span style="background: var(--primary); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">Artifactiq v3.0.1</span>
-                    <span style="background: var(--warning); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">Training</span>
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                    <span style="color: var(--primary); font-weight: 700; font-size: 1.25rem;">Model Showdown</span>
+                    <span style="background: var(--success); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">v3 WINS</span>
+                    <span style="background: var(--text-muted); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">Stock YOLOv8n</span>
+                    <span style="background: var(--warning); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">v4 Training</span>
                 </div>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Batch analysis on 20 COCO validation images. v3.0.1 is baseline checkpoint (1 epoch) - detection improves with more training.</p>
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; text-align: center;">
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Head-to-head comparison on 7,570 validation images from merged_all_datasets. v3-epoch1 leads; v4 needs more training epochs.</p>
+
+                <!-- 3-Model Comparison Table -->
+                <div style="overflow-x: auto; margin-bottom: 1.5rem;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                        <tr style="background: rgba(0, 212, 255, 0.1);">
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">Model</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">mAP50</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">Recall</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">Val Time</th>
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">Notes</th>
+                        </tr>
+                        <tr style="background: rgba(126, 231, 135, 0.1);">
+                            <td style="padding: 0.75rem; color: var(--success); font-weight: 600;">v3-epoch1</td>
+                            <td style="padding: 0.75rem; text-align: center; color: var(--success); font-weight: 700;">1.63%</td>
+                            <td style="padding: 0.75rem; text-align: center; color: var(--success); font-weight: 700;">22.85%</td>
+                            <td style="padding: 0.75rem; text-align: center;">188s</td>
+                            <td style="padding: 0.75rem; color: var(--text-muted);">18K images, more iterations</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem; color: var(--text-muted);">Stock YOLOv8n</td>
+                            <td style="padding: 0.75rem; text-align: center;">0.22%</td>
+                            <td style="padding: 0.75rem; text-align: center;">1.12%</td>
+                            <td style="padding: 0.75rem; text-align: center;">285s</td>
+                            <td style="padding: 0.75rem; color: var(--text-muted);">COCO 80 classes, no domain fit</td>
+                        </tr>
+                        <tr style="border-bottom: none;">
+                            <td style="padding: 0.75rem; color: var(--warning);">v4-epoch1-safe</td>
+                            <td style="padding: 0.75rem; text-align: center; color: var(--text-muted);">0.003%</td>
+                            <td style="padding: 0.75rem; text-align: center; color: var(--text-muted);">0.94%</td>
+                            <td style="padding: 0.75rem; text-align: center; color: var(--success);">149s</td>
+                            <td style="padding: 0.75rem; color: var(--text-muted);">68K images, needs more epochs</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Visual Bars -->
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
                     <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Total Detections</div>
-                        <div style="font-size: 1.5rem; font-weight: 700;"><span style="color: var(--stock-color);">61</span> <span style="color: var(--text-muted);">vs</span> <span style="color: var(--warning);">1</span></div>
-                        <div style="font-size: 0.7rem; color: var(--text-muted);">Stock (0.5) vs v3 (0.1 conf)</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem;">mAP50 Comparison</div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                <span style="width: 50px; font-size: 0.7rem; color: var(--success);">v3</span>
+                                <div style="flex: 1; height: 16px; background: var(--code-bg); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 100%; height: 100%; background: var(--success); display: flex; align-items: center; padding-left: 8px; font-size: 0.65rem; color: #000; font-weight: 600;">1.63%</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Stock</span>
+                                <div style="flex: 1; height: 16px; background: var(--code-bg); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 13.5%; height: 100%; background: var(--text-muted); min-width: 40px; display: flex; align-items: center; padding-left: 8px; font-size: 0.65rem; color: #000; font-weight: 600;">0.22%</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="width: 50px; font-size: 0.7rem; color: var(--warning);">v4</span>
+                                <div style="flex: 1; height: 16px; background: var(--code-bg); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 2%; height: 100%; background: var(--warning); min-width: 40px; display: flex; align-items: center; padding-left: 8px; font-size: 0.65rem; color: #000; font-weight: 600;">0.003%</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Domain Classes</div>
-                        <div style="font-size: 1.5rem; font-weight: 700;"><span style="color: #ff6b6b;">0</span> <span style="color: var(--text-muted);">vs</span> <span style="color: var(--success);">39</span></div>
-                        <div style="font-size: 0.7rem; color: var(--text-muted);">Apparel, Accessories, Footwear</div>
-                    </div>
-                    <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Training Metrics</div>
-                        <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">mAP50: 1.96%</div>
-                        <div style="font-size: 0.7rem; color: var(--text-muted);">Recall: 23.3% on val set</div>
-                    </div>
-                    <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Training Progress</div>
-                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--warning);">1 epoch</div>
-                        <div style="font-size: 0.7rem; color: var(--text-muted);">18,416 images dataset</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem;">Recall (Detection Rate)</div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                <span style="width: 50px; font-size: 0.7rem; color: var(--success);">v3</span>
+                                <div style="flex: 1; height: 16px; background: var(--code-bg); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 100%; height: 100%; background: var(--success); display: flex; align-items: center; padding-left: 8px; font-size: 0.65rem; color: #000; font-weight: 600;">22.85%</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                <span style="width: 50px; font-size: 0.7rem; color: var(--text-muted);">Stock</span>
+                                <div style="flex: 1; height: 16px; background: var(--code-bg); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 4.9%; height: 100%; background: var(--text-muted); min-width: 40px; display: flex; align-items: center; padding-left: 8px; font-size: 0.65rem; color: #000; font-weight: 600;">1.12%</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="width: 50px; font-size: 0.7rem; color: var(--warning);">v4</span>
+                                <div style="flex: 1; height: 16px; background: var(--code-bg); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 4.1%; height: 100%; background: var(--warning); min-width: 40px; display: flex; align-items: center; padding-left: 8px; font-size: 0.65rem; color: #000; font-weight: 600;">0.94%</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: var(--text-muted); font-size: 0.8rem;">v3.0.1 = baseline checkpoint. Train to v3.0.10+ for production detection. Auto-release pipeline: commit model → CI creates release</span>
-                    <a href="https://github.com/ARTIFACTIQ/ml-models/blob/main/docs/VERSION_SCHEME.md" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">Version scheme &rarr;</a>
+
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <span style="color: var(--text-muted); font-size: 0.8rem;">Use v3.0.1 for production. v4 trained on 68K images but needs 50-100 more epochs.</span>
+                    <a href="/blog/model-comparison.html" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">Full comparison report &rarr;</a>
                 </div>
             </div>
 

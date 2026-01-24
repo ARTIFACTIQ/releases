@@ -1,5 +1,28 @@
 [
   {
+    "id": "model-comparison-v3-v4-stock",
+    "date": "2026-01-24",
+    "badge": "ANALYSIS",
+    "title": "Model Showdown: v3 vs v4 vs Stock YOLOv8n",
+    "summary": "Head-to-head comparison on 7,570 validation images. v3-epoch1 leads with 7x higher mAP50 than stock. v4 needs more training epochs to compete.",
+    "highlights": [
+      { "label": "v3 mAP50", "value": "1.63%" },
+      { "label": "Stock mAP50", "value": "0.22%" },
+      { "label": "v4 mAP50", "value": "0.003%" },
+      { "label": "Winner", "value": "v3-epoch1" }
+    ],
+    "links": {
+      "primary": {
+        "label": "Full Comparison",
+        "url": "/blog/model-comparison.html"
+      },
+      "secondary": {
+        "label": "Raw Data (JSON)",
+        "url": "https://github.com/ARTIFACTIQ/ml-models/releases/download/v4.0.0/model_comparison_results.json"
+      }
+    }
+  },
+  {
     "id": "model-v4.0.0-merged-dataset-training",
     "date": "2026-01-24",
     "badge": "NEW MODEL",
@@ -60,11 +83,11 @@
     "links": {
       "primary": {
         "label": "View Full Report",
-        "url": "/images/batch_analysis_v2.json"
+        "url": "/blog/batch-analysis-v2.html"
       },
       "secondary": {
-        "label": "Sample Images",
-        "url": "#showcase"
+        "label": "Raw JSON Data",
+        "url": "/images/batch_analysis_v2.json"
       }
     }
   },

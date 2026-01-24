@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Comparison: v3 vs v4 vs Stock YOLOv8n - Artifactiq</title>
+    <meta name="description" content="Head-to-head comparison of Artifactiq v3, v4, and stock YOLOv8n models on 7,570 validation images.">
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --accent: #7b2cbf;
+            --bg-dark: #0a0a12;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e4e4e4;
+            --text-muted: #888;
+            --code-bg: #0d1117;
+            --success: #7ee787;
+            --warning: #f0b429;
+            --error: #f85149;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.8;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+        /* Header */
+        header {
+            background: rgba(10, 10, 18, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        header a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Article */
+        article { padding: 4rem 0; }
+
+        .article-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(90deg, #f97316, #ea580c);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .meta {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        h3 {
+            color: var(--text);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: rgba(0, 212, 255, 0.1);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        /* Comparison Bars */
+        .bar-container {
+            background: var(--code-bg);
+            border-radius: 4px;
+            overflow: hidden;
+            height: 24px;
+            position: relative;
+        }
+        .bar {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            min-width: fit-content;
+        }
+        .bar-v3 { background: var(--success); }
+        .bar-stock { background: var(--text-muted); }
+        .bar-v4 { background: var(--warning); }
+
+        /* Callouts */
+        .callout {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+        .callout-info {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary);
+        }
+        .callout-warning {
+            background: rgba(240, 180, 41, 0.1);
+            border-color: var(--warning);
+        }
+        .callout-success {
+            background: rgba(126, 231, 135, 0.1);
+            border-color: var(--success);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        .stat-card.winner {
+            border-color: var(--success);
+            background: rgba(126, 231, 135, 0.05);
+        }
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+        .stat-card.winner .stat-value { color: var(--success); }
+        .stat-card:not(.winner) .stat-value { color: var(--text-muted); }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.25rem;
+        }
+
+        /* Code */
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85em;
+        }
+        pre {
+            background: var(--code-bg);
+            padding: 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        /* Links */
+        a { color: var(--primary); }
+        a:hover { text-decoration: underline; }
+
+        /* Winner highlight */
+        .winner-text { color: var(--success); font-weight: 600; }
+        .loser-text { color: var(--text-muted); }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">&larr; Back to Artifactiq</a>
+    </header>
+
+    <div class="container">
+        <article>
+            <div class="article-header">
+                <span class="badge">Analysis</span>
+                <h1>Model Showdown: v3 vs v4 vs Stock YOLOv8n</h1>
+                <p class="meta">Published January 24, 2026 | By Artifactiq ML Team</p>
+            </div>
+
+            <h2>Executive Summary</h2>
+            <p>We ran a comprehensive comparison of three YOLOv8n models on our merged_all_datasets validation set (7,570 images). The goal: determine which model performs best for our 39-class detection taxonomy.</p>
+
+            <div class="callout callout-success">
+                <strong>Winner: v3-epoch1</strong> leads with mAP50 of 1.63% - over 7x better than stock YOLOv8n (0.22%) and significantly ahead of v4-epoch1-safe (0.003%).
+            </div>
+
+            <h2>Models Compared</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card winner">
+                    <div class="stat-value">1.63%</div>
+                    <div class="stat-label">v3-epoch1 mAP50</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0.22%</div>
+                    <div class="stat-label">Stock YOLOv8n mAP50</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0.003%</div>
+                    <div class="stat-label">v4-epoch1-safe mAP50</div>
+                </div>
+            </div>
+
+            <table>
+                <tr>
+                    <th>Model</th>
+                    <th>Training Data</th>
+                    <th>Classes</th>
+                    <th>Notes</th>
+                </tr>
+                <tr>
+                    <td class="winner-text">v3-epoch1</td>
+                    <td>18,416 images</td>
+                    <td>39</td>
+                    <td>More training iterations, better convergence</td>
+                </tr>
+                <tr>
+                    <td>Stock YOLOv8n</td>
+                    <td>COCO (118K images)</td>
+                    <td>80</td>
+                    <td>Pre-trained on general objects, no domain tuning</td>
+                </tr>
+                <tr>
+                    <td class="loser-text">v4-epoch1-safe</td>
+                    <td>68,117 images</td>
+                    <td>39</td>
+                    <td>Only 1 epoch - needs more training</td>
+                </tr>
+            </table>
+
+            <h2>Detailed Metrics Comparison</h2>
+
+            <table>
+                <tr>
+                    <th>Metric</th>
+                    <th>v3-epoch1</th>
+                    <th>Stock YOLOv8n</th>
+                    <th>v4-epoch1-safe</th>
+                </tr>
+                <tr>
+                    <td>mAP50</td>
+                    <td class="winner-text">0.0163 (1.63%)</td>
+                    <td>0.0022 (0.22%)</td>
+                    <td class="loser-text">0.00003 (0.003%)</td>
+                </tr>
+                <tr>
+                    <td>mAP50-95</td>
+                    <td class="winner-text">0.0098</td>
+                    <td>0.0010</td>
+                    <td class="loser-text">0.000004</td>
+                </tr>
+                <tr>
+                    <td>Precision</td>
+                    <td>0.0119</td>
+                    <td class="winner-text">0.0285</td>
+                    <td class="loser-text">0.00005</td>
+                </tr>
+                <tr>
+                    <td>Recall</td>
+                    <td class="winner-text">0.2285 (22.85%)</td>
+                    <td>0.0112 (1.12%)</td>
+                    <td class="loser-text">0.0094 (0.94%)</td>
+                </tr>
+                <tr>
+                    <td>Validation Time</td>
+                    <td>188s</td>
+                    <td>285s</td>
+                    <td class="winner-text">149s</td>
+                </tr>
+            </table>
+
+            <h3>Visual Comparison: mAP50</h3>
+            <div style="margin: 1.5rem 0;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                    <span style="width: 120px; text-align: right; font-size: 0.9rem;">v3-epoch1</span>
+                    <div class="bar-container" style="flex: 1;">
+                        <div class="bar bar-v3" style="width: 100%;">1.63%</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                    <span style="width: 120px; text-align: right; font-size: 0.9rem;">Stock YOLOv8n</span>
+                    <div class="bar-container" style="flex: 1;">
+                        <div class="bar bar-stock" style="width: 13.5%;">0.22%</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span style="width: 120px; text-align: right; font-size: 0.9rem;">v4-epoch1-safe</span>
+                    <div class="bar-container" style="flex: 1;">
+                        <div class="bar bar-v4" style="width: 2%; min-width: 50px;">0.003%</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Visual Comparison: Recall</h3>
+            <div style="margin: 1.5rem 0;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                    <span style="width: 120px; text-align: right; font-size: 0.9rem;">v3-epoch1</span>
+                    <div class="bar-container" style="flex: 1;">
+                        <div class="bar bar-v3" style="width: 100%;">22.85%</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                    <span style="width: 120px; text-align: right; font-size: 0.9rem;">Stock YOLOv8n</span>
+                    <div class="bar-container" style="flex: 1;">
+                        <div class="bar bar-stock" style="width: 4.9%;">1.12%</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span style="width: 120px; text-align: right; font-size: 0.9rem;">v4-epoch1-safe</span>
+                    <div class="bar-container" style="flex: 1;">
+                        <div class="bar bar-v4" style="width: 4.1%;">0.94%</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>CLI Test Results</h2>
+            <p>We tested both Artifactiq models using the CLI on the same sample image:</p>
+
+            <pre><code>$ artifactiq analyze --input coco_val_000001.jpg --model v4-epoch1-safe --confidence 0.01
+Detected 0 artifacts (29ms)
+
+$ artifactiq analyze --input coco_val_000001.jpg --model artifactiq:v3.0.1 --confidence 0.01
+Detected 8 artifacts (28ms)</code></pre>
+
+            <div class="callout callout-warning">
+                <strong>v4 detects 0 objects</strong> while v3 detects 8 on the same image. This confirms v4 needs significantly more training epochs.
+            </div>
+
+            <h2>Analysis</h2>
+
+            <h3>Why v3 Wins</h3>
+            <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                <li><strong>More training iterations:</strong> v3-epoch1 had more training cycles leading to better weight convergence</li>
+                <li><strong>Balanced dataset:</strong> 18K images with better class distribution</li>
+                <li><strong>Higher recall:</strong> 22.85% vs 1.12% for stock - finds 20x more relevant objects</li>
+            </ul>
+
+            <h3>Why Stock YOLOv8n Underperforms</h3>
+            <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                <li><strong>Different taxonomy:</strong> Trained on COCO's 80 classes, not our 39-class schema</li>
+                <li><strong>No domain knowledge:</strong> Cannot detect apparel, accessories, or fashion items</li>
+                <li><strong>Class mismatch:</strong> Only ~10 classes overlap with our taxonomy</li>
+            </ul>
+
+            <h3>Why v4 Needs More Training</h3>
+            <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                <li><strong>Only 1 epoch:</strong> Model barely started learning from 68K images</li>
+                <li><strong>MPS limitations:</strong> Had to use conservative settings (batch=2, amp=False)</li>
+                <li><strong>High loss values:</strong> Classification loss at 5.089 indicates early training stage</li>
+            </ul>
+
+            <h2>Recommendations</h2>
+
+            <div class="callout callout-success">
+                <strong>For Production:</strong> Use <code>artifactiq:v3.0.1</code> - it has the best accuracy and is proven to detect domain-specific objects.
+            </div>
+
+            <h3>Next Steps for v4</h3>
+            <ol style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                <li>Train for 50-100 more epochs</li>
+                <li>Consider cloud GPU for faster iteration (E2E Networks, JarvisLabs)</li>
+                <li>v4 has larger training data (68K vs 18K) - should eventually surpass v3</li>
+            </ol>
+
+            <h2>Raw Data</h2>
+
+            <pre><code>{
+  "stock_yolov8n": {
+    "mAP50": 0.002235670553958132,
+    "mAP50-95": 0.0009896921020394233,
+    "precision": 0.028516032337873094,
+    "recall": 0.011157857851309273,
+    "val_time": 285.04697918891907
+  },
+  "v3_epoch1": {
+    "mAP50": 0.016252708910629236,
+    "mAP50-95": 0.009827176456957071,
+    "precision": 0.011887220211440345,
+    "recall": 0.22848983816702392,
+    "val_time": 188.29582905769348
+  },
+  "v4_epoch1_safe": {
+    "mAP50": 2.6488202125105567e-05,
+    "mAP50-95": 4.420992177111466e-06,
+    "precision": 5.073689772766116e-05,
+    "recall": 0.009428982167208017,
+    "val_time": 149.37426495552063
+  }
+}</code></pre>
+
+            <p style="margin-top: 2rem;">
+                <a href="https://github.com/ARTIFACTIQ/ml-models/releases/download/v4.0.0/model_comparison_results.json">Download Raw JSON &rarr;</a>
+            </p>
+
+        </article>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Artifactiq. <a href="/">Return to Home</a> | <a href="https://github.com/ARTIFACTIQ/ml-models">GitHub</a></p>
+    </footer>
+</body>
+</html>

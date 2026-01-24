@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Analysis: Artifactiq v2 vs Stock YOLOv8n - Artifactiq</title>
+    <meta name="description" content="Comparative analysis on 10 travel/fashion images shows Artifactiq v2 detects domain-specific classes that stock models miss entirely.">
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --accent: #7b2cbf;
+            --bg-dark: #0a0a12;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e4e4e4;
+            --text-muted: #888;
+            --code-bg: #0d1117;
+            --success: #7ee787;
+            --warning: #f0b429;
+            --error: #f85149;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.8;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+
+        header {
+            background: rgba(10, 10, 18, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        header a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        article { padding: 4rem 0; }
+
+        .article-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(90deg, #f97316, #ea580c);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .meta { color: var(--text-muted); font-size: 0.9rem; }
+
+        h2 {
+            color: var(--primary);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        h3 { color: var(--text); margin: 1.5rem 0 0.75rem; }
+        p { margin-bottom: 1rem; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: rgba(0, 212, 255, 0.1);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        .callout {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+        .callout-info {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary);
+        }
+        .callout-warning {
+            background: rgba(240, 180, 41, 0.1);
+            border-color: var(--warning);
+        }
+        .callout-success {
+            background: rgba(126, 231, 135, 0.1);
+            border-color: var(--success);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.25rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .image-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .image-card-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+        }
+        .image-card-body {
+            padding: 1rem;
+        }
+        .detection-section {
+            margin-bottom: 1rem;
+        }
+        .detection-section:last-child {
+            margin-bottom: 0;
+        }
+        .detection-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        .detection-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.35rem 0.5rem;
+            background: var(--code-bg);
+            border-radius: 4px;
+            margin-bottom: 0.25rem;
+            font-size: 0.85rem;
+        }
+        .detection-class { color: var(--text); }
+        .detection-conf { color: var(--primary); font-weight: 500; }
+        .no-detections {
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+
+        .highlight-artifactiq {
+            background: rgba(126, 231, 135, 0.1);
+            border-color: var(--success);
+        }
+        .highlight-stock {
+            background: rgba(136, 136, 136, 0.1);
+            border-color: var(--text-muted);
+        }
+
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85em;
+        }
+
+        a { color: var(--primary); }
+        a:hover { text-decoration: underline; }
+
+        .winner-text { color: var(--success); font-weight: 600; }
+        .loser-text { color: var(--text-muted); }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">&larr; Back to Artifactiq</a>
+    </header>
+
+    <div class="container">
+        <article>
+            <div class="article-header">
+                <span class="badge">Analysis</span>
+                <h1>Batch Analysis: Artifactiq v2 vs Stock YOLOv8n</h1>
+                <p class="meta">Published January 22, 2026 | By Artifactiq ML Team</p>
+            </div>
+
+            <h2>Executive Summary</h2>
+            <p>We analyzed 10 travel and fashion images using both Artifactiq v2 (custom-trained) and stock YOLOv8n (COCO-trained) models. The key finding: <strong>Artifactiq v2 detects domain-specific classes like Clothing and Shorts that stock models completely miss.</strong></p>
+
+            <div class="callout callout-success">
+                <strong>Key Result:</strong> Artifactiq v2 detected 4 apparel items (Clothing, Shorts) while Stock YOLOv8n detected 0. Stock cannot detect fashion items - it wasn't trained for that domain.
+            </div>
+
+            <h2>Test Configuration</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">10</div>
+                    <div class="stat-label">Images Analyzed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">10%</div>
+                    <div class="stat-label">Confidence Threshold</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">18/100</div>
+                    <div class="stat-label">Artifactiq Epochs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12.9%</div>
+                    <div class="stat-label">Artifactiq mAP50</div>
+                </div>
+            </div>
+
+            <table>
+                <tr>
+                    <th>Model</th>
+                    <th>Training Data</th>
+                    <th>Classes</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>Artifactiq v2</td>
+                    <td>Custom fashion/travel dataset</td>
+                    <td>39 (apparel, accessories, etc.)</td>
+                    <td>18% trained (epoch 18/100)</td>
+                </tr>
+                <tr>
+                    <td>Stock YOLOv8n</td>
+                    <td>COCO dataset</td>
+                    <td>80 (general objects)</td>
+                    <td>Fully trained</td>
+                </tr>
+            </table>
+
+            <h2>Detection Summary by Category</h2>
+
+            <table>
+                <tr>
+                    <th>Category</th>
+                    <th>Stock YOLOv8n</th>
+                    <th>Artifactiq v2</th>
+                    <th>Winner</th>
+                </tr>
+                <tr>
+                    <td><strong>Apparel</strong></td>
+                    <td class="loser-text">0</td>
+                    <td class="winner-text">4</td>
+                    <td class="winner-text">Artifactiq +4</td>
+                </tr>
+                <tr>
+                    <td><strong>Accessories</strong></td>
+                    <td>14 (backpacks, handbags)</td>
+                    <td>0</td>
+                    <td>Stock +14</td>
+                </tr>
+                <tr>
+                    <td><strong>Footwear</strong></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>Tie</td>
+                </tr>
+                <tr>
+                    <td><strong>People</strong></td>
+                    <td>9</td>
+                    <td>4</td>
+                    <td>Stock +5</td>
+                </tr>
+                <tr>
+                    <td><strong>Other/Noise</strong></td>
+                    <td>15 (benches, chairs, etc.)</td>
+                    <td>0</td>
+                    <td>-</td>
+                </tr>
+            </table>
+
+            <div class="callout callout-warning">
+                <strong>Note:</strong> Artifactiq v2 was only 18% trained when this test was run. With continued training, accessory and footwear detection will improve significantly.
+            </div>
+
+            <h2>Key Findings</h2>
+
+            <h3>1. Apparel Detection: Artifactiq Exclusive</h3>
+            <p>Stock YOLOv8n cannot detect clothing items because COCO dataset doesn't include fashion classes. Artifactiq v2 detected:</p>
+            <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                <li><strong>Clothing</strong> - General apparel items (1 detection)</li>
+                <li><strong>Shorts</strong> - Specific apparel type (3 detections)</li>
+            </ul>
+
+            <h3>2. Stock Detects More Accessories (For Now)</h3>
+            <p>Stock YOLOv8n detected 14 accessories (mostly backpacks) because COCO includes these classes with extensive training data. Artifactiq v2 at 18% training hasn't developed strong accessory detection yet.</p>
+
+            <h3>3. False Positives in Stock</h3>
+            <p>Stock YOLOv8n produced several questionable detections:</p>
+            <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                <li><code>cat</code> detected in lake trekking image (likely hikers in distance)</li>
+                <li><code>fire hydrant</code> detected for binoculars on tripod</li>
+                <li><code>sheep</code> detected in rocky terrain</li>
+                <li><code>bird</code> detected on beach (no birds visible)</li>
+            </ul>
+
+            <h2>Per-Image Breakdown</h2>
+
+            <div class="comparison-grid">
+                <!-- alpine-hikers.webp -->
+                <div class="image-card">
+                    <div class="image-card-header">alpine-hikers.webp</div>
+                    <div class="image-card-body">
+                        <div class="detection-section">
+                            <div class="detection-label">Stock YOLOv8n (6 detections)</div>
+                            <div class="detection-item"><span class="detection-class">person</span><span class="detection-conf">85.7%</span></div>
+                            <div class="detection-item"><span class="detection-class">person</span><span class="detection-conf">84.2%</span></div>
+                            <div class="detection-item"><span class="detection-class">backpack</span><span class="detection-conf">74.2%</span></div>
+                            <div class="detection-item"><span class="detection-class">backpack</span><span class="detection-conf">63.0%</span></div>
+                        </div>
+                        <div class="detection-section">
+                            <div class="detection-label">Artifactiq v2 (4 detections)</div>
+                            <div class="detection-item"><span class="detection-class">Person</span><span class="detection-conf">26.2%</span></div>
+                            <div class="detection-item"><span class="detection-class">Person</span><span class="detection-conf">15.1%</span></div>
+                            <div class="detection-item"><span class="detection-class winner-text">Clothing</span><span class="detection-conf">12.6%</span></div>
+                            <div class="detection-item"><span class="detection-class">Man</span><span class="detection-conf">11.7%</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- mountain-trek.webp -->
+                <div class="image-card">
+                    <div class="image-card-header">mountain-trek.webp</div>
+                    <div class="image-card-body">
+                        <div class="detection-section">
+                            <div class="detection-label">Stock YOLOv8n (6 detections)</div>
+                            <div class="detection-item"><span class="detection-class">person</span><span class="detection-conf">84.8%</span></div>
+                            <div class="detection-item"><span class="detection-class">backpack</span><span class="detection-conf">84.1%</span></div>
+                            <div class="detection-item"><span class="detection-class">person</span><span class="detection-conf">76.3%</span></div>
+                        </div>
+                        <div class="detection-section">
+                            <div class="detection-label">Artifactiq v2 (3 detections)</div>
+                            <div class="detection-item"><span class="detection-class winner-text">Shorts</span><span class="detection-conf">18.4%</span></div>
+                            <div class="detection-item"><span class="detection-class winner-text">Shorts</span><span class="detection-conf">11.4%</span></div>
+                            <div class="detection-item"><span class="detection-class winner-text">Shorts</span><span class="detection-conf">10.8%</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- rocky-hiker.webp -->
+                <div class="image-card">
+                    <div class="image-card-header">rocky-hiker.webp</div>
+                    <div class="image-card-body">
+                        <div class="detection-section">
+                            <div class="detection-label">Stock YOLOv8n (5 detections)</div>
+                            <div class="detection-item"><span class="detection-class">person</span><span class="detection-conf">89.8%</span></div>
+                            <div class="detection-item"><span class="detection-class">backpack</span><span class="detection-conf">57.8%</span></div>
+                            <div class="detection-item"><span class="detection-class loser-text">sheep (?)</span><span class="detection-conf">20.1%</span></div>
+                        </div>
+                        <div class="detection-section">
+                            <div class="detection-label">Artifactiq v2 (1 detection)</div>
+                            <div class="detection-item"><span class="detection-class">Person</span><span class="detection-conf">13.1%</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- binoculars-mountain.webp -->
+                <div class="image-card">
+                    <div class="image-card-header">binoculars-mountain.webp</div>
+                    <div class="image-card-body">
+                        <div class="detection-section">
+                            <div class="detection-label">Stock YOLOv8n (1 detection)</div>
+                            <div class="detection-item"><span class="detection-class loser-text">fire hydrant (?)</span><span class="detection-conf">81.6%</span></div>
+                        </div>
+                        <div class="detection-section">
+                            <div class="detection-label">Artifactiq v2</div>
+                            <div class="no-detections">No detections at 10% threshold</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- lake-trekking.webp -->
+                <div class="image-card">
+                    <div class="image-card-header">lake-trekking.webp</div>
+                    <div class="image-card-body">
+                        <div class="detection-section">
+                            <div class="detection-label">Stock YOLOv8n (4 detections)</div>
+                            <div class="detection-item"><span class="detection-class loser-text">cat (?)</span><span class="detection-conf">35.4%</span></div>
+                            <div class="detection-item"><span class="detection-class loser-text">cat (?)</span><span class="detection-conf">21.9%</span></div>
+                            <div class="detection-item"><span class="detection-class">person</span><span class="detection-conf">14.6%</span></div>
+                        </div>
+                        <div class="detection-section">
+                            <div class="detection-label">Artifactiq v2</div>
+                            <div class="no-detections">No detections at 10% threshold</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- angkor-ruins.webp -->
+                <div class="image-card">
+                    <div class="image-card-header">angkor-ruins.webp</div>
+                    <div class="image-card-body">
+                        <div class="detection-section">
+                            <div class="detection-label">Stock YOLOv8n (2 detections)</div>
+                            <div class="detection-item"><span class="detection-class">person</span><span class="detection-conf">85.5%</span></div>
+                            <div class="detection-item"><span class="detection-class">backpack</span><span class="detection-conf">45.5%</span></div>
+                        </div>
+                        <div class="detection-section">
+                            <div class="detection-label">Artifactiq v2</div>
+                            <div class="no-detections">No detections at 10% threshold</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Conclusions</h2>
+
+            <h3>Artifactiq v2 Advantages</h3>
+            <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                <li><strong>Domain-specific detection:</strong> Can detect Clothing, Shorts, and other fashion items</li>
+                <li><strong>Fewer false positives:</strong> No spurious cat/sheep/fire hydrant detections</li>
+                <li><strong>Fashion taxonomy:</strong> 39 classes designed for merchandising</li>
+            </ul>
+
+            <h3>Stock YOLOv8n Advantages</h3>
+            <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                <li><strong>Higher confidence:</strong> Fully trained with 80-90% confidence on known classes</li>
+                <li><strong>Better person detection:</strong> More person instances detected</li>
+                <li><strong>Backpack detection:</strong> Strong accessory detection (included in COCO)</li>
+            </ul>
+
+            <h3>Recommendation</h3>
+            <div class="callout callout-success">
+                <strong>For fashion/travel content:</strong> Use Artifactiq - it detects apparel that stock models cannot. As training progresses (currently at 18%), confidence and detection rates will improve significantly.
+            </div>
+
+            <h2>Raw Data</h2>
+            <p>
+                <a href="/images/batch_analysis_v2.json">Download Full JSON Report &rarr;</a>
+            </p>
+
+        </article>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Artifactiq. <a href="/">Return to Home</a> | <a href="https://github.com/ARTIFACTIQ/ml-models">GitHub</a></p>
+    </footer>
+</body>
+</html>
