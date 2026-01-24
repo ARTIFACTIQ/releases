@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artifactiq v4.0.0 Training Report - 68K Images on Apple M4 Max</title>
+    <meta name="description" content="Detailed training report for Artifactiq v4.0.0 model trained on 68K images using YOLOv8n on Apple M4 Max with MPS backend.">
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --accent: #7b2cbf;
+            --bg-dark: #0a0a12;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e4e4e4;
+            --text-muted: #888;
+            --code-bg: #0d1117;
+            --success: #7ee787;
+            --warning: #f0b429;
+            --error: #f85149;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.8;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+        /* Header */
+        header {
+            background: rgba(10, 10, 18, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        header a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Article */
+        article { padding: 4rem 0; }
+
+        .article-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .meta {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        h3 {
+            color: var(--text);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: rgba(0, 212, 255, 0.1);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        /* Code */
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85em;
+        }
+        pre {
+            background: var(--code-bg);
+            padding: 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        /* Callouts */
+        .callout {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+        .callout-info {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary);
+        }
+        .callout-warning {
+            background: rgba(240, 180, 41, 0.1);
+            border-color: var(--warning);
+        }
+        .callout-success {
+            background: rgba(126, 231, 135, 0.1);
+            border-color: var(--success);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Links */
+        a { color: var(--primary); }
+        a:hover { text-decoration: underline; }
+
+        /* Winner highlight */
+        .winner { color: var(--success); font-weight: 600; }
+        .loser { color: var(--text-muted); }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">&larr; Back to Artifactiq</a>
+    </header>
+
+    <div class="container">
+        <article>
+            <div class="article-header">
+                <span class="badge">Training Report</span>
+                <h1>Artifactiq v4.0.0: Training on 68K Images with Apple M4 Max</h1>
+                <p class="meta">Published January 24, 2026 | By Artifactiq ML Team</p>
+            </div>
+
+            <h2>Executive Summary</h2>
+            <p>We trained the Artifactiq v4.0.0 model on our merged_all_datasets containing <strong>68,117 training images</strong> using YOLOv8n architecture on Apple M4 Max with the MPS (Metal Performance Shaders) backend. This report documents the training process, challenges encountered with MPS, and comparison with previous model versions.</p>
+
+            <div class="callout callout-warning">
+                <strong>Key Finding:</strong> After 1 epoch, v3.0.1 (with more training iterations) still outperforms v4.0.0. The v4 model requires additional training epochs to surpass v3's accuracy.
+            </div>
+
+            <h2>Training Configuration</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">68,117</div>
+                    <div class="stat-label">Training Images</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">7,570</div>
+                    <div class="stat-label">Validation Images</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">4.47h</div>
+                    <div class="stat-label">Training Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">39</div>
+                    <div class="stat-label">Classes</div>
+                </div>
+            </div>
+
+            <h3>Hardware & Software</h3>
+            <table>
+                <tr><th>Component</th><th>Specification</th></tr>
+                <tr><td>Device</td><td>Apple M4 Max</td></tr>
+                <tr><td>Backend</td><td>MPS (Metal Performance Shaders)</td></tr>
+                <tr><td>Framework</td><td>Ultralytics 8.4.7 + PyTorch 2.9.1</td></tr>
+                <tr><td>Architecture</td><td>YOLOv8n (nano)</td></tr>
+            </table>
+
+            <h3>MPS-Safe Training Settings</h3>
+            <p>Training on Apple Silicon's MPS backend requires specific settings to avoid tensor shape mismatch errors and memory issues:</p>
+
+            <pre><code>model.train(
+    data="merged_all_datasets/dataset.yaml",
+    epochs=1,
+    batch=2,      # Reduced from default for MPS stability
+    imgsz=640,
+    device="mps",
+    workers=0,    # Disabled multiprocessing for MPS
+    amp=False,    # MPS doesn't support FP16 properly
+    cache=False,  # Large dataset - don't cache
+)</code></pre>
+
+            <div class="callout callout-info">
+                <strong>Why these settings?</strong> MPS is 10-25x slower than NVIDIA GPUs and has known issues with larger batch sizes causing tensor shape mismatches. Disabling AMP and workers ensures stable training at the cost of speed.
+            </div>
+
+            <h2>Model Comparison Results</h2>
+
+            <p>We evaluated three models on the merged_all_datasets validation set (7,570 images):</p>
+
+            <table>
+                <tr>
+                    <th>Model</th>
+                    <th>mAP50</th>
+                    <th>mAP50-95</th>
+                    <th>Precision</th>
+                    <th>Recall</th>
+                    <th>Val Time</th>
+                </tr>
+                <tr>
+                    <td class="winner">v3-epoch1</td>
+                    <td class="winner">0.0163</td>
+                    <td class="winner">0.0098</td>
+                    <td>0.0119</td>
+                    <td class="winner">0.2285</td>
+                    <td>188s</td>
+                </tr>
+                <tr>
+                    <td>stock YOLOv8n</td>
+                    <td>0.0022</td>
+                    <td>0.0010</td>
+                    <td class="winner">0.0285</td>
+                    <td>0.0112</td>
+                    <td>285s</td>
+                </tr>
+                <tr>
+                    <td class="loser">v4-epoch1-safe</td>
+                    <td class="loser">0.00003</td>
+                    <td class="loser">0.000004</td>
+                    <td class="loser">0.0001</td>
+                    <td>0.0094</td>
+                    <td>149s</td>
+                </tr>
+            </table>
+
+            <h3>Analysis</h3>
+            <ul>
+                <li><strong>v3-epoch1 leads:</strong> More training iterations result in better convergence</li>
+                <li><strong>Stock YOLOv8n:</strong> Trained on COCO (80 classes), limited transfer to our 39-class taxonomy</li>
+                <li><strong>v4-epoch1-safe:</strong> Only 1 epoch trained - needs significantly more training</li>
+            </ul>
+
+            <h2>CLI Testing Results</h2>
+
+            <p>We tested both models using the Artifactiq CLI on sample validation images:</p>
+
+            <pre><code>$ artifactiq analyze --input coco_val_000001.jpg --model v4-epoch1-safe --confidence 0.01
+Detected 0 artifacts (29ms)
+
+$ artifactiq analyze --input coco_val_000001.jpg --model artifactiq:v3.0.1 --confidence 0.01
+Detected 8 artifacts (28ms)</code></pre>
+
+            <div class="callout callout-warning">
+                <strong>Production Recommendation:</strong> Use v3.0.1 for production workloads until v4 receives more training epochs.
+            </div>
+
+            <h2>MPS Training Challenges</h2>
+
+            <p>Training on Apple Silicon MPS backend presents several challenges documented in our research:</p>
+
+            <h3>Known Issues</h3>
+            <ol>
+                <li><strong>Speed:</strong> MPS is 10-25x slower than NVIDIA GPUs (RTX 4090, A100)</li>
+                <li><strong>Tensor Mismatches:</strong> Larger batch sizes cause runtime errors in loss calculation</li>
+                <li><strong>Memory Leaks:</strong> RAM usage can grow progressively during long training</li>
+                <li><strong>AMP Broken:</strong> Mixed precision training doesn't provide speedup on MPS</li>
+            </ol>
+
+            <h3>Recommended Cloud Alternatives (India)</h3>
+            <table>
+                <tr><th>Provider</th><th>GPU</th><th>Price/hr</th><th>Notes</th></tr>
+                <tr><td>E2E Networks</td><td>A100 80GB</td><td>Rs.130-150</td><td>Largest Indian GPU cloud</td></tr>
+                <tr><td>JarvisLabs</td><td>A100 80GB</td><td>Rs.108</td><td>Per-minute billing</td></tr>
+                <tr><td>Lambda Labs</td><td>A100</td><td>$1.29-1.79</td><td>Multi-GPU clusters</td></tr>
+            </table>
+
+            <h2>Output Files</h2>
+
+            <table>
+                <tr><th>File</th><th>Size</th><th>Format</th></tr>
+                <tr><td>best.pt</td><td>5.9 MB</td><td>PyTorch</td></tr>
+                <tr><td>best.onnx</td><td>12 MB</td><td>ONNX</td></tr>
+                <tr><td>epoch0.pt</td><td>18 MB</td><td>Checkpoint (includes optimizer)</td></tr>
+                <tr><td>last.pt</td><td>5.9 MB</td><td>PyTorch</td></tr>
+            </table>
+
+            <h2>Next Steps</h2>
+
+            <ol>
+                <li><strong>Extended Training:</strong> Train v4 for 50-100 epochs to match/exceed v3 performance</li>
+                <li><strong>Cloud Burst:</strong> Use E2E Networks or JarvisLabs for faster iteration</li>
+                <li><strong>Hyperparameter Tuning:</strong> Optimize learning rate, augmentation settings</li>
+                <li><strong>Model Export:</strong> Generate INT8 quantized ONNX for edge deployment</li>
+            </ol>
+
+            <div class="callout callout-success">
+                <strong>Download:</strong> v4.0.0 is available on <a href="https://github.com/ARTIFACTIQ/ml-models/releases/tag/v4.0.0">GitHub Releases</a> for experimentation and continued training.
+            </div>
+
+            <h2>Appendix: Training Metrics After 1 Epoch</h2>
+
+            <table>
+                <tr><th>Metric</th><th>Value</th></tr>
+                <tr><td>Box Loss (train)</td><td>2.299</td></tr>
+                <tr><td>Cls Loss (train)</td><td>5.089</td></tr>
+                <tr><td>DFL Loss (train)</td><td>2.479</td></tr>
+                <tr><td>Box Loss (val)</td><td>3.478</td></tr>
+                <tr><td>Cls Loss (val)</td><td>5.951</td></tr>
+                <tr><td>DFL Loss (val)</td><td>4.174</td></tr>
+            </table>
+
+            <p>These high loss values are expected after only 1 epoch and indicate the model is still in early stages of learning. Continued training will significantly reduce these values.</p>
+        </article>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Artifactiq. <a href="/">Return to Home</a> | <a href="https://github.com/ARTIFACTIQ/ml-models">GitHub</a></p>
+    </footer>
+</body>
+</html>

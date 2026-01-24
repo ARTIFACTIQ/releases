@@ -1,5 +1,28 @@
 [
   {
+    "id": "model-v4.0.0-merged-dataset-training",
+    "date": "2026-01-24",
+    "badge": "NEW MODEL",
+    "title": "Model v4.0.0: Trained on 68K Images",
+    "summary": "v4.0.0 trained on merged_all_datasets (68K images) using YOLOv8n on Apple M4 Max. Comparison shows v3 still leads. Full training report available.",
+    "highlights": [
+      { "label": "Dataset", "value": "68,117 images" },
+      { "label": "Training Time", "value": "4.47 hours" },
+      { "label": "Format", "value": "PyTorch + ONNX" },
+      { "label": "Next", "value": "More epochs" }
+    ],
+    "links": {
+      "primary": {
+        "label": "Training Report",
+        "url": "/blog/v4-training-report.html"
+      },
+      "secondary": {
+        "label": "GitHub Release",
+        "url": "https://github.com/ARTIFACTIQ/ml-models/releases/tag/v4.0.0"
+      }
+    }
+  },
+  {
     "id": "v3-auto-release-pipeline",
     "date": "2026-01-23",
     "badge": "NEW MODEL",
