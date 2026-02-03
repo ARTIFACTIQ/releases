@@ -1093,8 +1093,8 @@
                 <div class="prereq-banner" style="background: linear-gradient(135deg, rgba(126, 231, 135, 0.15), rgba(0, 212, 255, 0.15)); border-color: rgba(126, 231, 135, 0.3);">
                     <div class="icon"></div>
                     <div class="text">
-                        <strong style="color: var(--success);">New in v1.0.0-alpha.13:</strong> CoreML support for Apple Silicon with custom v1.1.0 model (39 classes, 3.4x faster)!
-                        <a href="#showcase">See detection examples</a>
+                        <strong style="color: var(--success);">New: Model v5.0.0 (E7)</strong> - 4.6x better mAP50! Trained with optimized shard-based approach (46 shards x 3 epochs).
+                        <a href="/blog/v5-e7-training-report.html">Read the announcement</a>
                     </div>
                 </div>
 
@@ -1129,7 +1129,7 @@
                             <span class="prompt">$</span>
                             <span class="cmd">artifactiq analyze --input bus.jpg</span>
                         </div>
-                        <div class="terminal-output">Downloading artifactiq-v1.0.0.onnx... done</div>
+                        <div class="terminal-output">Downloading artifactiq-v5.0.0.onnx... done</div>
                         <div class="terminal-output highlight">Detected 4 objects:</div>
                         <div class="terminal-output">  person (89.3%) | person (88.1%) | person (86.8%) | bus (83.8%)</div>
                         <div class="terminal-output">&nbsp;</div>
@@ -1222,7 +1222,7 @@
                         </div>
                         <div class="code-block-body">
 <pre style="margin: 0; color: var(--text-muted);">[model]
-version = "v1.0.0"        # Pin to specific version
+version = "v5.0.0"        # Pin to specific version
 update_policy = "check"   # manual, check, or auto
 
 [engine]
@@ -1247,7 +1247,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                         </div>
                         <div class="code-block-body">
                             <span class="comment"># Use specific Artifactiq model version</span><br>
-                            <span class="prompt">$ </span><span class="command">artifactiq analyze --input photo.jpg --model artifactiq:v1.0.0</span><br><br>
+                            <span class="prompt">$ </span><span class="command">artifactiq analyze --input photo.jpg --model artifactiq:v5.0.0</span><br><br>
                             <span class="comment"># Use YOLOv8 via Axon (requires axon install)</span><br>
                             <span class="prompt">$ </span><span class="command">artifactiq analyze --input photo.jpg --model yolov8n</span><br><br>
                             <span class="comment"># Use custom ONNX file</span><br>
@@ -1378,8 +1378,8 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 </div>
 
                 <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                    <span style="color: var(--text-muted); font-size: 0.8rem;">Use v3.0.1 for production. v4 trained on 68K images but needs 50-100 more epochs.</span>
-                    <a href="/blog/model-comparison.html" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">Full comparison report &rarr;</a>
+                    <span style="color: var(--text-muted); font-size: 0.8rem;">Model v5.0.0 (E7) now available - 4.6x mAP50 improvement over baseline.</span>
+                    <a href="/blog/v5-e7-training-report.html" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">E7 training report &rarr;</a>
                 </div>
             </div>
 
@@ -2250,7 +2250,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
             <div style="margin-top: 2rem; padding: 1rem; background: var(--code-bg); border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
                 <div style="color: var(--text-muted); margin-bottom: 0.5rem;"># Model comparison test (conf=0.05):</div>
                 <div style="color: var(--stock-color); margin-bottom: 0.25rem;">artifactiq analyze --input ./images/ --model yolov8n  <span style="color: var(--text-muted);"># Stock COCO model</span></div>
-                <div style="color: var(--artifactiq-color);">artifactiq analyze --input ./images/ --model artifactiq:v2  <span style="color: var(--text-muted);"># Domain-specific model</span></div>
+                <div style="color: var(--artifactiq-color);">artifactiq analyze --input ./images/ --model artifactiq:v5.0.0  <span style="color: var(--text-muted);"># Domain-specific model</span></div>
             </div>
             <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 1rem;">
                 Note: v3.0.1 is baseline (1 epoch). Continue training to v3.0.10+ for production-quality detection. See <a href="https://github.com/ARTIFACTIQ/ml-models/blob/main/docs/VERSION_SCHEME.md" style="color: var(--primary);">version scheme</a>.
