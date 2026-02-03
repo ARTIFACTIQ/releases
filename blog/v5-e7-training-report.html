@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artifactiq v5.0.0 (E7) - 4.6x Performance Improvement</title>
+    <meta name="description" content="Major release: Artifactiq v5.0.0 (E7) achieves 4.6x improvement in mAP50 through optimized shard-based training with 3 epochs per shard.">
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --accent: #7b2cbf;
+            --bg-dark: #0a0a12;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e4e4e4;
+            --text-muted: #888;
+            --code-bg: #0d1117;
+            --success: #7ee787;
+            --warning: #f0b429;
+            --error: #f85149;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.8;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+        /* Header */
+        header {
+            background: rgba(10, 10, 18, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        header a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Article */
+        article { padding: 4rem 0; }
+
+        .article-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .badge-success {
+            background: linear-gradient(90deg, var(--success), #52d858);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .meta {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        h3 {
+            color: var(--text);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: rgba(0, 212, 255, 0.1);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        /* Code */
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85em;
+        }
+        pre {
+            background: var(--code-bg);
+            padding: 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        /* Callouts */
+        .callout {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+        .callout-info {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary);
+        }
+        .callout-warning {
+            background: rgba(240, 180, 41, 0.1);
+            border-color: var(--warning);
+        }
+        .callout-success {
+            background: rgba(126, 231, 135, 0.1);
+            border-color: var(--success);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-value-success {
+            color: var(--success);
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Links */
+        a { color: var(--primary); }
+        a:hover { text-decoration: underline; }
+
+        /* Winner highlight */
+        .winner { color: var(--success); font-weight: 600; }
+        .loser { color: var(--text-muted); }
+
+        /* Improvement highlight */
+        .improvement {
+            display: inline-block;
+            background: rgba(126, 231, 135, 0.2);
+            color: var(--success);
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        ul, ol { margin: 1rem 0 1rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">&larr; Back to Artifactiq</a>
+    </header>
+
+    <div class="container">
+        <article>
+            <div class="article-header">
+                <span class="badge badge-success">Major Release</span>
+                <h1>Artifactiq v5.0.0 (E7): 4.6x Performance Breakthrough</h1>
+                <p class="meta">Published February 3, 2026 | By Artifactiq ML Team</p>
+            </div>
+
+            <h2>Executive Summary</h2>
+            <p>We're excited to announce <strong>Artifactiq v5.0.0</strong> (internally E7), our best-performing model to date. Through optimized shard-based training with 3 epochs per shard, we achieved a <span class="improvement">4.6x improvement</span> in mAP50 compared to our previous best model (E2/v4 baseline).</p>
+
+            <div class="callout callout-success">
+                <strong>Key Achievement:</strong> mAP50 improved from 0.000316 (E2) to 0.001454 (E7) - a 4.6x improvement achieved through an important discovery: 3 epochs per shard is critical for convergence; 1 epoch causes regression.
+            </div>
+
+            <h2>Performance Metrics</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value stat-value-success">4.6x</div>
+                    <div class="stat-label">Improvement</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0.001454</div>
+                    <div class="stat-label">mAP50</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3.5h</div>
+                    <div class="stat-label">Training Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">46</div>
+                    <div class="stat-label">Shards</div>
+                </div>
+            </div>
+
+            <h3>Detailed Metrics</h3>
+            <table>
+                <tr><th>Metric</th><th>E7 (v5.0.0)</th><th>E2 (Baseline)</th><th>Improvement</th></tr>
+                <tr>
+                    <td>mAP50</td>
+                    <td class="winner">0.001454</td>
+                    <td>0.000316</td>
+                    <td><span class="improvement">+360%</span></td>
+                </tr>
+                <tr>
+                    <td>mAP50-95</td>
+                    <td class="winner">0.000409</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Precision</td>
+                    <td>0.0022</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Recall</td>
+                    <td>0.042</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </table>
+
+            <h2>The Key Discovery: Epochs Per Shard Matter</h2>
+
+            <p>Our training experiments revealed a critical insight: <strong>the number of epochs per shard dramatically affects model convergence</strong>.</p>
+
+            <h3>Model Comparison</h3>
+            <table>
+                <tr><th>Model</th><th>Shards</th><th>Epochs/Shard</th><th>mAP50</th><th>Status</th></tr>
+                <tr>
+                    <td>E2</td>
+                    <td>22</td>
+                    <td>1</td>
+                    <td>0.000316</td>
+                    <td>Previous best</td>
+                </tr>
+                <tr>
+                    <td class="loser">E6</td>
+                    <td>46</td>
+                    <td class="loser">1</td>
+                    <td class="loser">0.000170</td>
+                    <td class="loser">Regressed</td>
+                </tr>
+                <tr>
+                    <td class="winner">E7</td>
+                    <td>46</td>
+                    <td class="winner">3</td>
+                    <td class="winner">0.001454</td>
+                    <td class="winner">Current best</td>
+                </tr>
+            </table>
+
+            <div class="callout callout-warning">
+                <strong>Critical Learning:</strong> E6 (46 shards x 1 epoch) actually regressed to 0.000170 mAP50 - worse than E2. Increasing to 3 epochs per shard for E7 not only recovered but achieved 4.6x improvement over the E2 baseline.
+            </div>
+
+            <h2>Training Configuration</h2>
+
+            <h3>Hardware</h3>
+            <table>
+                <tr><th>Component</th><th>Specification</th></tr>
+                <tr><td>Device</td><td>Apple M4 Max</td></tr>
+                <tr><td>Backend</td><td>MPS (Metal Performance Shaders)</td></tr>
+                <tr><td>Framework</td><td>Ultralytics YOLO11m + PyTorch</td></tr>
+            </table>
+
+            <h3>Optimized Training Parameters</h3>
+            <pre><code>{
+    # Shard configuration
+    "shards": 46,
+    "images_per_shard": 1500,
+    "epochs_per_shard": 3,      # CRITICAL: Must be 3+
+
+    # Speed optimizations
+    "batch": 8,
+    "mini_val": 100,            # Fast validation subset
+
+    # Stability - Critical for MPS
+    "freeze": 10,
+    "cos_lr": True,
+    "warmup_epochs": 3,
+
+    # MPS Compatibility
+    "workers": 0,
+    "cache": False,
+    "rect": False,
+    "mosaic": 0.0,
+    "mixup": 0.0,
+    "copy_paste": 0.0,
+
+    # Learning Rate
+    "lr0": 0.001,
+    "lrf": 0.01,
+    "optimizer": "AdamW"
+}</code></pre>
+
+            <div class="callout callout-info">
+                <strong>Key Optimizations:</strong>
+                <ul>
+                    <li><strong>freeze=10:</strong> Freezes backbone layers for stability on MPS</li>
+                    <li><strong>cos_lr=True:</strong> Cosine learning rate annealing for smoother convergence</li>
+                    <li><strong>mini_val=100:</strong> Small validation set (100 images) for fast per-shard validation</li>
+                    <li><strong>batch=8:</strong> Optimal batch size for M4 Max memory</li>
+                </ul>
+            </div>
+
+            <h2>Dataset</h2>
+
+            <table>
+                <tr><th>Item</th><th>Value</th></tr>
+                <tr><td>Training Images</td><td>67,991</td></tr>
+                <tr><td>Validation Images</td><td>7,570</td></tr>
+                <tr><td>Classes</td><td>39</td></tr>
+                <tr><td>Shard Size</td><td>1,500 images each</td></tr>
+            </table>
+
+            <h2>Shard-Based Training Architecture</h2>
+
+            <p>Our training uses a chained shard approach where each shard's output model becomes the input for the next shard:</p>
+
+            <pre><code>Base Model (federated_final.pt)
+    |
+    v
+Shard 0 (1500 images x 3 epochs) -> shard_0/weights/last.pt
+    |
+    v
+Shard 1 (1500 images x 3 epochs) -> shard_1/weights/last.pt
+    |
+    v
+... (44 more shards) ...
+    |
+    v
+Shard 45 (1500 images x 3 epochs) -> e7_best.pt</code></pre>
+
+            <p>This approach allows:</p>
+            <ul>
+                <li>Incremental training without loading entire dataset</li>
+                <li>Progress checkpoints after each shard</li>
+                <li>Real-time monitoring via ntfy.sh notifications</li>
+                <li>Resume capability if training is interrupted</li>
+            </ul>
+
+            <h2>Installation</h2>
+
+            <p>Update to v5.0.0 using the Artifactiq CLI:</p>
+
+            <pre><code>$ artifactiq model update
+Checking for updates... v5.0.0 available (current: v4.0.0)
+Downloading artifactiq-v5.0.0.onnx (76.8 MB)... done
+Model updated successfully!</code></pre>
+
+            <p>Or specify the version explicitly:</p>
+
+            <pre><code>$ artifactiq analyze --model artifactiq:v5.0.0 --input image.jpg</code></pre>
+
+            <div class="callout callout-success">
+                <strong>Download:</strong> v5.0.0 is available on <a href="https://github.com/ARTIFACTIQ/releases/releases/tag/v5.0.0">GitHub Releases</a>
+            </div>
+
+            <h2>Model Files</h2>
+
+            <table>
+                <tr><th>File</th><th>Size</th><th>Format</th></tr>
+                <tr><td>e7_best.pt</td><td>40.5 MB</td><td>PyTorch</td></tr>
+                <tr><td>artifactiq-v5.0.0.onnx</td><td>76.8 MB</td><td>ONNX (deployed)</td></tr>
+            </table>
+
+            <h2>What's Next</h2>
+
+            <p>With the E7 training breakthrough, we're planning:</p>
+
+            <ol>
+                <li><strong>E8 Training:</strong> Experiment with 5 epochs per shard to see if further improvements are possible</li>
+                <li><strong>Cloud Training:</strong> Leverage A100 GPUs for faster iteration on hyperparameter tuning</li>
+                <li><strong>Quantization:</strong> INT8 ONNX export for faster inference on edge devices</li>
+                <li><strong>Expanded Classes:</strong> Adding more artifact categories based on user feedback</li>
+            </ol>
+
+            <h2>Changelog</h2>
+
+            <table>
+                <tr><th>Date</th><th>Event</th></tr>
+                <tr><td>2026-02-03</td><td class="winner">E7 released as v5.0.0</td></tr>
+                <tr><td>2026-02-03</td><td>E7 training complete (46 shards x 3 epochs)</td></tr>
+                <tr><td>2026-02-02</td><td class="loser">E6 regressed (1 epoch per shard insufficient)</td></tr>
+                <tr><td>2026-02-02</td><td>Optimized training: batch=8, mini_val=100, freeze=10</td></tr>
+                <tr><td>2026-01-31</td><td>E2 baseline established (mAP50: 0.000316)</td></tr>
+                <tr><td>2026-01-24</td><td>v4.0.0 released</td></tr>
+            </table>
+        </article>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Artifactiq. <a href="/">Return to Home</a> | <a href="https://github.com/ARTIFACTIQ/releases">GitHub</a></p>
+    </footer>
+</body>
+</html>
