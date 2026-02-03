@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Model Comparison | Artifactiq</title>
-    <meta name="description" content="Transparent comparison of Artifactiq models vs stock YOLOv8n. All results from actual inference runs.">
+    <meta name="description" content="Transparent comparison of Artifactiq models vs stock YOLOv8n using validation dataset with ground truth.">
     <style>
         :root {
             --primary: #00d4ff;
@@ -43,29 +43,12 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            margin-left: 1.5rem;
-        }
-
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+        nav a { color: var(--text-muted); text-decoration: none; margin-left: 1.5rem; }
         nav a:hover { color: var(--primary); }
 
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-        }
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--text-muted); margin-bottom: 2rem; }
 
         .transparency-notice {
             background: var(--code-bg);
@@ -76,96 +59,88 @@
             font-size: 0.85rem;
         }
 
-        .transparency-notice h3 {
-            color: var(--success);
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
+        .transparency-notice h3 { color: var(--success); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .transparency-notice code { background: rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.8rem; }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
-        .transparency-notice code {
-            background: rgba(255,255,255,0.1);
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
+        .summary-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
         }
 
-        /* Comparison Gallery Styles */
-        .comparison-header {
-            margin-bottom: 1.5rem;
+        .summary-card h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .comparison-meta {
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Filters */
+        .filters {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
             font-size: 0.8rem;
             color: var(--text-muted);
         }
 
-        .model-badges {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .model-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.4rem 0.75rem;
-            border-radius: 6px;
-            border: 1px solid;
+        .filter-group select, .filter-group input {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text);
+            padding: 0.4rem 0.6rem;
+            border-radius: 4px;
             font-size: 0.8rem;
-            font-weight: 600;
         }
 
-        .badge-label {
-            font-size: 0.6rem;
-            padding: 0.1rem 0.3rem;
-            border-radius: 3px;
-            background: currentColor;
-            color: var(--bg-dark);
-            margin-left: 0.25rem;
-        }
-
-        .badge-metric {
-            font-size: 0.65rem;
-            opacity: 0.8;
-        }
-
-        .summary-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 2rem;
-            font-size: 0.85rem;
-        }
-
-        .summary-table th,
-        .summary-table td {
-            padding: 0.75rem 1rem;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .summary-table th:first-child,
-        .summary-table td:first-child {
-            text-align: left;
-        }
-
-        .summary-table thead {
-            background: var(--bg-card);
-        }
-
-        .total-row {
-            background: var(--bg-card);
-            font-weight: 600;
-        }
-
+        /* Comparison Grid */
         .comparison-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1rem;
         }
 
         .comparison-card {
@@ -175,10 +150,14 @@
             border: 1px solid var(--border-color);
         }
 
+        .comparison-card.highlight-success { border-color: var(--success); }
+        .comparison-card.highlight-failure { border-color: var(--error); }
+
         .card-image {
             aspect-ratio: 16/10;
             overflow: hidden;
             background: #111;
+            position: relative;
         }
 
         .card-image img {
@@ -187,18 +166,29 @@
             object-fit: cover;
         }
 
-        .card-filename {
+        .card-gt-badge {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            background: rgba(0,0,0,0.8);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+        }
+
+        .card-header {
             padding: 0.5rem 1rem;
             font-size: 0.75rem;
             color: var(--text-muted);
             border-bottom: 1px solid var(--border-color);
             font-family: monospace;
+            display: flex;
+            justify-content: space-between;
         }
 
         .card-results {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0;
         }
 
         .model-result {
@@ -206,9 +196,7 @@
             border-right: 1px solid var(--border-color);
         }
 
-        .model-result:last-child {
-            border-right: none;
-        }
+        .model-result:last-child { border-right: none; }
 
         .result-header {
             display: flex;
@@ -220,69 +208,72 @@
             font-size: 0.75rem;
         }
 
-        .model-name {
-            font-weight: 600;
-        }
+        .model-name { font-weight: 600; }
 
-        .detection-count {
-            opacity: 0.7;
-        }
-
-        .timing {
+        .eval-metrics {
+            display: flex;
+            gap: 0.5rem;
             font-size: 0.65rem;
-            opacity: 0.6;
+            margin-bottom: 0.5rem;
         }
+
+        .eval-metrics span {
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+        }
+
+        .tp { background: var(--success); color: #000; }
+        .fp { background: var(--error); color: #fff; }
+        .fn { background: var(--warning); color: #000; }
 
         .result-detections {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.3rem;
-            min-height: 2rem;
+            gap: 0.25rem;
+            min-height: 1.5rem;
         }
 
         .detection-tag {
             display: inline-block;
-            padding: 0.2rem 0.5rem;
+            padding: 0.15rem 0.4rem;
             border-radius: 4px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: white;
+            background: #6b7280;
         }
 
         .no-detections {
             color: var(--text-muted);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-style: italic;
         }
 
-        .result-note {
-            font-size: 0.65rem;
-            color: var(--warning);
-            margin-top: 0.5rem;
-            font-style: italic;
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding: 1rem;
         }
 
-        .loading {
-            text-align: center;
-            padding: 4rem;
-            color: var(--text-muted);
+        .pagination button {
+            background: var(--primary);
+            color: var(--bg-dark);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
         }
 
-        .error {
-            text-align: center;
-            padding: 2rem;
-            color: var(--error);
-            background: rgba(239, 68, 68, 0.1);
-            border-radius: 8px;
+        .pagination button:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
         }
 
-        /* Category colors */
-        .cat-apparel { background: #ef4444; }
-        .cat-footwear { background: #f59e0b; }
-        .cat-accessories { background: #8b5cf6; }
-        .cat-bags { background: #06b6d4; }
-        .cat-people { background: #6b7280; }
-        .cat-vehicles { background: #3b82f6; }
-        .cat-other { background: #4b5563; }
+        .loading { text-align: center; padding: 4rem; color: var(--text-muted); }
+        .error { text-align: center; padding: 2rem; color: var(--error); background: rgba(239, 68, 68, 0.1); border-radius: 8px; }
 
         footer {
             margin-top: 3rem;
@@ -294,43 +285,34 @@
         }
 
         @media (max-width: 768px) {
-            .comparison-grid {
-                grid-template-columns: 1fr;
-            }
-            .card-results {
-                grid-template-columns: 1fr;
-            }
-            .model-result {
-                border-right: none;
-                border-bottom: 1px solid var(--border-color);
-            }
+            .comparison-grid { grid-template-columns: 1fr; }
+            .card-results { grid-template-columns: 1fr; }
+            .model-result { border-right: none; border-bottom: 1px solid var(--border-color); }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="logo">Artifactiq</div>
+            <a href="/" class="logo">Artifactiq</a>
             <nav>
                 <a href="/">Home</a>
-                <a href="/blog/v5-e7-training-report.html">E7 Training Report</a>
+                <a href="/blog/v5-e7-training-report.html">E7 Report</a>
                 <a href="https://github.com/ARTIFACTIQ">GitHub</a>
             </nav>
         </header>
 
         <h1>Model Comparison</h1>
-        <p class="subtitle">Transparent, reproducible comparison of stock vs custom models</p>
+        <p class="subtitle">Transparent comparison using validation dataset with ground truth labels</p>
 
         <div class="transparency-notice">
-            <h3>🔍 Transparency Notice</h3>
-            <p>All results on this page are generated from actual inference runs, not manually curated.</p>
+            <h3>🔍 Validation Set Comparison</h3>
+            <p>Results generated from <strong>700 randomly sampled images</strong> (10%) from the 7,570 image validation set.</p>
             <p style="margin-top: 0.5rem;">
-                <strong>Regenerate yourself:</strong>
-                <code>cd releases-repo && python scripts/generate-comparison.py</code>
+                Ground truth labels enable honest evaluation: ✅ True Positives, ❌ False Positives, ⚠️ Missed Detections
             </p>
-            <p style="margin-top: 0.5rem; color: var(--warning);">
-                <strong>Known Issue:</strong> E7 model has low confidence scores (1-3%) due to <code>val=False</code> during training.
-                E8 training (in progress) addresses this with proper confidence calibration.
+            <p style="margin-top: 0.5rem;">
+                <strong>Regenerate:</strong> <code>python scripts/generate-val-comparison.py --sample-size 700</code>
             </p>
         </div>
 
@@ -339,173 +321,203 @@
         </div>
 
         <footer>
-            <p>Data source: <code>src/data/model-comparison-results.json</code></p>
+            <p>Data: <code>src/data/val-comparison-results.json</code> | Seed: 42 (reproducible)</p>
             <p>© 2026 Artifactiq. Committed to transparency in AI.</p>
         </footer>
     </div>
 
     <script>
-        const CATEGORY_COLORS = {
-            apparel: '#ef4444',
-            footwear: '#f59e0b',
-            accessories: '#8b5cf6',
-            bags: '#06b6d4',
-            people: '#6b7280',
-            vehicles: '#3b82f6',
-            other: '#4b5563'
-        };
+        let allData = null;
+        let currentPage = 0;
+        const PAGE_SIZE = 50;
 
         async function loadComparison() {
             const container = document.getElementById('comparison-container');
 
             try {
-                const response = await fetch('src/data/model-comparison-results.json');
+                const response = await fetch('src/data/val-comparison-results.json');
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const data = await response.json();
-                renderComparison(container, data);
+                allData = await response.json();
+                renderComparison(container);
             } catch (error) {
-                container.innerHTML = `
-                    <div class="error">
-                        <p><strong>Failed to load comparison data</strong></p>
-                        <p>${error.message}</p>
-                        <p style="margin-top: 1rem; font-size: 0.8rem;">
-                            Run <code>python scripts/generate-comparison.py</code> to generate data
-                        </p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="error"><p><strong>Failed to load</strong></p><p>${error.message}</p></div>`;
             }
         }
 
-        function renderComparison(container, data) {
-            const models = data.models || {};
-            const modelIds = Object.keys(models);
+        function renderComparison(container) {
+            const models = allData.models || {};
+            const summary = allData.summary || {};
+            const config = allData.benchmark_config || {};
 
             let html = `
-                <div class="comparison-header">
-                    <div class="comparison-meta">
-                        <span>Generated: ${formatDate(data.generated_at)}</span>
-                        <span>Images: ${data.images?.length || 0}</span>
-                        <span>Confidence ≥ ${((data.benchmark_config?.confidence_threshold || 0.1) * 100).toFixed(0)}%</span>
+                <div class="summary-grid">
+                    ${Object.entries(models).map(([id, model]) => `
+                        <div class="summary-card" style="border-left: 4px solid ${model.color}">
+                            <h3 style="color: ${model.color}">
+                                ${model.name}
+                                ${model.is_current ? '<span style="background: var(--success); color: #000; padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.6rem;">CURRENT</span>' : ''}
+                            </h3>
+                            <div class="metric-grid">
+                                <div class="metric">
+                                    <div class="metric-value" style="color: ${model.color}">${summary[id]?.total_detections || 0}</div>
+                                    <div class="metric-label">Detections</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value" style="color: var(--success)">${((summary[id]?.precision || 0) * 100).toFixed(1)}%</div>
+                                    <div class="metric-label">Precision</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value" style="color: var(--warning)">${((summary[id]?.recall || 0) * 100).toFixed(1)}%</div>
+                                    <div class="metric-label">Recall</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--text-muted);">
+                                TP: ${summary[id]?.true_positives || 0} | FP: ${summary[id]?.false_positives || 0} | FN: ${summary[id]?.false_negatives || 0} | F1: ${((summary[id]?.f1 || 0) * 100).toFixed(1)}%
+                            </div>
+                            ${model.known_issue ? `<div style="margin-top: 0.5rem; font-size: 0.7rem; color: var(--warning);">⚠️ ${model.known_issue}</div>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Show:</label>
+                        <select id="filter-type" onchange="renderPage()">
+                            <option value="all">All Images</option>
+                            <option value="e7_better">E7 Better</option>
+                            <option value="stock_better">Stock Better</option>
+                            <option value="both_detect">Both Detect</option>
+                            <option value="e7_only">E7 Only</option>
+                        </select>
                     </div>
-                    <div class="model-badges">
-                        ${modelIds.map(id => {
-                            const m = models[id];
-                            return `
-                                <span class="model-badge" style="background: ${m.color}15; border-color: ${m.color}; color: ${m.color}">
-                                    ${m.name}
-                                    ${m.is_current ? '<span class="badge-label">CURRENT</span>' : ''}
-                                    ${m.mAP50 ? `<span class="badge-metric">mAP50: ${(m.mAP50 * 100).toFixed(3)}%</span>` : ''}
-                                </span>
-                            `;
-                        }).join('')}
+                    <div class="filter-group">
+                        <label>Page Size:</label>
+                        <select id="page-size" onchange="changePageSize()">
+                            <option value="25">25</option>
+                            <option value="50" selected>50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div style="margin-left: auto; font-size: 0.8rem; color: var(--text-muted);">
+                        ${config.sample_size} images | ${config.sample_percentage}% of validation set | conf ≥ ${(config.confidence_threshold * 100).toFixed(0)}%
                     </div>
                 </div>
 
-                <table class="summary-table">
-                    <thead>
-                        <tr>
-                            <th>Category</th>
-                            ${modelIds.map(id => `<th style="color: ${models[id].color}">${models[id].name}</th>`).join('')}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${renderSummaryRows(data.summary, models, modelIds)}
-                        <tr class="total-row">
-                            <td>Total Detections</td>
-                            ${modelIds.map(id => `<td>${data.summary[id]?.total_detections || 0}</td>`).join('')}
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="comparison-grid">
-                    ${data.images.map(img => renderImageCard(img, models, modelIds)).join('')}
-                </div>
+                <div id="image-grid" class="comparison-grid"></div>
+                <div id="pagination" class="pagination"></div>
             `;
 
             container.innerHTML = html;
+            renderPage();
         }
 
-        function renderSummaryRows(summary, models, modelIds) {
-            const categories = ['apparel', 'footwear', 'accessories', 'bags', 'people', 'vehicles', 'other'];
-            const labels = {
-                apparel: '👕 Apparel',
-                footwear: '👟 Footwear',
-                accessories: '🕶️ Accessories',
-                bags: '🎒 Bags',
-                people: '👤 People',
-                vehicles: '🚗 Vehicles',
-                other: '📦 Other'
-            };
+        function getFilteredImages() {
+            const filterType = document.getElementById('filter-type')?.value || 'all';
+            let images = allData.images || [];
 
-            return categories.map(cat => {
-                const hasData = modelIds.some(id => (summary[id]?.by_category?.[cat] || 0) > 0);
-                if (!hasData) return '';
+            if (filterType === 'e7_better') {
+                images = images.filter(img => {
+                    const e7 = img.results?.artifactiq_e7?.evaluation;
+                    const stock = img.results?.stock_yolov8n?.evaluation;
+                    return e7 && stock && (e7.recall > stock.recall || e7.precision > stock.precision);
+                });
+            } else if (filterType === 'stock_better') {
+                images = images.filter(img => {
+                    const e7 = img.results?.artifactiq_e7?.evaluation;
+                    const stock = img.results?.stock_yolov8n?.evaluation;
+                    return e7 && stock && stock.recall > e7.recall && stock.true_positives > e7.true_positives;
+                });
+            } else if (filterType === 'both_detect') {
+                images = images.filter(img => {
+                    const e7 = img.results?.artifactiq_e7?.count || 0;
+                    const stock = img.results?.stock_yolov8n?.count || 0;
+                    return e7 > 0 && stock > 0;
+                });
+            } else if (filterType === 'e7_only') {
+                images = images.filter(img => {
+                    const e7 = img.results?.artifactiq_e7?.count || 0;
+                    return e7 > 0;
+                });
+            }
 
-                return `
-                    <tr>
-                        <td>${labels[cat]}</td>
-                        ${modelIds.map(id => {
-                            const count = summary[id]?.by_category?.[cat] || 0;
-                            return `<td style="color: ${count > 0 ? models[id].color : 'var(--text-muted)'}">${count}</td>`;
-                        }).join('')}
-                    </tr>
-                `;
-            }).join('');
+            return images;
         }
 
-        function renderImageCard(imageData, models, modelIds) {
+        function renderPage() {
+            const images = getFilteredImages();
+            const pageSize = parseInt(document.getElementById('page-size')?.value || PAGE_SIZE);
+            const totalPages = Math.ceil(images.length / pageSize);
+            currentPage = Math.min(currentPage, totalPages - 1);
+            currentPage = Math.max(0, currentPage);
+
+            const start = currentPage * pageSize;
+            const pageImages = images.slice(start, start + pageSize);
+
+            const grid = document.getElementById('image-grid');
+            const models = allData.models || {};
+
+            grid.innerHTML = pageImages.map(img => renderImageCard(img, models)).join('');
+
+            document.getElementById('pagination').innerHTML = `
+                <button onclick="prevPage()" ${currentPage === 0 ? 'disabled' : ''}>← Previous</button>
+                <span>Page ${currentPage + 1} of ${totalPages} (${images.length} images)</span>
+                <button onclick="nextPage()" ${currentPage >= totalPages - 1 ? 'disabled' : ''}>Next →</button>
+            `;
+        }
+
+        function renderImageCard(img, models) {
+            const gt = img.ground_truth || {};
+
             return `
                 <div class="comparison-card">
                     <div class="card-image">
-                        <img src="images/${imageData.filename}" alt="${imageData.filename}" loading="lazy"
-                             onerror="this.style.display='none'">
+                        <img src="/images/val/${img.filename}" alt="${img.filename}" loading="lazy"
+                             onerror="this.parentElement.innerHTML='<div style=\\'padding:2rem;text-align:center;color:var(--text-muted)\\'>Image not available</div>'">
+                        <div class="card-gt-badge">GT: ${gt.count || 0} objects</div>
                     </div>
-                    <div class="card-filename">${imageData.filename}</div>
+                    <div class="card-header">
+                        <span>${img.filename}</span>
+                        <span>${gt.classes?.slice(0,3).join(', ') || 'Unknown'}${gt.classes?.length > 3 ? '...' : ''}</span>
+                    </div>
                     <div class="card-results">
-                        ${modelIds.map(id => renderModelResult(id, imageData.results?.[id], models[id])).join('')}
+                        ${Object.entries(models).map(([id, model]) => renderModelResult(id, img.results?.[id], model)).join('')}
                     </div>
                 </div>
             `;
         }
 
         function renderModelResult(modelId, result, config) {
-            if (!result) {
-                return `<div class="model-result"><span class="no-detections">No data</span></div>`;
-            }
+            if (!result) return `<div class="model-result"><span class="no-detections">No data</span></div>`;
 
+            const eval_ = result.evaluation || {};
             const detections = result.detections || [];
-            const topDet = detections.slice(0, 4);
 
             return `
                 <div class="model-result">
                     <div class="result-header">
                         <span class="model-name" style="color: ${config?.color || '#888'}">${config?.name || modelId}</span>
-                        <span class="detection-count">${result.count} det</span>
-                        <span class="timing">${result.processing_time_ms}ms</span>
+                        <span>${result.count} det</span>
+                    </div>
+                    <div class="eval-metrics">
+                        <span class="tp">✓${eval_.true_positives || 0}</span>
+                        <span class="fp">✗${eval_.false_positives || 0}</span>
+                        <span class="fn">?${eval_.false_negatives || 0}</span>
                     </div>
                     <div class="result-detections">
-                        ${topDet.length === 0 ? '<span class="no-detections">No detections</span>' : ''}
-                        ${topDet.map(det => `
-                            <span class="detection-tag" style="background: ${CATEGORY_COLORS[det.category] || '#6b7280'}">
-                                ${det.label} ${(det.confidence * 100).toFixed(1)}%
-                            </span>
+                        ${detections.length === 0 ? '<span class="no-detections">No detections</span>' : ''}
+                        ${detections.slice(0, 5).map(det => `
+                            <span class="detection-tag">${det.label} ${(det.confidence * 100).toFixed(0)}%</span>
                         `).join('')}
-                        ${detections.length > 4 ? `<span class="no-detections">+${detections.length - 4} more</span>` : ''}
+                        ${detections.length > 5 ? `<span class="no-detections">+${detections.length - 5}</span>` : ''}
                     </div>
-                    ${result.note ? `<div class="result-note">${result.note}</div>` : ''}
                 </div>
             `;
         }
 
-        function formatDate(isoString) {
-            try {
-                return new Date(isoString).toLocaleDateString('en-US', {
-                    year: 'numeric', month: 'short', day: 'numeric'
-                });
-            } catch { return isoString; }
-        }
+        function prevPage() { currentPage--; renderPage(); window.scrollTo(0, 400); }
+        function nextPage() { currentPage++; renderPage(); window.scrollTo(0, 400); }
+        function changePageSize() { currentPage = 0; renderPage(); }
 
-        // Load on page ready
         document.addEventListener('DOMContentLoaded', loadComparison);
     </script>
 </body>
