@@ -1,0 +1,64 @@
+{
+  "schema_version": "2.0",
+  "generated_at": "2026-02-03T14:00:00Z",
+  "benchmark_config": {
+    "confidence_threshold": 0.1,
+    "iou_threshold": 0.45,
+    "image_source": "artifactiq.ai showcase images"
+  },
+  "models": {
+    "stock_yolov8n": {
+      "name": "Stock YOLOv8n",
+      "version": "8.0.0",
+      "type": "baseline",
+      "classes": 80,
+      "dataset": "COCO",
+      "description": "Pre-trained on COCO dataset. Generic object detection.",
+      "color": "#888888"
+    },
+    "artifactiq_e2": {
+      "name": "Artifactiq E2",
+      "version": "v2.0.0",
+      "type": "custom",
+      "classes": 39,
+      "dataset": "Open Images V7 (filtered)",
+      "mAP50": 0.000316,
+      "training": "22 shards x 1 epoch",
+      "description": "First custom model. Baseline for comparison.",
+      "color": "#f59e0b"
+    },
+    "artifactiq_e7": {
+      "name": "Artifactiq E7",
+      "version": "v5.0.0",
+      "type": "custom",
+      "classes": 39,
+      "dataset": "Open Images V7 (filtered)",
+      "mAP50": 0.001454,
+      "training": "46 shards x 3 epochs",
+      "description": "Current production model. 4.6x improvement over E2.",
+      "color": "#10b981",
+      "is_current": true
+    },
+    "artifactiq_e8": {
+      "name": "Artifactiq E8",
+      "version": "v6.0.0",
+      "type": "custom",
+      "classes": 39,
+      "dataset": "Open Images V7 (filtered)",
+      "mAP50": null,
+      "training": "46 shards x 10 epochs, val=True",
+      "description": "Calibrated training for proper confidence scores.",
+      "color": "#3b82f6",
+      "is_training": true
+    }
+  },
+  "class_categories": {
+    "apparel": ["Clothing", "Dress", "Suit", "Jacket", "Coat", "Jeans", "Shorts", "Skirt", "Swimwear", "Miniskirt"],
+    "footwear": ["Footwear", "Boot", "High heels", "Sandal"],
+    "accessories": ["Watch", "Sunglasses", "Hat", "Tie", "Belt", "Scarf", "Glasses"],
+    "bags": ["Backpack", "Handbag", "Suitcase", "Briefcase", "Luggage and bags"],
+    "people": ["Person", "Man", "Woman", "Boy", "Girl", "Human face", "Human body", "Human head"],
+    "jewelry": ["Earrings", "Necklace", "Bracelet", "Ring"]
+  },
+  "images": []
+}

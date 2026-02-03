@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Comparison | Artifactiq</title>
+    <meta name="description" content="Transparent comparison of Artifactiq models vs stock YOLOv8n. All results from actual inference runs.">
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --bg-dark: #0a0a12;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text: #e4e4e4;
+            --text-muted: #888;
+            --code-bg: #0d1117;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 1.5rem;
+        }
+
+        nav a:hover { color: var(--primary); }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .transparency-notice {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .transparency-notice h3 {
+            color: var(--success);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .transparency-notice code {
+            background: rgba(255,255,255,0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        /* Comparison Gallery Styles */
+        .comparison-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .comparison-meta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .model-badges {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .model-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-label {
+            font-size: 0.6rem;
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            background: currentColor;
+            color: var(--bg-dark);
+            margin-left: 0.25rem;
+        }
+
+        .badge-metric {
+            font-size: 0.65rem;
+            opacity: 0.8;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .summary-table th,
+        .summary-table td {
+            padding: 0.75rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-table th:first-child,
+        .summary-table td:first-child {
+            text-align: left;
+        }
+
+        .summary-table thead {
+            background: var(--bg-card);
+        }
+
+        .total-row {
+            background: var(--bg-card);
+            font-weight: 600;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .comparison-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .card-image {
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            background: #111;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-filename {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            font-family: monospace;
+        }
+
+        .card-results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .model-result {
+            padding: 0.75rem;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .model-result:last-child {
+            border-right: none;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.75rem;
+        }
+
+        .model-name {
+            font-weight: 600;
+        }
+
+        .detection-count {
+            opacity: 0.7;
+        }
+
+        .timing {
+            font-size: 0.65rem;
+            opacity: 0.6;
+        }
+
+        .result-detections {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            min-height: 2rem;
+        }
+
+        .detection-tag {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: white;
+        }
+
+        .no-detections {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-style: italic;
+        }
+
+        .result-note {
+            font-size: 0.65rem;
+            color: var(--warning);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-muted);
+        }
+
+        .error {
+            text-align: center;
+            padding: 2rem;
+            color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Category colors */
+        .cat-apparel { background: #ef4444; }
+        .cat-footwear { background: #f59e0b; }
+        .cat-accessories { background: #8b5cf6; }
+        .cat-bags { background: #06b6d4; }
+        .cat-people { background: #6b7280; }
+        .cat-vehicles { background: #3b82f6; }
+        .cat-other { background: #4b5563; }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            .card-results {
+                grid-template-columns: 1fr;
+            }
+            .model-result {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Artifactiq</div>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/blog/v5-e7-training-report.html">E7 Training Report</a>
+                <a href="https://github.com/ARTIFACTIQ">GitHub</a>
+            </nav>
+        </header>
+
+        <h1>Model Comparison</h1>
+        <p class="subtitle">Transparent, reproducible comparison of stock vs custom models</p>
+
+        <div class="transparency-notice">
+            <h3>🔍 Transparency Notice</h3>
+            <p>All results on this page are generated from actual inference runs, not manually curated.</p>
+            <p style="margin-top: 0.5rem;">
+                <strong>Regenerate yourself:</strong>
+                <code>cd releases-repo && python scripts/generate-comparison.py</code>
+            </p>
+            <p style="margin-top: 0.5rem; color: var(--warning);">
+                <strong>Known Issue:</strong> E7 model has low confidence scores (1-3%) due to <code>val=False</code> during training.
+                E8 training (in progress) addresses this with proper confidence calibration.
+            </p>
+        </div>
+
+        <div id="comparison-container">
+            <div class="loading">Loading comparison data...</div>
+        </div>
+
+        <footer>
+            <p>Data source: <code>src/data/model-comparison-results.json</code></p>
+            <p>© 2026 Artifactiq. Committed to transparency in AI.</p>
+        </footer>
+    </div>
+
+    <script>
+        const CATEGORY_COLORS = {
+            apparel: '#ef4444',
+            footwear: '#f59e0b',
+            accessories: '#8b5cf6',
+            bags: '#06b6d4',
+            people: '#6b7280',
+            vehicles: '#3b82f6',
+            other: '#4b5563'
+        };
+
+        async function loadComparison() {
+            const container = document.getElementById('comparison-container');
+
+            try {
+                const response = await fetch('src/data/model-comparison-results.json');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                renderComparison(container, data);
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="error">
+                        <p><strong>Failed to load comparison data</strong></p>
+                        <p>${error.message}</p>
+                        <p style="margin-top: 1rem; font-size: 0.8rem;">
+                            Run <code>python scripts/generate-comparison.py</code> to generate data
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderComparison(container, data) {
+            const models = data.models || {};
+            const modelIds = Object.keys(models);
+
+            let html = `
+                <div class="comparison-header">
+                    <div class="comparison-meta">
+                        <span>Generated: ${formatDate(data.generated_at)}</span>
+                        <span>Images: ${data.images?.length || 0}</span>
+                        <span>Confidence ≥ ${((data.benchmark_config?.confidence_threshold || 0.1) * 100).toFixed(0)}%</span>
+                    </div>
+                    <div class="model-badges">
+                        ${modelIds.map(id => {
+                            const m = models[id];
+                            return `
+                                <span class="model-badge" style="background: ${m.color}15; border-color: ${m.color}; color: ${m.color}">
+                                    ${m.name}
+                                    ${m.is_current ? '<span class="badge-label">CURRENT</span>' : ''}
+                                    ${m.mAP50 ? `<span class="badge-metric">mAP50: ${(m.mAP50 * 100).toFixed(3)}%</span>` : ''}
+                                </span>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            ${modelIds.map(id => `<th style="color: ${models[id].color}">${models[id].name}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${renderSummaryRows(data.summary, models, modelIds)}
+                        <tr class="total-row">
+                            <td>Total Detections</td>
+                            ${modelIds.map(id => `<td>${data.summary[id]?.total_detections || 0}</td>`).join('')}
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="comparison-grid">
+                    ${data.images.map(img => renderImageCard(img, models, modelIds)).join('')}
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function renderSummaryRows(summary, models, modelIds) {
+            const categories = ['apparel', 'footwear', 'accessories', 'bags', 'people', 'vehicles', 'other'];
+            const labels = {
+                apparel: '👕 Apparel',
+                footwear: '👟 Footwear',
+                accessories: '🕶️ Accessories',
+                bags: '🎒 Bags',
+                people: '👤 People',
+                vehicles: '🚗 Vehicles',
+                other: '📦 Other'
+            };
+
+            return categories.map(cat => {
+                const hasData = modelIds.some(id => (summary[id]?.by_category?.[cat] || 0) > 0);
+                if (!hasData) return '';
+
+                return `
+                    <tr>
+                        <td>${labels[cat]}</td>
+                        ${modelIds.map(id => {
+                            const count = summary[id]?.by_category?.[cat] || 0;
+                            return `<td style="color: ${count > 0 ? models[id].color : 'var(--text-muted)'}">${count}</td>`;
+                        }).join('')}
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderImageCard(imageData, models, modelIds) {
+            return `
+                <div class="comparison-card">
+                    <div class="card-image">
+                        <img src="images/${imageData.filename}" alt="${imageData.filename}" loading="lazy"
+                             onerror="this.style.display='none'">
+                    </div>
+                    <div class="card-filename">${imageData.filename}</div>
+                    <div class="card-results">
+                        ${modelIds.map(id => renderModelResult(id, imageData.results?.[id], models[id])).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderModelResult(modelId, result, config) {
+            if (!result) {
+                return `<div class="model-result"><span class="no-detections">No data</span></div>`;
+            }
+
+            const detections = result.detections || [];
+            const topDet = detections.slice(0, 4);
+
+            return `
+                <div class="model-result">
+                    <div class="result-header">
+                        <span class="model-name" style="color: ${config?.color || '#888'}">${config?.name || modelId}</span>
+                        <span class="detection-count">${result.count} det</span>
+                        <span class="timing">${result.processing_time_ms}ms</span>
+                    </div>
+                    <div class="result-detections">
+                        ${topDet.length === 0 ? '<span class="no-detections">No detections</span>' : ''}
+                        ${topDet.map(det => `
+                            <span class="detection-tag" style="background: ${CATEGORY_COLORS[det.category] || '#6b7280'}">
+                                ${det.label} ${(det.confidence * 100).toFixed(1)}%
+                            </span>
+                        `).join('')}
+                        ${detections.length > 4 ? `<span class="no-detections">+${detections.length - 4} more</span>` : ''}
+                    </div>
+                    ${result.note ? `<div class="result-note">${result.note}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function formatDate(isoString) {
+            try {
+                return new Date(isoString).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'short', day: 'numeric'
+                });
+            } catch { return isoString; }
+        }
+
+        // Load on page ready
+        document.addEventListener('DOMContentLoaded', loadComparison);
+    </script>
+</body>
+</html>
