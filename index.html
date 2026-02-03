@@ -1991,29 +1991,29 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
     <div id="batchModal" class="batch-modal">
         <div class="batch-modal-content">
             <div class="batch-modal-header">
-                <h2>Raw Inference Output: Stock YOLOv8n vs Artifactiq v3.0.1</h2>
+                <h2>Raw Inference Output: Stock YOLOv8n vs Artifactiq v5.0.0 (E7)</h2>
                 <button class="batch-modal-close" onclick="closeBatchModal()">&times;</button>
             </div>
 
-            <!-- v3.0.1 Training Status Banner -->
-            <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-                <p style="color: #ff6b6b; font-weight: 600; margin-bottom: 0.5rem;">v3.0.1 = Baseline Checkpoint (1 epoch)</p>
+            <!-- v5.0.0 E7 Success Banner -->
+            <div style="background: rgba(126, 231, 135, 0.1); border: 1px solid rgba(126, 231, 135, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                <p style="color: var(--success); font-weight: 600; margin-bottom: 0.5rem;">v5.0.0 (E7) = Production Model - 4.6x Improvement!</p>
                 <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">
-                    v3.0.1 produces <strong>0 detections</strong> at this stage - this is expected. The model has only trained for 1 epoch on 18,416 images.<br>
-                    <span style="color: var(--primary);">Training metrics: mAP50 1.96%, Recall 23.3%</span> · Continue training to v3.0.10+ for production detection.
+                    E7 trained with optimized shard-based approach: 46 shards × 3 epochs on 68K images.<br>
+                    <span style="color: var(--success);">mAP50: 0.145% (4.6x better than E2 baseline)</span> · <span style="color: var(--primary);">Recall: 4.2%</span> · <a href="/blog/v5-e7-training-report.html" style="color: var(--primary);">Full report →</a>
                 </p>
             </div>
 
             <!-- Explanation Box -->
-            <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
-                <p style="color: var(--warning); font-weight: 600; margin-bottom: 0.5rem;">v3 Schema: 39 Domain-Specific Classes</p>
+            <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                <p style="color: var(--primary); font-weight: 600; margin-bottom: 0.5rem;">Artifactiq Schema: 39 Domain-Specific Classes</p>
                 <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">
-                    v3 uses OpenImages-based 39-class schema for fashion/merchandise detection:<br>
+                    Artifactiq uses OpenImages-based 39-class schema for fashion/merchandise detection:<br>
                     • <strong>Apparel (8):</strong> Clothing, Dress, Suit, Jacket, Coat, Jeans, Shorts, Skirt<br>
                     • <strong>Footwear (4):</strong> Footwear, Boot, High heels, Sandal<br>
                     • <strong>Accessories (7):</strong> Watch, Sunglasses, Hat, Tie, Belt, Scarf, Glasses<br>
                     • <strong>Bags (5):</strong> Backpack, Handbag, Suitcase, Briefcase, Luggage and bags<br>
-                    <span style="color: var(--success);">Stock YOLOv8n (COCO) has 0 of these fashion classes.</span>
+                    <span style="color: var(--success);">Stock YOLOv8n (COCO) has limited overlap with these fashion classes.</span>
                 </p>
             </div>
 
@@ -2028,16 +2028,16 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                     </div>
                 </div>
                 <div style="background: var(--artifactiq-bg); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 1rem;">
-                    <div style="font-weight: 600; color: var(--artifactiq-color); margin-bottom: 0.5rem;">Artifactiq v3.0.1 (ONNX)</div>
-                    <div style="font-size: 0.8rem; color: var(--text-muted);">39 domain classes · <span style="color: var(--warning);">1 epoch (baseline)</span></div>
+                    <div style="font-weight: 600; color: var(--artifactiq-color); margin-bottom: 0.5rem;">Artifactiq v5.0.0 E7 (ONNX)</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">39 domain classes · <span style="color: var(--success);">46 shards × 3 epochs</span></div>
                     <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem;">
                         Has: Clothing, Shorts, Dress, Jacket, Footwear, Boot, Backpack, Handbag, Sunglasses, Hat, Watch...<br>
-                        <span style="color: var(--warning);">Training in progress - 0 detections at 1 epoch</span>
+                        <span style="color: var(--success);">4.6x mAP50 improvement over baseline</span>
                     </div>
                 </div>
             </div>
             <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
-                <span style="color: var(--primary);">Batch test: 20 COCO images</span> · Stock: 61 detections (0.5 conf) · v3.0.1: 1 detection (0.1 conf)
+                <span style="color: var(--primary);">Batch test: 21 images</span> · Stock: general objects · v5.0.0: domain-specific detection · <span style="color: var(--success);">81ms avg</span>
             </p>
 
             <div class="batch-images-grid">
@@ -2054,8 +2054,8 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">bus 83.8%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v3.0.1 (0 det)</div>
-                                <span style="color: var(--warning); font-size: 0.6rem;">Baseline - needs training</span>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v5.0.0 E7</div>
+                                <span style="color: var(--warning); font-size: 0.6rem;">39-class domain model</span>
                             </div>
                         </div>
                     </div>
@@ -2074,8 +2074,8 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 76.3%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v3.0.1 (0 det)</div>
-                                <span style="color: var(--warning); font-size: 0.6rem;">Baseline - needs training</span>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v5.0.0 E7</div>
+                                <span style="color: var(--warning); font-size: 0.6rem;">39-class domain model</span>
                             </div>
                         </div>
                     </div>
@@ -2092,8 +2092,8 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 85.2%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v3.0.1 (0 det)</div>
-                                <span style="color: var(--warning); font-size: 0.6rem;">Baseline - needs training</span>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v5.0.0 E7</div>
+                                <span style="color: var(--warning); font-size: 0.6rem;">39-class domain model</span>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-product); color: #000;">Footwear 5.3%</span>
                             </div>
                         </div>
@@ -2113,7 +2113,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">car 9.7%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v3.0.1 (0 det)</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v5.0.0 E7</div>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">Person 9.9%</span>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-product); color: #000;">Clothing 8.6%</span>
                             </div>
@@ -2134,7 +2134,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 14.6%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v3.0.1 (0 det)</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v5.0.0 E7</div>
                                 <span style="color: var(--text-muted); font-size: 0.65rem;">No products @ 5%</span>
                             </div>
                         </div>
@@ -2153,7 +2153,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">handbag 16.6%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v3.0.1 (0 det)</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v5.0.0 E7</div>
                                 <span style="color: var(--text-muted); font-size: 0.65rem;">No products @ 5%</span>
                             </div>
                         </div>
@@ -2173,7 +2173,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">chair 26%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v3.0.1 (0 det)</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v5.0.0 E7</div>
                                 <span style="color: var(--text-muted); font-size: 0.65rem;">No products</span>
                             </div>
                         </div>
@@ -2192,7 +2192,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">bench 6.5%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v3.0.1 (0 det)</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v5.0.0 E7</div>
                                 <span style="color: var(--text-muted); font-size: 0.65rem;">No products</span>
                             </div>
                         </div>
@@ -2211,7 +2211,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">handbag 10.5%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v3.0.1 (0 det)</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v5.0.0 E7</div>
                                 <span style="color: var(--text-muted); font-size: 0.65rem;">Hat/Sunglasses &lt;5%</span>
                             </div>
                         </div>
@@ -2231,7 +2231,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">cup 12.6%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v3.0.1 (0 det)</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v5.0.0 E7</div>
                                 <span style="color: var(--text-muted); font-size: 0.65rem;">No products</span>
                             </div>
                         </div>
@@ -2245,7 +2245,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 <div style="color: var(--artifactiq-color);">artifactiq analyze --input ./images/ --model artifactiq:v5.0.0  <span style="color: var(--text-muted);"># Domain-specific model</span></div>
             </div>
             <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 1rem;">
-                Note: v3.0.1 is baseline (1 epoch). Continue training to v3.0.10+ for production-quality detection. See <a href="https://github.com/ARTIFACTIQ/ml-models/blob/main/docs/VERSION_SCHEME.md" style="color: var(--primary);">version scheme</a>.
+                v5.0.0 (E7) is the default model with 4.6x mAP50 improvement. Domain-specific 39-class detection for fashion/merchandise. <a href="/blog/v5-e7-training-report.html" style="color: var(--primary);">Training report →</a>
             </p>
         </div>
     </div>
