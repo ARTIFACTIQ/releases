@@ -88,12 +88,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate comparison data
+        env:
+          SAMPLE_SIZE: ${{ github.event.inputs.sample_size || '100' }}
         run: |
-          SAMPLE_SIZE="${{ github.event.inputs.sample_size || '100' }}"
-
           # Create comparison script for CI
           python3 << 'EOF'
           import json
+          import os
           import random
           import time
           from datetime import datetime, timezone
@@ -136,7 +137,7 @@ jobs:
           all_images = list(VAL_IMAGES.glob("*"))
           print(f"Found {len(all_images)} validation images")
 
-          sample_size = min(int("$SAMPLE_SIZE" if "$SAMPLE_SIZE" else 100), len(all_images))
+          sample_size = min(int(os.environ.get("SAMPLE_SIZE", "100")), len(all_images))
           random.seed(42)
           sample = random.sample(all_images, sample_size)
 
