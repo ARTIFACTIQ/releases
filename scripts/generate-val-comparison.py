@@ -34,17 +34,17 @@ MODELS = {
         "dataset": "COCO",
         "color": "#888888"
     },
-    "artifactiq_e7": {
-        "path": "/Users/shaileshpant/src/orgs/artifactiq/ml-models/training/runs/production/e7_best.pt",
-        "name": "Artifactiq E7",
-        "version": "v5.0.0",
+    "artifactiq_e8": {
+        "path": "/Users/shaileshpant/src/orgs/artifactiq/ml-models/training/runs/production/e8_best.pt",
+        "name": "Artifactiq E8",
+        "version": "v6.0.0",
         "type": "custom",
         "classes": 39,
         "dataset": "Open Images V7",
-        "mAP50": 0.001454,
-        "color": "#10b981",
+        "mAP50": 0.1035,
+        "color": "#3b82f6",
         "is_current": True,
-        "known_issue": "Low confidence (1-3%) due to val=False during training"
+        "note": "Calibrated training with val=True, 21.6% avg confidence"
     }
 }
 
