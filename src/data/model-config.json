@@ -1,28 +1,44 @@
 {
   "current_model": {
-    "name": "E8",
+    "name": "Latest",
     "version": "v6.0.0",
-    "display_name": "Artifactiq E8",
+    "display_name": "Artifactiq Latest",
     "release_date": "2026-02-04",
-    "improvements": "74x better mAP50, calibrated confidence scores",
-    "training": "Calibrated training with val=True (46 shards x 10 epochs)",
+    "improvements": "See release notes",
+    "training": "Automated release",
     "metrics": {
-      "mAP50": 10.35,
-      "precision": 40.05,
-      "recall": 23.65,
-      "f1": 29.74,
-      "avg_confidence": 21.6
+      "mAP50": 0,
+      "precision": 0,
+      "recall": 0,
+      "total_detections": 74
     },
-    "comparison_vs_previous": {
-      "previous_model": "E7",
-      "mAP50_improvement": "74x",
-      "confidence_improvement": "from 0% to 21.6%"
-    },
-    "known_issues": null,
-    "download_url": "https://github.com/ARTIFACTIQ/releases/releases/download/v6.0.0/e8_best.pt",
-    "report_url": "/blog/v6-e8-training-report.html"
+    "download_url": "https://github.com/ARTIFACTIQ/releases/releases/download/v6.0.0/latest_best.pt",
+    "report_url": "/blog/v6.0.0-training-report.html"
   },
   "previous_models": [
+    {
+      "name": "E8",
+      "version": "v6.0.0",
+      "display_name": "Artifactiq E8",
+      "release_date": "2026-02-04",
+      "improvements": "74x better mAP50, calibrated confidence scores",
+      "training": "Calibrated training with val=True (46 shards x 10 epochs)",
+      "metrics": {
+        "mAP50": 10.35,
+        "precision": 40.05,
+        "recall": 23.65,
+        "f1": 29.74,
+        "avg_confidence": 21.6
+      },
+      "comparison_vs_previous": {
+        "previous_model": "E7",
+        "mAP50_improvement": "74x",
+        "confidence_improvement": "from 0% to 21.6%"
+      },
+      "known_issues": null,
+      "download_url": "https://github.com/ARTIFACTIQ/releases/releases/download/v6.0.0/e8_best.pt",
+      "report_url": "/blog/v6-e8-training-report.html"
+    },
     {
       "name": "E7",
       "version": "v5.0.0",
