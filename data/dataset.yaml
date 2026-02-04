@@ -1,0 +1,6 @@
+path: /Users/shaileshpant/src/orgs/artifactiq-models/runs/merged_all_datasets
+train: images/train
+val: images/val
+
+nc: 39
+names: ['Clothing', 'Dress', 'Suit', 'Jacket', 'Coat', 'Jeans', 'Shorts', 'Skirt', 'Footwear', 'Boot', 'High heels', 'Sandal', 'Backpack', 'Handbag', 'Suitcase', 'Briefcase', 'Luggage and bags', 'Watch', 'Sunglasses', 'Hat', 'Tie', 'Belt', 'Scarf', 'Glasses', 'Laptop', 'Mobile phone', 'Tablet computer', 'Camera', 'Headphones', 'Car', 'Motorcycle', 'Bicycle', 'Truck', 'Bus', 'Person', 'Man', 'Woman', 'Boy', 'Girl']

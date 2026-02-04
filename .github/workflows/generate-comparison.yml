@@ -1,17 +1,14 @@
 name: Generate Model Comparison
 
 on:
-  # Trigger on new releases
   release:
     types: [published]
-
-  # Manual trigger
   workflow_dispatch:
     inputs:
       sample_size:
         description: 'Number of validation images to sample'
         required: false
-        default: '100'
+        default: '700'
       model_tag:
         description: 'Release tag to use (leave empty for latest)'
         required: false
@@ -19,7 +16,7 @@ on:
 jobs:
   generate-comparison:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
 
     steps:
       - name: Checkout repository
@@ -45,255 +42,233 @@ jobs:
         run: |
           mkdir -p models
 
-          # Get latest release or specified tag
           TAG="${{ github.event.inputs.model_tag }}"
           if [ -z "$TAG" ]; then
             TAG=$(gh release list --limit 1 --json tagName -q '.[0].tagName')
           fi
-
           echo "Using release: $TAG"
 
-          # Download model assets
           gh release download "$TAG" --pattern "*.pt" --dir models/ || echo "No .pt files in release"
 
-          # Also download stock YOLOv8n for comparison
           if [ ! -f models/yolov8n.pt ]; then
-            echo "Downloading stock YOLOv8n..."
             python -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
             mv yolov8n.pt models/
           fi
 
           ls -la models/
 
-      - name: Download validation dataset sample
-        run: |
-          # Download validation images from release assets or external storage
-          mkdir -p data/val/images data/val/labels
-
-          # Check if validation data is in release
-          gh release download "$TAG" --pattern "val-sample.tar.gz" --dir data/ || true
-
-          if [ -f data/val-sample.tar.gz ]; then
-            tar -xzf data/val-sample.tar.gz -C data/val/
-          else
-            echo "Using images from repo (images/val/)"
-            # Copy from repo if available
-            if [ -d images/val ]; then
-              cp images/val/* data/val/images/ 2>/dev/null || true
-            fi
-          fi
-
-          echo "Validation images: $(ls data/val/images/ 2>/dev/null | wc -l)"
+      - name: Generate comparison with ground truth
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Generate comparison data
-        env:
-          SAMPLE_SIZE: ${{ github.event.inputs.sample_size || '100' }}
+          SAMPLE_SIZE: ${{ github.event.inputs.sample_size || '700' }}
         run: |
-          # Create comparison script for CI
-          python3 << 'EOF'
+          python3 << 'PYTHON_SCRIPT'
           import json
           import os
           import random
           import time
+          import yaml
           from datetime import datetime, timezone
           from pathlib import Path
 
-          # Try to import ultralytics
-          try:
-              from ultralytics import YOLO
-          except ImportError:
-              print("ERROR: ultralytics not installed")
-              exit(1)
+          from ultralytics import YOLO
 
-          # Paths
+          # Paths - use repo structure
           MODELS_DIR = Path("models")
-          VAL_IMAGES = Path("data/val/images") if Path("data/val/images").exists() else Path("images/val")
+          VAL_IMAGES = Path("images/val")
+          VAL_LABELS = Path("data/val/labels")
+          DATASET_YAML = Path("data/dataset.yaml")
           OUTPUT_FILE = Path("src/data/val-comparison-results.json")
+
+          # Load class names
+          def load_class_names():
+              with open(DATASET_YAML) as f:
+                  config = yaml.safe_load(f)
+              names = config.get('names', [])
+              if isinstance(names, list):
+                  return {i: name for i, name in enumerate(names)}
+              return names
+
+          # Parse YOLO label
+          def parse_yolo_label(label_path, class_names):
+              annotations = []
+              if not Path(label_path).exists():
+                  return annotations
+              with open(label_path) as f:
+                  for line in f:
+                      parts = line.strip().split()
+                      if len(parts) >= 5:
+                          class_id = int(parts[0])
+                          annotations.append({
+                              "class_id": class_id,
+                              "class_name": class_names.get(class_id, f"class_{class_id}"),
+                              "bbox": [float(x) for x in parts[1:5]]
+                          })
+              return annotations
+
+          # Calculate IoU
+          def calculate_iou(box1, box2):
+              def xywh_to_xyxy(box):
+                  x, y, w, h = box
+                  return [x - w/2, y - h/2, x + w/2, y + h/2]
+              b1, b2 = xywh_to_xyxy(box1), xywh_to_xyxy(box2)
+              x1, y1 = max(b1[0], b2[0]), max(b1[1], b2[1])
+              x2, y2 = min(b1[2], b2[2]), min(b1[3], b2[3])
+              inter = max(0, x2 - x1) * max(0, y2 - y1)
+              area1 = (b1[2] - b1[0]) * (b1[3] - b1[1])
+              area2 = (b2[2] - b2[0]) * (b2[3] - b2[1])
+              union = area1 + area2 - inter
+              return inter / union if union > 0 else 0
+
+          # Evaluate detections
+          def evaluate_detections(detections, ground_truth, iou_threshold=0.5):
+              matched_gt = set()
+              true_positives, false_positives = [], []
+              for det in detections:
+                  best_iou, best_gt_idx = 0, -1
+                  for i, gt in enumerate(ground_truth):
+                      if i in matched_gt:
+                          continue
+                      iou = calculate_iou(det["bbox"], gt["bbox"])
+                      if iou > best_iou:
+                          best_iou, best_gt_idx = iou, i
+                  if best_iou >= iou_threshold and best_gt_idx >= 0:
+                      matched_gt.add(best_gt_idx)
+                      true_positives.append({**det, "matched_gt": ground_truth[best_gt_idx]["class_name"], "iou": round(best_iou, 3)})
+                  else:
+                      false_positives.append(det)
+              false_negatives = [ground_truth[i] for i in range(len(ground_truth)) if i not in matched_gt]
+              return {
+                  "true_positives": true_positives,
+                  "false_positives": false_positives,
+                  "false_negatives": false_negatives,
+                  "precision": len(true_positives) / len(detections) if detections else 0,
+                  "recall": len(true_positives) / len(ground_truth) if ground_truth else 0
+              }
+
+          # Main
+          print("Loading class names...")
+          class_names = load_class_names()
+          print(f"Loaded {len(class_names)} classes")
 
           # Find models
           models = {}
           for pt_file in MODELS_DIR.glob("*.pt"):
               if "yolov8n" in pt_file.name.lower():
-                  models["stock_yolov8n"] = {
-                      "path": str(pt_file),
-                      "name": "Stock YOLOv8n",
-                      "type": "baseline"
-                  }
+                  models["stock_yolov8n"] = {"path": str(pt_file), "name": "Stock YOLOv8n", "type": "baseline", "classes": 80, "dataset": "COCO", "color": "#888888"}
               else:
-                  # Assume it's the Artifactiq model
                   model_name = pt_file.stem.replace("_best", "").replace("-", "_")
-                  models[f"artifactiq_{model_name}"] = {
-                      "path": str(pt_file),
-                      "name": f"Artifactiq {model_name.upper()}",
-                      "type": "custom",
-                      "is_current": True
-                  }
+                  models[f"artifactiq_{model_name}"] = {"path": str(pt_file), "name": f"Artifactiq {model_name.upper()}", "type": "custom", "classes": 39, "dataset": "Open Images V7", "color": "#3b82f6", "is_current": True}
 
           print(f"Found models: {list(models.keys())}")
 
           # Sample images
-          all_images = list(VAL_IMAGES.glob("*"))
-          print(f"Found {len(all_images)} validation images")
-
-          sample_size = min(int(os.environ.get("SAMPLE_SIZE", "100")), len(all_images))
+          all_images = sorted(VAL_IMAGES.glob("*"))
+          sample_size = min(int(os.environ.get("SAMPLE_SIZE", "700")), len(all_images))
           random.seed(42)
           sample = random.sample(all_images, sample_size)
+          print(f"Sampled {sample_size} images from {len(all_images)}")
 
-          # Run inference
+          # Initialize output
           output = {
               "schema_version": "3.0",
               "generated_at": datetime.now(timezone.utc).isoformat(),
               "data_source": "validation_set",
-              "benchmark_config": {
-                  "sample_size": sample_size,
-                  "confidence_threshold": 0.1,
-                  "generated_by": "github_actions"
-              },
-              "models": {k: {kk: vv for kk, vv in v.items() if kk != "path"} for k, v in models.items()},
-              "summary": {},
+              "benchmark_config": {"validation_set": str(VAL_IMAGES), "total_val_images": len(all_images), "sample_size": sample_size, "confidence_threshold": 0.1, "iou_threshold": 0.5, "random_seed": 42},
+              "models": {mid: {k: v for k, v in cfg.items() if k != "path"} for mid, cfg in models.items()},
+              "ground_truth_classes": class_names,
+              "summary": {mid: {"total_detections": 0, "true_positives": 0, "false_positives": 0, "false_negatives": 0, "precision": 0, "recall": 0} for mid in models},
               "images": []
           }
 
+          # Load models
           loaded_models = {}
           for mid, cfg in models.items():
               print(f"Loading {cfg['name']}...")
               loaded_models[mid] = YOLO(cfg["path"])
 
+          # Process images
+          start_time = time.time()
           for idx, img_path in enumerate(sample):
-              if idx % 20 == 0:
-                  print(f"Processing {idx+1}/{sample_size}...")
+              if idx % 50 == 0:
+                  elapsed = time.time() - start_time
+                  eta = (elapsed / (idx + 1)) * (sample_size - idx - 1) if idx > 0 else 0
+                  print(f"[{idx+1}/{sample_size}] Processing... (ETA: {eta/60:.1f} min)")
 
-              img_result = {"filename": img_path.name, "results": {}}
+              # Load ground truth
+              label_path = VAL_LABELS / (img_path.stem + ".txt")
+              ground_truth = parse_yolo_label(label_path, class_names)
+
+              image_result = {"filename": img_path.name, "ground_truth": {"count": len(ground_truth), "classes": list(set(gt["class_name"] for gt in ground_truth))}, "results": {}}
 
               for mid, model in loaded_models.items():
                   start = time.time()
                   results = model(str(img_path), conf=0.1, verbose=False)
-                  elapsed = int((time.time() - start) * 1000)
+                  elapsed_ms = int((time.time() - start) * 1000)
 
                   detections = []
                   for r in results:
                       if r.boxes is not None:
                           for box in r.boxes:
-                              detections.append({
-                                  "label": model.names[int(box.cls)],
-                                  "confidence": round(float(box.conf), 4)
-                              })
+                              detections.append({"label": model.names[int(box.cls)], "confidence": round(float(box.conf), 4), "bbox": box.xywhn[0].tolist()})
+                  detections.sort(key=lambda x: x["confidence"], reverse=True)
 
-                  img_result["results"][mid] = {
+                  evaluation = evaluate_detections(detections, ground_truth)
+
+                  image_result["results"][mid] = {
                       "count": len(detections),
-                      "processing_time_ms": elapsed,
-                      "detections": sorted(detections, key=lambda x: x["confidence"], reverse=True)[:10]
+                      "processing_time_ms": elapsed_ms,
+                      "detections": detections[:10],
+                      "evaluation": {"true_positives": len(evaluation["true_positives"]), "false_positives": len(evaluation["false_positives"]), "false_negatives": len(evaluation["false_negatives"]), "precision": round(evaluation["precision"], 3), "recall": round(evaluation["recall"], 3)}
                   }
 
-              output["images"].append(img_result)
+                  output["summary"][mid]["total_detections"] += len(detections)
+                  output["summary"][mid]["true_positives"] += len(evaluation["true_positives"])
+                  output["summary"][mid]["false_positives"] += len(evaluation["false_positives"])
+                  output["summary"][mid]["false_negatives"] += len(evaluation["false_negatives"])
 
-          # Calculate summaries
+              output["images"].append(image_result)
+
+          # Calculate final metrics
           for mid in models:
-              total = sum(img["results"].get(mid, {}).get("count", 0) for img in output["images"])
-              output["summary"][mid] = {"total_detections": total}
+              s = output["summary"][mid]
+              total_gt = s["true_positives"] + s["false_negatives"]
+              total_det = s["true_positives"] + s["false_positives"]
+              s["precision"] = round(s["true_positives"] / total_det, 4) if total_det > 0 else 0
+              s["recall"] = round(s["true_positives"] / total_gt, 4) if total_gt > 0 else 0
+              s["f1"] = round(2 * s["precision"] * s["recall"] / (s["precision"] + s["recall"]), 4) if (s["precision"] + s["recall"]) > 0 else 0
 
-          # Save output
+          # Save
           OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
           with open(OUTPUT_FILE, "w") as f:
               json.dump(output, f, indent=2)
 
-          print(f"Saved to {OUTPUT_FILE}")
-          for mid, summary in output["summary"].items():
-              print(f"  {mid}: {summary['total_detections']} detections")
-          EOF
+          print(f"\n✅ Done in {(time.time() - start_time)/60:.1f} minutes")
+          print(f"📄 Saved to: {OUTPUT_FILE}")
+          for mid, s in output["summary"].items():
+              print(f"\n  {models[mid]['name']}:")
+              print(f"    Detections: {s['total_detections']}")
+              print(f"    Precision: {s['precision']*100:.2f}%")
+              print(f"    Recall: {s['recall']*100:.2f}%")
+              print(f"    F1: {s['f1']*100:.2f}%")
+          PYTHON_SCRIPT
 
-      - name: Update model config
-        env:
-          RELEASE_TAG: ${{ github.event.release.tag_name || github.event.inputs.model_tag }}
-          RELEASE_NAME: ${{ github.event.release.name || 'Latest Model' }}
-        run: |
-          python3 << 'EOF'
-          import json
-          import os
-          import re
-          from datetime import datetime
-          from pathlib import Path
-
-          CONFIG_FILE = Path("src/data/model-config.json")
-          COMPARISON_FILE = Path("src/data/val-comparison-results.json")
-
-          # Load existing config
-          if CONFIG_FILE.exists():
-              with open(CONFIG_FILE) as f:
-                  config = json.load(f)
-          else:
-              config = {"current_model": {}, "previous_models": [], "stock_baseline": {}}
-
-          # Get release info
-          tag = os.environ.get("RELEASE_TAG", "latest")
-          name = os.environ.get("RELEASE_NAME", "Latest")
-
-          # Extract model name from release (e.g., "E8" from "Artifactiq Model v6.0.0 - E8")
-          model_match = re.search(r'E(\d+)', name)
-          model_name = f"E{model_match.group(1)}" if model_match else "Latest"
-
-          # Load comparison results for metrics
-          metrics = {"mAP50": 0, "precision": 0, "recall": 0}
-          if COMPARISON_FILE.exists():
-              with open(COMPARISON_FILE) as f:
-                  comparison = json.load(f)
-                  # Find Artifactiq model in summary
-                  for mid, summary in comparison.get("summary", {}).items():
-                      if "artifactiq" in mid.lower():
-                          metrics["total_detections"] = summary.get("total_detections", 0)
-
-          # Move current to previous
-          if config.get("current_model", {}).get("name"):
-              prev = config["current_model"].copy()
-              if prev not in config.get("previous_models", []):
-                  config.setdefault("previous_models", []).insert(0, prev)
-
-          # Update current model
-          config["current_model"] = {
-              "name": model_name,
-              "version": tag,
-              "display_name": f"Artifactiq {model_name}",
-              "release_date": datetime.now().strftime("%Y-%m-%d"),
-              "improvements": "See release notes",
-              "training": "Automated release",
-              "metrics": metrics,
-              "download_url": f"https://github.com/ARTIFACTIQ/releases/releases/download/{tag}/{model_name.lower()}_best.pt",
-              "report_url": f"/blog/{tag}-training-report.html"
-          }
-
-          # Save config
-          with open(CONFIG_FILE, "w") as f:
-              json.dump(config, f, indent=2)
-
-          print(f"Updated model config: {model_name} ({tag})")
-          EOF
-
-      - name: Commit comparison results
+      - name: Commit results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add src/data/val-comparison-results.json src/data/model-config.json
-
+          git add src/data/val-comparison-results.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore: Update model comparison data [skip ci]
+            git commit -m "chore: Update model comparison data with ground truth [skip ci]
 
             Generated by GitHub Actions
-            Trigger: ${{ github.event_name }}
-            Sample size: ${{ github.event.inputs.sample_size || '100' }}"
-
+            Sample size: ${{ github.event.inputs.sample_size || '700' }}"
             git push
           fi
 
       - name: Summary
         run: |
           echo "## Model Comparison Generated" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- Sample size: ${{ github.event.inputs.sample_size || '100' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Output: src/data/val-comparison-results.json" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Website will automatically update with new data." >> $GITHUB_STEP_SUMMARY
+          echo "- Sample size: ${{ github.event.inputs.sample_size || '700' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Includes ground truth evaluation (TP/FP/FN)" >> $GITHUB_STEP_SUMMARY
