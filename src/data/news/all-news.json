@@ -1,5 +1,28 @@
 [
   {
+    "id": "model-quality-pipeline",
+    "date": "2026-02-04",
+    "badge": "ENGINEERING",
+    "title": "Automated Model Quality Evaluation in CI/CD",
+    "summary": "How we use GitHub Actions to evaluate every model release against ground truth labels. IoU-based precision, recall, and F1 scores calculated automatically.",
+    "highlights": [
+      { "label": "Trigger", "value": "On Release" },
+      { "label": "Metrics", "value": "P/R/F1" },
+      { "label": "Method", "value": "IoU @ 0.5" },
+      { "label": "Baseline", "value": "YOLOv8n" }
+    ],
+    "links": {
+      "primary": {
+        "label": "Read Article",
+        "url": "/blog/model-quality-pipeline.html"
+      },
+      "secondary": {
+        "label": "View Workflow",
+        "url": "https://github.com/ARTIFACTIQ/releases/blob/main/.github/workflows/generate-comparison.yml"
+      }
+    }
+  },
+  {
     "id": "model-comparison-v3-v4-stock",
     "date": "2026-01-24",
     "badge": "ANALYSIS",
