@@ -384,10 +384,10 @@
                         <label>Show:</label>
                         <select id="filter-type" onchange="renderPage()">
                             <option value="all">All Images</option>
-                            <option value="e7_better">E7 Better</option>
+                            <option value="e8_better">E8 Better</option>
                             <option value="stock_better">Stock Better</option>
                             <option value="both_detect">Both Detect</option>
-                            <option value="e7_only">E7 Only</option>
+                            <option value="e8_only">E8 Only</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -415,27 +415,27 @@
             const filterType = document.getElementById('filter-type')?.value || 'all';
             let images = allData.images || [];
 
-            if (filterType === 'e7_better') {
+            if (filterType === 'e8_better') {
                 images = images.filter(img => {
-                    const e7 = img.results?.artifactiq_e7?.evaluation;
+                    const e7 = img.results?.artifactiq_e8?.evaluation;
                     const stock = img.results?.stock_yolov8n?.evaluation;
                     return e7 && stock && (e7.recall > stock.recall || e7.precision > stock.precision);
                 });
             } else if (filterType === 'stock_better') {
                 images = images.filter(img => {
-                    const e7 = img.results?.artifactiq_e7?.evaluation;
+                    const e7 = img.results?.artifactiq_e8?.evaluation;
                     const stock = img.results?.stock_yolov8n?.evaluation;
                     return e7 && stock && stock.recall > e7.recall && stock.true_positives > e7.true_positives;
                 });
             } else if (filterType === 'both_detect') {
                 images = images.filter(img => {
-                    const e7 = img.results?.artifactiq_e7?.count || 0;
+                    const e7 = img.results?.artifactiq_e8?.count || 0;
                     const stock = img.results?.stock_yolov8n?.count || 0;
                     return e7 > 0 && stock > 0;
                 });
-            } else if (filterType === 'e7_only') {
+            } else if (filterType === 'e8_only') {
                 images = images.filter(img => {
-                    const e7 = img.results?.artifactiq_e7?.count || 0;
+                    const e7 = img.results?.artifactiq_e8?.count || 0;
                     return e7 > 0;
                 });
             }
