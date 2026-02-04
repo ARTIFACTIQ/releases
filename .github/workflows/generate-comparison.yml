@@ -203,12 +203,78 @@ jobs:
               print(f"  {mid}: {summary['total_detections']} detections")
           EOF
 
+      - name: Update model config
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || github.event.inputs.model_tag }}
+          RELEASE_NAME: ${{ github.event.release.name || 'Latest Model' }}
+        run: |
+          python3 << 'EOF'
+          import json
+          import os
+          import re
+          from datetime import datetime
+          from pathlib import Path
+
+          CONFIG_FILE = Path("src/data/model-config.json")
+          COMPARISON_FILE = Path("src/data/val-comparison-results.json")
+
+          # Load existing config
+          if CONFIG_FILE.exists():
+              with open(CONFIG_FILE) as f:
+                  config = json.load(f)
+          else:
+              config = {"current_model": {}, "previous_models": [], "stock_baseline": {}}
+
+          # Get release info
+          tag = os.environ.get("RELEASE_TAG", "latest")
+          name = os.environ.get("RELEASE_NAME", "Latest")
+
+          # Extract model name from release (e.g., "E8" from "Artifactiq Model v6.0.0 - E8")
+          model_match = re.search(r'E(\d+)', name)
+          model_name = f"E{model_match.group(1)}" if model_match else "Latest"
+
+          # Load comparison results for metrics
+          metrics = {"mAP50": 0, "precision": 0, "recall": 0}
+          if COMPARISON_FILE.exists():
+              with open(COMPARISON_FILE) as f:
+                  comparison = json.load(f)
+                  # Find Artifactiq model in summary
+                  for mid, summary in comparison.get("summary", {}).items():
+                      if "artifactiq" in mid.lower():
+                          metrics["total_detections"] = summary.get("total_detections", 0)
+
+          # Move current to previous
+          if config.get("current_model", {}).get("name"):
+              prev = config["current_model"].copy()
+              if prev not in config.get("previous_models", []):
+                  config.setdefault("previous_models", []).insert(0, prev)
+
+          # Update current model
+          config["current_model"] = {
+              "name": model_name,
+              "version": tag,
+              "display_name": f"Artifactiq {model_name}",
+              "release_date": datetime.now().strftime("%Y-%m-%d"),
+              "improvements": "See release notes",
+              "training": "Automated release",
+              "metrics": metrics,
+              "download_url": f"https://github.com/ARTIFACTIQ/releases/releases/download/{tag}/{model_name.lower()}_best.pt",
+              "report_url": f"/blog/{tag}-training-report.html"
+          }
+
+          # Save config
+          with open(CONFIG_FILE, "w") as f:
+              json.dump(config, f, indent=2)
+
+          print(f"Updated model config: {model_name} ({tag})")
+          EOF
+
       - name: Commit comparison results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add src/data/val-comparison-results.json
+          git add src/data/val-comparison-results.json src/data/model-config.json
 
           if git diff --staged --quiet; then
             echo "No changes to commit"
