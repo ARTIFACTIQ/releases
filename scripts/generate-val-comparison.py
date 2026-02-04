@@ -22,31 +22,85 @@ from pathlib import Path
 VAL_IMAGES_DIR = "/Users/shaileshpant/src/orgs/artifactiq-models/runs/merged_all_datasets/images/val"
 VAL_LABELS_DIR = "/Users/shaileshpant/src/orgs/artifactiq-models/runs/merged_all_datasets/labels/val"
 DATASET_YAML = "/Users/shaileshpant/src/orgs/artifactiq-models/runs/merged_all_datasets/dataset.yaml"
+PRODUCTION_DIR = "/Users/shaileshpant/src/orgs/artifactiq/ml-models/training/runs/production"
+MANIFEST_FILE = f"{PRODUCTION_DIR}/release_manifest.json"
 
-# Models
-MODELS = {
-    "stock_yolov8n": {
-        "path": "yolov8n.pt",
-        "name": "Stock YOLOv8n",
-        "version": "8.0.0",
-        "type": "baseline",
-        "classes": 80,
-        "dataset": "COCO",
-        "color": "#888888"
-    },
-    "artifactiq_e8": {
-        "path": "/Users/shaileshpant/src/orgs/artifactiq/ml-models/training/runs/production/e8_best.pt",
-        "name": "Artifactiq E8",
-        "version": "v6.0.0",
-        "type": "custom",
-        "classes": 39,
-        "dataset": "Open Images V7",
-        "mAP50": 0.1035,
-        "color": "#3b82f6",
-        "is_current": True,
-        "note": "Calibrated training with val=True, 21.6% avg confidence"
+
+def load_models_config():
+    """Load models configuration dynamically from manifest."""
+    models = {
+        "stock_yolov8n": {
+            "path": "yolov8n.pt",
+            "name": "Stock YOLOv8n",
+            "version": "8.0.0",
+            "type": "baseline",
+            "classes": 80,
+            "dataset": "COCO",
+            "color": "#888888"
+        }
     }
-}
+
+    # Load current production model from manifest
+    manifest_path = Path(MANIFEST_FILE)
+    if manifest_path.exists():
+        with open(manifest_path) as f:
+            manifest = json.load(f)
+
+        if manifest.get("current") and manifest.get("releases"):
+            # Find current release
+            current_id = manifest["current"]
+            current_release = next(
+                (r for r in manifest["releases"] if r["model_id"] == current_id),
+                None
+            )
+            if current_release:
+                models[current_id] = {
+                    "path": current_release.get("file", f"{PRODUCTION_DIR}/current_best.pt"),
+                    "name": f"Artifactiq {current_release['name']}",
+                    "version": current_release["version"],
+                    "type": "custom",
+                    "classes": 39,
+                    "dataset": "Open Images V7",
+                    "mAP50": current_release.get("mAP50", 0),
+                    "color": "#3b82f6",
+                    "is_current": True,
+                    "note": current_release.get("note", "")
+                }
+                return models
+
+    # Fallback: use hardcoded current model if no manifest
+    current_best = Path(PRODUCTION_DIR) / "current_best.pt"
+    if current_best.exists():
+        models["artifactiq_current"] = {
+            "path": str(current_best),
+            "name": "Artifactiq (Current)",
+            "version": "latest",
+            "type": "custom",
+            "classes": 39,
+            "dataset": "Open Images V7",
+            "color": "#3b82f6",
+            "is_current": True
+        }
+    else:
+        # Final fallback to E8
+        models["artifactiq_e8"] = {
+            "path": f"{PRODUCTION_DIR}/e8_best.pt",
+            "name": "Artifactiq E8",
+            "version": "v6.0.0",
+            "type": "custom",
+            "classes": 39,
+            "dataset": "Open Images V7",
+            "mAP50": 0.1035,
+            "color": "#3b82f6",
+            "is_current": True,
+            "note": "Calibrated training with val=True"
+        }
+
+    return models
+
+
+# Load models dynamically
+MODELS = load_models_config()
 
 def load_class_names():
     """Load class names from dataset.yaml"""
