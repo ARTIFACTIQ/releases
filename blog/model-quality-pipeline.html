@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Model Quality Evaluation Pipeline - Artifactiq</title>
+    <meta name="description" content="How we use GitHub Actions to automatically evaluate model quality against ground truth labels on every release.">
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --accent: #7b2cbf;
+            --bg-dark: #0a0a12;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e4e4e4;
+            --text-muted: #888;
+            --code-bg: #0d1117;
+            --success: #7ee787;
+            --warning: #f0b429;
+            --error: #f85149;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.8;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+        header {
+            background: rgba(10, 10, 18, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        header a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        article { padding: 4rem 0; }
+
+        .article-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .meta {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        h3 {
+            color: var(--text);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: rgba(0, 212, 255, 0.1);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85em;
+        }
+        pre {
+            background: var(--code-bg);
+            padding: 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .callout {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+        .callout-info {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary);
+        }
+        .callout-success {
+            background: rgba(126, 231, 135, 0.1);
+            border-color: var(--success);
+        }
+
+        .flow-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+        }
+        .flow-arrow {
+            color: var(--primary);
+            margin: 0.25rem 0;
+            padding-left: 2rem;
+        }
+
+        a { color: var(--primary); }
+        a:hover { text-decoration: underline; }
+
+        .winner { color: var(--success); font-weight: 600; }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        ul, ol { margin: 1rem 0 1rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+
+        .metric-formula {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">&larr; Back to Artifactiq</a>
+    </header>
+
+    <div class="container">
+        <article>
+            <div class="article-header">
+                <span class="badge">Engineering</span>
+                <h1>How We Ensure Model Quality: Automated Evaluation in CI/CD</h1>
+                <p class="meta">Published February 4, 2026 | By Artifactiq ML Team</p>
+            </div>
+
+            <h2>The Problem</h2>
+            <p>Every ML team faces the same challenge: how do you know if a new model is actually better? Training metrics like mAP50 from the training run are useful, but they don't tell the full story. The model needs to be evaluated against real validation data with ground truth labels.</p>
+
+            <p>Manual evaluation creates bottlenecks. Someone has to remember to run the comparison script, interpret results, update documentation, and publish findings. Steps get skipped. Results become stale. The website shows metrics from three releases ago.</p>
+
+            <p>We automated the entire process.</p>
+
+            <h2>The Pipeline</h2>
+
+            <p>When we publish a new model release on GitHub, a workflow automatically:</p>
+
+            <div class="flow-diagram">
+                <div class="flow-step">1. Downloads the released model weights</div>
+                <div class="flow-arrow">&darr;</div>
+                <div class="flow-step">2. Loads validation images and ground truth labels</div>
+                <div class="flow-arrow">&darr;</div>
+                <div class="flow-step">3. Runs inference on sampled validation set</div>
+                <div class="flow-arrow">&darr;</div>
+                <div class="flow-step">4. Matches detections to ground truth using IoU</div>
+                <div class="flow-arrow">&darr;</div>
+                <div class="flow-step">5. Calculates precision, recall, F1 scores</div>
+                <div class="flow-arrow">&darr;</div>
+                <div class="flow-step">6. Commits results to repository</div>
+                <div class="flow-arrow">&darr;</div>
+                <div class="flow-step">7. Website automatically displays updated metrics</div>
+            </div>
+
+            <p>The entire process runs on GitHub Actions runners. No local machine required. No manual steps.</p>
+
+            <h2>Ground Truth Evaluation</h2>
+
+            <p>We store validation labels directly in the repository alongside the images. Each label file contains bounding box annotations in YOLO format:</p>
+
+            <pre><code># Format: class_id center_x center_y width height (normalized)
+0 0.4521 0.3892 0.2341 0.4567
+12 0.7234 0.6543 0.1234 0.2345</code></pre>
+
+            <p>When the workflow runs, it loads these labels and matches model predictions against them using Intersection over Union (IoU):</p>
+
+            <div class="metric-formula">
+                IoU = Area of Overlap / Area of Union
+            </div>
+
+            <p>A detection is considered a <strong>True Positive</strong> if:</p>
+            <ul>
+                <li>IoU with a ground truth box exceeds 0.5 threshold</li>
+                <li>The ground truth box hasn't already been matched</li>
+            </ul>
+
+            <p>Unmatched detections become <strong>False Positives</strong>. Unmatched ground truth boxes become <strong>False Negatives</strong>.</p>
+
+            <h3>Metrics Calculated</h3>
+
+            <table>
+                <tr><th>Metric</th><th>Formula</th><th>What It Measures</th></tr>
+                <tr>
+                    <td>Precision</td>
+                    <td><code>TP / (TP + FP)</code></td>
+                    <td>Of all detections, how many were correct?</td>
+                </tr>
+                <tr>
+                    <td>Recall</td>
+                    <td><code>TP / (TP + FN)</code></td>
+                    <td>Of all ground truth objects, how many were found?</td>
+                </tr>
+                <tr>
+                    <td>F1 Score</td>
+                    <td><code>2 * P * R / (P + R)</code></td>
+                    <td>Harmonic mean of precision and recall</td>
+                </tr>
+            </table>
+
+            <h2>Baseline Comparison</h2>
+
+            <p>Raw metrics are hard to interpret without context. Is 35% precision good? It depends on the task and the alternatives.</p>
+
+            <p>We compare every release against Stock YOLOv8n trained on COCO. This provides a consistent baseline:</p>
+
+            <table>
+                <tr><th>Model</th><th>Precision</th><th>Recall</th><th>F1</th></tr>
+                <tr>
+                    <td class="winner">Artifactiq E8</td>
+                    <td class="winner">35.6%</td>
+                    <td>22.1%</td>
+                    <td>27.3%</td>
+                </tr>
+                <tr>
+                    <td>Stock YOLOv8n</td>
+                    <td>27.0%</td>
+                    <td class="winner">52.9%</td>
+                    <td class="winner">35.8%</td>
+                </tr>
+            </table>
+
+            <div class="callout callout-info">
+                <strong>Why the difference?</strong> Artifactiq is trained on 39 apparel-specific classes. Stock YOLOv8n is trained on 80 COCO classes. Artifactiq has higher precision on its target domain but lower recall since it doesn't detect non-apparel objects that may be in the ground truth.
+            </div>
+
+            <h2>Implementation</h2>
+
+            <p>The workflow is a single GitHub Actions YAML file. Key sections:</p>
+
+            <h3>Trigger</h3>
+            <pre><code>on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      sample_size:
+        description: 'Number of validation images'
+        default: '700'</code></pre>
+
+            <p>Runs automatically on every release. Can also be triggered manually with configurable sample size.</p>
+
+            <h3>Model Download</h3>
+            <pre><code>- name: Download models from release
+  run: |
+    TAG="${{ github.event.inputs.model_tag }}"
+    if [ -z "$TAG" ]; then
+      TAG=$(gh release list --limit 1 --json tagName -q '.[0].tagName')
+    fi
+    gh release download "$TAG" --pattern "*.pt" --dir models/</code></pre>
+
+            <p>Fetches the model weights directly from the GitHub release assets.</p>
+
+            <h3>IoU Calculation</h3>
+            <pre><code>def calculate_iou(box1, box2):
+    def xywh_to_xyxy(box):
+        x, y, w, h = box
+        return [x - w/2, y - h/2, x + w/2, y + h/2]
+    b1, b2 = xywh_to_xyxy(box1), xywh_to_xyxy(box2)
+    x1, y1 = max(b1[0], b2[0]), max(b1[1], b2[1])
+    x2, y2 = min(b1[2], b2[2]), min(b1[3], b2[3])
+    inter = max(0, x2 - x1) * max(0, y2 - y1)
+    area1 = (b1[2] - b1[0]) * (b1[3] - b1[1])
+    area2 = (b2[2] - b2[0]) * (b2[3] - b2[1])
+    union = area1 + area2 - inter
+    return inter / union if union > 0 else 0</code></pre>
+
+            <h3>Auto-Commit Results</h3>
+            <pre><code>- name: Commit results
+  run: |
+    git config user.name "github-actions[bot]"
+    git add src/data/val-comparison-results.json
+    git diff --staged --quiet || git commit -m "chore: Update comparison data"
+    git push</code></pre>
+
+            <p>Results are committed back to the repository. The website loads this JSON file and displays current metrics.</p>
+
+            <h2>Data in the Repository</h2>
+
+            <p>To make this work, we store validation data directly in the repo:</p>
+
+            <pre><code>releases-repo/
+├── images/val/           # 700 validation images
+├── data/
+│   ├── val/labels/       # Ground truth label files
+│   └── dataset.yaml      # Class definitions
+├── src/data/
+│   └── val-comparison-results.json  # Generated output
+└── .github/workflows/
+    └── generate-comparison.yml</code></pre>
+
+            <p>This approach has tradeoffs:</p>
+
+            <table>
+                <tr><th>Pros</th><th>Cons</th></tr>
+                <tr>
+                    <td>Self-contained, reproducible</td>
+                    <td>Repository size increases</td>
+                </tr>
+                <tr>
+                    <td>No external dependencies</td>
+                    <td>Git LFS recommended for images</td>
+                </tr>
+                <tr>
+                    <td>Version controlled ground truth</td>
+                    <td>Limited to validation subset</td>
+                </tr>
+                <tr>
+                    <td>Works on any GitHub runner</td>
+                    <td>Clone time increases</td>
+                </tr>
+            </table>
+
+            <p>For our use case with 700 validation images, the repository stays manageable with Git LFS.</p>
+
+            <h2>Website Integration</h2>
+
+            <p>The website loads comparison results dynamically:</p>
+
+            <pre><code>fetch('src/data/val-comparison-results.json')
+  .then(response => response.json())
+  .then(data => {
+    updateMetricsDisplay(data.summary);
+    updateModelInfo(data.models);
+  });</code></pre>
+
+            <p>When a new release triggers the workflow, the JSON updates, and the website reflects current metrics on next page load. No deployment required.</p>
+
+            <h2>Results</h2>
+
+            <p>Since implementing this pipeline:</p>
+
+            <ul>
+                <li>Every release has ground truth evaluation within 5 minutes of publishing</li>
+                <li>Website metrics are never stale</li>
+                <li>We catch regressions before they reach users</li>
+                <li>Comparison data is versioned and auditable</li>
+            </ul>
+
+            <div class="callout callout-success">
+                <strong>View live results:</strong> The <a href="/model-comparison.html">Model Comparison</a> page shows the latest evaluation data, automatically updated on every release.
+            </div>
+
+            <h2>Source</h2>
+
+            <p>The complete workflow is available in our public repository:</p>
+
+            <p><a href="https://github.com/ARTIFACTIQ/releases/blob/main/.github/workflows/generate-comparison.yml">github.com/ARTIFACTIQ/releases/.github/workflows/generate-comparison.yml</a></p>
+
+        </article>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Artifactiq. <a href="/">Return to Home</a> | <a href="https://github.com/ARTIFACTIQ/releases">GitHub</a></p>
+    </footer>
+</body>
+</html>
