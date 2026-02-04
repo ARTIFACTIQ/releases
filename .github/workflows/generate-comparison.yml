@@ -1,0 +1,232 @@
+name: Generate Model Comparison
+
+on:
+  # Trigger on new releases
+  release:
+    types: [published]
+
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      sample_size:
+        description: 'Number of validation images to sample'
+        required: false
+        default: '100'
+      model_tag:
+        description: 'Release tag to use (leave empty for latest)'
+        required: false
+
+jobs:
+  generate-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install ultralytics pyyaml
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Download models from release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p models
+
+          # Get latest release or specified tag
+          TAG="${{ github.event.inputs.model_tag }}"
+          if [ -z "$TAG" ]; then
+            TAG=$(gh release list --limit 1 --json tagName -q '.[0].tagName')
+          fi
+
+          echo "Using release: $TAG"
+
+          # Download model assets
+          gh release download "$TAG" --pattern "*.pt" --dir models/ || echo "No .pt files in release"
+
+          # Also download stock YOLOv8n for comparison
+          if [ ! -f models/yolov8n.pt ]; then
+            echo "Downloading stock YOLOv8n..."
+            python -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
+            mv yolov8n.pt models/
+          fi
+
+          ls -la models/
+
+      - name: Download validation dataset sample
+        run: |
+          # Download validation images from release assets or external storage
+          mkdir -p data/val/images data/val/labels
+
+          # Check if validation data is in release
+          gh release download "$TAG" --pattern "val-sample.tar.gz" --dir data/ || true
+
+          if [ -f data/val-sample.tar.gz ]; then
+            tar -xzf data/val-sample.tar.gz -C data/val/
+          else
+            echo "Using images from repo (images/val/)"
+            # Copy from repo if available
+            if [ -d images/val ]; then
+              cp images/val/* data/val/images/ 2>/dev/null || true
+            fi
+          fi
+
+          echo "Validation images: $(ls data/val/images/ 2>/dev/null | wc -l)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate comparison data
+        run: |
+          SAMPLE_SIZE="${{ github.event.inputs.sample_size || '100' }}"
+
+          # Create comparison script for CI
+          python3 << 'EOF'
+          import json
+          import random
+          import time
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          # Try to import ultralytics
+          try:
+              from ultralytics import YOLO
+          except ImportError:
+              print("ERROR: ultralytics not installed")
+              exit(1)
+
+          # Paths
+          MODELS_DIR = Path("models")
+          VAL_IMAGES = Path("data/val/images") if Path("data/val/images").exists() else Path("images/val")
+          OUTPUT_FILE = Path("src/data/val-comparison-results.json")
+
+          # Find models
+          models = {}
+          for pt_file in MODELS_DIR.glob("*.pt"):
+              if "yolov8n" in pt_file.name.lower():
+                  models["stock_yolov8n"] = {
+                      "path": str(pt_file),
+                      "name": "Stock YOLOv8n",
+                      "type": "baseline"
+                  }
+              else:
+                  # Assume it's the Artifactiq model
+                  model_name = pt_file.stem.replace("_best", "").replace("-", "_")
+                  models[f"artifactiq_{model_name}"] = {
+                      "path": str(pt_file),
+                      "name": f"Artifactiq {model_name.upper()}",
+                      "type": "custom",
+                      "is_current": True
+                  }
+
+          print(f"Found models: {list(models.keys())}")
+
+          # Sample images
+          all_images = list(VAL_IMAGES.glob("*"))
+          print(f"Found {len(all_images)} validation images")
+
+          sample_size = min(int("$SAMPLE_SIZE" if "$SAMPLE_SIZE" else 100), len(all_images))
+          random.seed(42)
+          sample = random.sample(all_images, sample_size)
+
+          # Run inference
+          output = {
+              "schema_version": "3.0",
+              "generated_at": datetime.now(timezone.utc).isoformat(),
+              "data_source": "validation_set",
+              "benchmark_config": {
+                  "sample_size": sample_size,
+                  "confidence_threshold": 0.1,
+                  "generated_by": "github_actions"
+              },
+              "models": {k: {kk: vv for kk, vv in v.items() if kk != "path"} for k, v in models.items()},
+              "summary": {},
+              "images": []
+          }
+
+          loaded_models = {}
+          for mid, cfg in models.items():
+              print(f"Loading {cfg['name']}...")
+              loaded_models[mid] = YOLO(cfg["path"])
+
+          for idx, img_path in enumerate(sample):
+              if idx % 20 == 0:
+                  print(f"Processing {idx+1}/{sample_size}...")
+
+              img_result = {"filename": img_path.name, "results": {}}
+
+              for mid, model in loaded_models.items():
+                  start = time.time()
+                  results = model(str(img_path), conf=0.1, verbose=False)
+                  elapsed = int((time.time() - start) * 1000)
+
+                  detections = []
+                  for r in results:
+                      if r.boxes is not None:
+                          for box in r.boxes:
+                              detections.append({
+                                  "label": model.names[int(box.cls)],
+                                  "confidence": round(float(box.conf), 4)
+                              })
+
+                  img_result["results"][mid] = {
+                      "count": len(detections),
+                      "processing_time_ms": elapsed,
+                      "detections": sorted(detections, key=lambda x: x["confidence"], reverse=True)[:10]
+                  }
+
+              output["images"].append(img_result)
+
+          # Calculate summaries
+          for mid in models:
+              total = sum(img["results"].get(mid, {}).get("count", 0) for img in output["images"])
+              output["summary"][mid] = {"total_detections": total}
+
+          # Save output
+          OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+          with open(OUTPUT_FILE, "w") as f:
+              json.dump(output, f, indent=2)
+
+          print(f"Saved to {OUTPUT_FILE}")
+          for mid, summary in output["summary"].items():
+              print(f"  {mid}: {summary['total_detections']} detections")
+          EOF
+
+      - name: Commit comparison results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add src/data/val-comparison-results.json
+
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: Update model comparison data [skip ci]
+
+            Generated by GitHub Actions
+            Trigger: ${{ github.event_name }}
+            Sample size: ${{ github.event.inputs.sample_size || '100' }}"
+
+            git push
+          fi
+
+      - name: Summary
+        run: |
+          echo "## Model Comparison Generated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Sample size: ${{ github.event.inputs.sample_size || '100' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Output: src/data/val-comparison-results.json" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Website will automatically update with new data." >> $GITHUB_STEP_SUMMARY
