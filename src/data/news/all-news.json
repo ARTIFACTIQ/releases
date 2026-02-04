@@ -9,7 +9,7 @@
       { "label": "Trigger", "value": "On Release" },
       { "label": "Metrics", "value": "P/R/F1" },
       { "label": "Method", "value": "IoU @ 0.5" },
-      { "label": "Baseline", "value": "YOLOv8n" }
+      { "label": "Baseline", "value": "YOLOv11m" }
     ],
     "links": {
       "primary": {

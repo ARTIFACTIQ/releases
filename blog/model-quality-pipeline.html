@@ -275,7 +275,7 @@
 
             <p>Raw metrics are hard to interpret without context. Is 35% precision good? It depends on the task and the alternatives.</p>
 
-            <p>We compare every release against Stock YOLOv8n trained on COCO. This provides a consistent baseline:</p>
+            <p>We compare every release against Stock YOLOv11m trained on COCO. This provides a consistent baseline:</p>
 
             <table>
                 <tr><th>Model</th><th>Precision</th><th>Recall</th><th>F1</th></tr>
@@ -286,7 +286,7 @@
                     <td>27.3%</td>
                 </tr>
                 <tr>
-                    <td>Stock YOLOv8n</td>
+                    <td>Stock YOLOv11m</td>
                     <td>27.0%</td>
                     <td class="winner">52.9%</td>
                     <td class="winner">35.8%</td>
@@ -294,7 +294,7 @@
             </table>
 
             <div class="callout callout-info">
-                <strong>Why the difference?</strong> Artifactiq is trained on 39 apparel-specific classes. Stock YOLOv8n is trained on 80 COCO classes. Artifactiq has higher precision on its target domain but lower recall since it doesn't detect non-apparel objects that may be in the ground truth.
+                <strong>Why the difference?</strong> Artifactiq is trained on 39 apparel-specific classes. Stock YOLOv11m is trained on 80 COCO classes. Artifactiq has higher precision on its target domain but lower recall since it doesn't detect non-apparel objects that may be in the ground truth.
             </div>
 
             <h2>Implementation</h2>
