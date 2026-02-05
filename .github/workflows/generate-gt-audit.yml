@@ -176,8 +176,7 @@ jobs:
 
           gh pr create \
             --title "GT Audit Report: ${{ env.MODEL_TAG }}" \
-            --body "$(cat <<EOF
-          ## GT Audit Report for ${{ env.MODEL_TAG }}
+            --body "## GT Audit Report for ${{ env.MODEL_TAG }}
 
           Generated automatically by gt-audit on model release.
 
@@ -188,10 +187,7 @@ jobs:
           | Medium Severity | $MEDIUM |
           | Low Severity | $LOW |
 
-          View full report: [gt-audit-report.json](gt-audit-report.json)
-          EOF
-          )" \
-            --label "automated"
+          View full report: [gt-audit-report.json](gt-audit-report.json)"
 
           echo "PR created for GT audit report"
 
