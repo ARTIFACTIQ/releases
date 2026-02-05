@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-02-05T10:51:31.370742+00:00",
+  "generated_at": "2026-02-05T13:51:08.140369+00:00",
   "dataset_path": "/Users/shaileshpant/src/orgs/artifactiq/releases-repo",
   "method": "yolo",
   "confidence_threshold": 0.25,
@@ -13,13 +13,13 @@
     "total_issues": 1905,
     "by_severity": {
       "medium": 68,
-      "low": 1689,
-      "high": 148
+      "high": 148,
+      "low": 1689
     },
     "by_type": {
+      "missing_label": 68,
       "spurious_label": 1689,
-      "class_mismatch": 148,
-      "missing_label": 68
+      "class_mismatch": 148
     }
   },
   "flagged_images": [
