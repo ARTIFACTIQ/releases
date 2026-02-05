@@ -12,6 +12,10 @@ on:
       model_tag:
         description: 'Release tag to use (leave empty for latest)'
         required: false
+      confidence_threshold:
+        description: 'Minimum confidence for detections (default: 0.25)'
+        required: false
+        default: '0.25'
 
 jobs:
   generate-comparison:
@@ -60,6 +64,7 @@ jobs:
       - name: Generate comparison with ground truth
         env:
           SAMPLE_SIZE: ${{ github.event.inputs.sample_size || '700' }}
+          CONFIDENCE_THRESHOLD: ${{ github.event.inputs.confidence_threshold || '0.25' }}
         run: |
           python3 << 'PYTHON_SCRIPT'
           import json
@@ -161,19 +166,21 @@ jobs:
 
           print(f"Found models: {list(models.keys())}")
 
-          # Sample images
+          # Config from environment
           all_images = sorted(VAL_IMAGES.glob("*"))
           sample_size = min(int(os.environ.get("SAMPLE_SIZE", "700")), len(all_images))
+          conf_threshold = float(os.environ.get("CONFIDENCE_THRESHOLD", "0.25"))
           random.seed(42)
           sample = random.sample(all_images, sample_size)
           print(f"Sampled {sample_size} images from {len(all_images)}")
+          print(f"Confidence threshold: {conf_threshold}")
 
           # Initialize output
           output = {
               "schema_version": "3.0",
               "generated_at": datetime.now(timezone.utc).isoformat(),
               "data_source": "validation_set",
-              "benchmark_config": {"validation_set": str(VAL_IMAGES), "total_val_images": len(all_images), "sample_size": sample_size, "confidence_threshold": 0.1, "iou_threshold": 0.5, "random_seed": 42},
+              "benchmark_config": {"validation_set": str(VAL_IMAGES), "total_val_images": len(all_images), "sample_size": sample_size, "confidence_threshold": float(os.environ.get("CONFIDENCE_THRESHOLD", "0.25")), "iou_threshold": 0.5, "random_seed": 42},
               "models": {mid: {k: v for k, v in cfg.items() if k != "path"} for mid, cfg in models.items()},
               "ground_truth_classes": class_names,
               "summary": {mid: {"total_detections": 0, "true_positives": 0, "false_positives": 0, "false_negatives": 0, "precision": 0, "recall": 0} for mid in models},
@@ -202,7 +209,7 @@ jobs:
 
               for mid, model in loaded_models.items():
                   start = time.time()
-                  results = model(str(img_path), conf=0.1, verbose=False)
+                  results = model(str(img_path), conf=conf_threshold, verbose=False)
                   elapsed_ms = int((time.time() - start) * 1000)
 
                   detections = []
