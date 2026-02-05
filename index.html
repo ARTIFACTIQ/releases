@@ -1734,6 +1734,67 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                         </p>
                     </div>
                 </div>
+
+                <!-- gt-audit -->
+                <div style="background: linear-gradient(135deg, rgba(251, 146, 60, 0.1), rgba(239, 68, 68, 0.1)); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; display: flex; gap: 2rem; align-items: flex-start; margin-top: 2rem;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <h3 style="font-size: 1.75rem; background: linear-gradient(90deg, #fb923c, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">gt-audit</h3>
+                            <span style="background: rgba(126, 231, 135, 0.2); color: var(--success); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">MIT</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Fast ground truth label validation for object detection datasets. Detect class mismatches, missing labels, and spurious annotations using YOLO model inference.</p>
+
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                            <div style="background: var(--code-bg); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem;">
+                                <span style="color: var(--text-muted);">Platform:</span> <span style="color: var(--text);">Linux, macOS</span>
+                            </div>
+                            <div style="background: var(--code-bg); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem;">
+                                <span style="color: var(--text-muted);">Format:</span> <span style="color: var(--text);">YOLO, ONNX</span>
+                            </div>
+                        </div>
+
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <span>Install</span>
+                                <button class="copy-btn" onclick="copyCode('curl -fsSL https://raw.githubusercontent.com/ARTIFACTIQ/gt-audit/main/install.sh | bash')">Copy</button>
+                            </div>
+                            <div class="code-block-body">
+                                <span class="prompt">$ </span><span class="command">curl -fsSL https://raw.githubusercontent.com/ARTIFACTIQ/gt-audit/main/install.sh | bash</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1.5rem;">
+                            <a href="https://github.com/ARTIFACTIQ/gt-audit" class="btn btn-secondary" style="padding: 0.75rem 1.5rem;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
+                                View on GitHub
+                            </a>
+                        </div>
+                    </div>
+
+                    <div style="width: 400px; flex-shrink: 0;">
+                        <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); border: 1px solid var(--border); background: #0d1117; padding: 1rem; font-family: 'SF Mono', Monaco, monospace; font-size: 0.7rem; line-height: 1.4;">
+                            <div style="color: #58a6ff; margin-bottom: 0.5rem;">$ gt-audit validate ./dataset --model model.onnx</div>
+                            <div style="color: #8b949e; border: 1px solid #30363d; padding: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="color: #c9d1d9;">gt-audit - Ground Truth Validator</div>
+                            </div>
+                            <div style="color: #8b949e; margin-bottom: 0.25rem;">Loading dataset: ./dataset</div>
+                            <div style="color: #8b949e; margin-bottom: 0.25rem;">   Classes: 39 | Images: 700</div>
+                            <div style="color: #8b949e; margin-bottom: 0.5rem;">Auditing 700 images...</div>
+                            <div style="color: #c9d1d9; border-top: 1px solid #30363d; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                <div style="font-weight: bold; margin-bottom: 0.25rem;">AUDIT SUMMARY</div>
+                                <div>Images with issues: <span style="color: #f0883e;">642</span></div>
+                                <div>Total issues: <span style="color: #f0883e;">1,905</span></div>
+                                <div style="margin-top: 0.25rem;">By severity:</div>
+                                <div style="color: #f85149;">  High:   148</div>
+                                <div style="color: #d29922;">  Medium: 68</div>
+                                <div style="color: #8b949e;">  Low:    1,689</div>
+                            </div>
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.75rem; margin-top: 0.75rem;">
+                            CLI output showing audit summary
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
