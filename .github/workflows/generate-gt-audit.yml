@@ -25,22 +25,23 @@ jobs:
           lfs: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Rust
-        uses: dtolnay/rust-action@stable
-
-      - name: Cache cargo
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-          key: ${{ runner.os }}-cargo-gt-audit-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: Install gt-audit
+      - name: Download gt-audit binary
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cargo install --git https://github.com/ARTIFACTIQ/gt-audit --branch main
+          # Download latest gt-audit release for Linux
+          GT_AUDIT_VERSION=$(gh release list --repo ARTIFACTIQ/gt-audit --limit 1 --json tagName -q '.[0].tagName')
+          echo "Downloading gt-audit $GT_AUDIT_VERSION"
+
+          gh release download "$GT_AUDIT_VERSION" \
+            --repo ARTIFACTIQ/gt-audit \
+            --pattern "gt-audit-linux-x86_64.tar.gz" \
+            --dir /tmp
+
+          tar -xzf /tmp/gt-audit-linux-x86_64.tar.gz -C /tmp
+          chmod +x /tmp/gt-audit
+          sudo mv /tmp/gt-audit /usr/local/bin/
+
           gt-audit --version || echo "gt-audit installed"
 
       - name: Download model from release
