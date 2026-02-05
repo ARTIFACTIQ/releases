@@ -271,6 +271,40 @@
             50% { opacity: 0.5; }
         }
 
+        .gt-issue-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .gt-issue-badge:hover {
+            background: rgba(239, 68, 68, 1);
+        }
+
+        .gt-issue-badge.medium {
+            background: rgba(245, 158, 11, 0.9);
+            color: black;
+        }
+
+        .gt-issue-badge.low {
+            background: rgba(107, 114, 128, 0.8);
+        }
+
+        .comparison-card.has-gt-issue {
+            border-color: var(--warning);
+        }
+
+        .comparison-card.has-gt-issue.high-severity {
+            border-color: var(--error);
+        }
+
         .pagination {
             display: flex;
             justify-content: center;
@@ -354,6 +388,8 @@
 
     <script>
         let allData = null;
+        let gtAuditData = null;
+        let gtIssuesByFile = {};
         let currentPage = 0;
         const PAGE_SIZE = 50;
 
@@ -368,13 +404,33 @@
             return id ? (allData.models[id]?.name || id) : 'Artifactiq';
         }
 
+        // Get GT issues for a specific filename
+        function getGtIssues(filename) {
+            return gtIssuesByFile[filename] || null;
+        }
+
         async function loadComparison() {
             const container = document.getElementById('comparison-container');
 
             try {
-                const response = await fetch('src/data/val-comparison-results.json');
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                allData = await response.json();
+                // Load both comparison data and GT audit data in parallel
+                const [compResponse, auditResponse] = await Promise.all([
+                    fetch('src/data/val-comparison-results.json'),
+                    fetch('src/data/gt-audit-results.json').catch(() => null)
+                ]);
+
+                if (!compResponse.ok) throw new Error(`HTTP ${compResponse.status}`);
+                allData = await compResponse.json();
+
+                // Load GT audit data if available
+                if (auditResponse?.ok) {
+                    gtAuditData = await auditResponse.json();
+                    // Index by filename for quick lookup
+                    (gtAuditData.flagged_images || []).forEach(img => {
+                        gtIssuesByFile[img.filename] = img;
+                    });
+                }
+
                 renderComparison(container);
             } catch (error) {
                 container.innerHTML = `<div class="error"><p><strong>Failed to load</strong></p><p>${error.message}</p></div>`;
@@ -425,6 +481,7 @@
                             <option value="stock_better">Stock Better</option>
                             <option value="both_detect">Both Detect</option>
                             <option value="artifactiq_only">${getArtifactiqModelName()} Only</option>
+                            <option value="gt_issues">GT Issues Only</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -436,7 +493,7 @@
                         </select>
                     </div>
                     <div style="margin-left: auto; font-size: 0.8rem; color: var(--text-muted);">
-                        ${config.sample_size} images | ${config.sample_percentage}% of validation set | conf ≥ ${(config.confidence_threshold * 100).toFixed(0)}%
+                        ${config.sample_size} images | conf ≥ ${(config.confidence_threshold * 100).toFixed(0)}% | <a href="/gt-audit.html" style="color: var(--warning);">${Object.keys(gtIssuesByFile).length} GT issues</a>
                     </div>
                 </div>
 
@@ -475,6 +532,14 @@
                 images = images.filter(img => {
                     const artifactiqCount = img.results?.[artifactiqId]?.count || 0;
                     return artifactiqCount > 0;
+                });
+            } else if (filterType === 'gt_issues') {
+                images = images.filter(img => {
+                    const issues = getGtIssues(img.filename);
+                    if (!issues) return false;
+                    const highCount = issues.issues?.filter(i => i.severity === 'high').length || 0;
+                    const medCount = issues.issues?.filter(i => i.severity === 'medium').length || 0;
+                    return highCount > 0 || medCount > 0;
                 });
             }
 
@@ -556,12 +621,32 @@
             const gt = img.ground_truth || {};
             const winner = getWinner(img);
 
+            // Check for GT issues
+            const gtIssues = getGtIssues(img.filename);
+            const hasGtIssue = gtIssues !== null;
+            const highCount = gtIssues?.issues?.filter(i => i.severity === 'high').length || 0;
+            const medCount = gtIssues?.issues?.filter(i => i.severity === 'medium').length || 0;
+            const maxSeverity = highCount > 0 ? 'high' : (medCount > 0 ? 'medium' : 'low');
+
+            // GT issue badge
+            let gtIssueBadge = '';
+            if (hasGtIssue && (highCount > 0 || medCount > 0)) {
+                const badgeClass = highCount > 0 ? '' : 'medium';
+                const issueText = highCount > 0 ? `${highCount} GT issue${highCount > 1 ? 's' : ''}` : `${medCount} GT issue${medCount > 1 ? 's' : ''}`;
+                gtIssueBadge = `<a href="/gt-audit.html" class="gt-issue-badge ${badgeClass}" title="Click to view GT audit details">${issueText}</a>`;
+            }
+
+            const cardClasses = ['comparison-card'];
+            if (hasGtIssue && highCount > 0) cardClasses.push('has-gt-issue', 'high-severity');
+            else if (hasGtIssue && medCount > 0) cardClasses.push('has-gt-issue');
+
             return `
-                <div class="comparison-card">
+                <div class="${cardClasses.join(' ')}">
                     <div class="card-image">
                         <img src="images/val/${img.filename}" alt="${img.filename}" loading="lazy"
                              onerror="this.parentElement.innerHTML='<div style=\\'padding:2rem;text-align:center;color:var(--text-muted)\\'>Image not available</div>'">
                         <div class="card-gt-badge">GT: ${gt.count || 0} objects</div>
+                        ${gtIssueBadge}
                     </div>
                     <div class="card-header">
                         <span>${img.filename}</span>
