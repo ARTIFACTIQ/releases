@@ -331,6 +331,17 @@
         let currentPage = 0;
         const PAGE_SIZE = 50;
 
+        // Dynamically find the Artifactiq model ID from loaded data
+        function getArtifactiqModelId() {
+            if (!allData?.models) return null;
+            return Object.keys(allData.models).find(id => id.startsWith('artifactiq_'));
+        }
+
+        function getArtifactiqModelName() {
+            const id = getArtifactiqModelId();
+            return id ? (allData.models[id]?.name || id) : 'Artifactiq';
+        }
+
         async function loadComparison() {
             const container = document.getElementById('comparison-container');
 
@@ -384,10 +395,10 @@
                         <label>Show:</label>
                         <select id="filter-type" onchange="renderPage()">
                             <option value="all">All Images</option>
-                            <option value="e8_better">E8 Better</option>
+                            <option value="artifactiq_better">${getArtifactiqModelName()} Better</option>
                             <option value="stock_better">Stock Better</option>
                             <option value="both_detect">Both Detect</option>
-                            <option value="e8_only">E8 Only</option>
+                            <option value="artifactiq_only">${getArtifactiqModelName()} Only</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -414,29 +425,30 @@
         function getFilteredImages() {
             const filterType = document.getElementById('filter-type')?.value || 'all';
             let images = allData.images || [];
+            const artifactiqId = getArtifactiqModelId();
 
-            if (filterType === 'e8_better') {
+            if (filterType === 'artifactiq_better') {
                 images = images.filter(img => {
-                    const e7 = img.results?.artifactiq_e8?.evaluation;
+                    const artifactiq = img.results?.[artifactiqId]?.evaluation;
                     const stock = img.results?.stock_yolov8n?.evaluation;
-                    return e7 && stock && (e7.recall > stock.recall || e7.precision > stock.precision);
+                    return artifactiq && stock && (artifactiq.recall > stock.recall || artifactiq.precision > stock.precision);
                 });
             } else if (filterType === 'stock_better') {
                 images = images.filter(img => {
-                    const e7 = img.results?.artifactiq_e8?.evaluation;
+                    const artifactiq = img.results?.[artifactiqId]?.evaluation;
                     const stock = img.results?.stock_yolov8n?.evaluation;
-                    return e7 && stock && stock.recall > e7.recall && stock.true_positives > e7.true_positives;
+                    return artifactiq && stock && stock.recall > artifactiq.recall && stock.true_positives > artifactiq.true_positives;
                 });
             } else if (filterType === 'both_detect') {
                 images = images.filter(img => {
-                    const e7 = img.results?.artifactiq_e8?.count || 0;
+                    const artifactiqCount = img.results?.[artifactiqId]?.count || 0;
                     const stock = img.results?.stock_yolov8n?.count || 0;
-                    return e7 > 0 && stock > 0;
+                    return artifactiqCount > 0 && stock > 0;
                 });
-            } else if (filterType === 'e8_only') {
+            } else if (filterType === 'artifactiq_only') {
                 images = images.filter(img => {
-                    const e7 = img.results?.artifactiq_e8?.count || 0;
-                    return e7 > 0;
+                    const artifactiqCount = img.results?.[artifactiqId]?.count || 0;
+                    return artifactiqCount > 0;
                 });
             }
 
