@@ -270,6 +270,17 @@
             font-size: 0.85rem;
         }
 
+        .method-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--bg-dark);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
         @media (max-width: 768px) {
             .issue-image-row { grid-template-columns: 1fr; }
         }
@@ -299,7 +310,7 @@
         </div>
 
         <footer>
-            <p>Audit generated using E8.1 model at 25% confidence threshold</p>
+            <p id="footer-info">Audit generated using gt-audit</p>
             <p>© 2026 Artifactiq. Committed to transparency in AI.</p>
         </footer>
     </div>
@@ -313,39 +324,41 @@
             const container = document.getElementById('audit-container');
 
             try {
-                const response = await fetch('src/data/gt-audit-results.json');
+                // Try loading the gt-audit-report.json (Rust tool output)
+                const response = await fetch('gt-audit-report.json');
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 auditData = await response.json();
                 renderAudit(container);
             } catch (error) {
-                container.innerHTML = `<div class="error"><p><strong>Failed to load</strong></p><p>${error.message}</p></div>`;
+                container.innerHTML = `<div class="error"><p><strong>Failed to load audit report</strong></p><p>${error.message}</p></div>`;
             }
         }
 
         function renderAudit(container) {
             const summary = auditData.summary || {};
+            const methodLabel = auditData.method === 'yolo' ? 'YOLO ONNX' : auditData.method;
 
             container.innerHTML = `
                 <div class="summary-grid">
                     <div class="summary-card">
-                        <div class="value">${auditData.total_images}</div>
-                        <div class="label">Total Images</div>
+                        <div class="value">${auditData.images_audited || auditData.total_images}</div>
+                        <div class="label">Images Audited</div>
                     </div>
                     <div class="summary-card">
-                        <div class="value">${summary.images_with_issues}</div>
+                        <div class="value">${summary.images_with_issues || 0}</div>
                         <div class="label">Images with Issues</div>
                     </div>
                     <div class="summary-card severity-high">
                         <div class="value">${summary.by_severity?.high || 0}</div>
-                        <div class="label">High Severity</div>
+                        <div class="label">High (Class Mismatch)</div>
                     </div>
                     <div class="summary-card severity-medium">
                         <div class="value">${summary.by_severity?.medium || 0}</div>
-                        <div class="label">Medium Severity</div>
+                        <div class="label">Medium (Missing Label)</div>
                     </div>
                     <div class="summary-card severity-low">
                         <div class="value">${summary.by_severity?.low || 0}</div>
-                        <div class="label">Low Severity</div>
+                        <div class="label">Low (Spurious Label)</div>
                     </div>
                 </div>
 
@@ -363,12 +376,13 @@
                         <select id="filter-type" onchange="renderPage()">
                             <option value="all">All Types</option>
                             <option value="class_mismatch">Class Mismatch</option>
-                            <option value="missing_gt">Missing GT</option>
-                            <option value="phantom_gt">Phantom GT</option>
+                            <option value="missing_label">Missing Label</option>
+                            <option value="spurious_label">Spurious Label</option>
                         </select>
                     </div>
                     <div style="margin-left: auto; font-size: 0.8rem; color: var(--text-muted);">
-                        Model: ${auditData.model} | Conf: ${(auditData.confidence_threshold * 100).toFixed(0)}%
+                        <span class="method-badge">${methodLabel}</span>
+                        Conf: ${(auditData.confidence_threshold * 100).toFixed(0)}%
                     </div>
                 </div>
 
@@ -381,6 +395,13 @@
                     <a href="https://github.com/ARTIFACTIQ/releases/issues/new?labels=gt-correction&title=GT%20Correction:">Report Issue</a>
                 </div>
             `;
+
+            // Update footer with model info
+            const footerInfo = document.getElementById('footer-info');
+            if (footerInfo) {
+                const genDate = auditData.generated_at ? new Date(auditData.generated_at).toLocaleDateString() : 'Unknown';
+                footerInfo.textContent = `Generated ${genDate} using gt-audit with ${methodLabel} at ${(auditData.confidence_threshold * 100).toFixed(0)}% confidence`;
+            }
 
             renderPage();
         }
@@ -443,7 +464,7 @@
                                 </div>
                                 <div class="issue-details">
                                     <div style="margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.75rem;">
-                                        GT: ${img.ground_truth_count} objects | Model: ${img.model_detections} detections
+                                        GT: ${img.gt_count || img.ground_truth_count || 0} labels | Model: ${img.detection_count || img.model_detections || 0} detections
                                     </div>
                                     ${img.issues.slice(0, 10).map(issue => `
                                         <div class="issue-item ${issue.severity}">
