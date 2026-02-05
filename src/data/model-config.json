@@ -37,7 +37,7 @@
       },
       "known_issues": null,
       "download_url": "https://github.com/ARTIFACTIQ/releases/releases/download/v6.0.0/e8_best.pt",
-      "report_url": "/blog/v6-e8-training-report.html"
+      "report_url": "/blog/model-quality-pipeline.html"
     },
     {
       "name": "E7",
