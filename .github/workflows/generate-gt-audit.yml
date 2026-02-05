@@ -70,7 +70,8 @@ jobs:
 
       - name: Export model to ONNX
         run: |
-          pip install ultralytics torch --index-url https://download.pytorch.org/whl/cpu
+          pip install ultralytics
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
 
           # Find the Artifactiq model (not yolov8n)
           MODEL_PT=$(ls models/*.pt | grep -v yolov8n | head -1)
