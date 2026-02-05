@@ -1,0 +1,184 @@
+name: Generate GT Audit Report
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      model_tag:
+        description: 'Release tag to use (leave empty for latest)'
+        required: false
+      confidence_threshold:
+        description: 'Minimum confidence for detections (default: 0.25)'
+        required: false
+        default: '0.25'
+
+jobs:
+  generate-gt-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Rust
+        uses: dtolnay/rust-action@stable
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+          key: ${{ runner.os }}-cargo-gt-audit-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install gt-audit
+        run: |
+          cargo install --git https://github.com/ARTIFACTIQ/gt-audit --branch main
+          gt-audit --version || echo "gt-audit installed"
+
+      - name: Download model from release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p models
+
+          TAG="${{ github.event.inputs.model_tag }}"
+          if [ -z "$TAG" ]; then
+            TAG=$(gh release list --limit 1 --json tagName -q '.[0].tagName')
+          fi
+          echo "Using release: $TAG"
+          echo "MODEL_TAG=$TAG" >> $GITHUB_ENV
+
+          # Download .pt file and export to ONNX
+          gh release download "$TAG" --pattern "*.pt" --dir models/ || echo "No .pt files in release"
+
+          ls -la models/
+
+      - name: Set up Python for ONNX export
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Export model to ONNX
+        run: |
+          pip install ultralytics torch --index-url https://download.pytorch.org/whl/cpu
+
+          # Find the Artifactiq model (not yolov8n)
+          MODEL_PT=$(ls models/*.pt | grep -v yolov8n | head -1)
+
+          if [ -z "$MODEL_PT" ]; then
+            echo "No Artifactiq model found in release"
+            exit 1
+          fi
+
+          echo "Exporting $MODEL_PT to ONNX..."
+          python -c "from ultralytics import YOLO; YOLO('$MODEL_PT').export(format='onnx', imgsz=640)"
+
+          MODEL_ONNX="${MODEL_PT%.pt}.onnx"
+          echo "MODEL_ONNX=$MODEL_ONNX" >> $GITHUB_ENV
+
+          ls -la models/
+
+      - name: Run GT Audit
+        env:
+          CONFIDENCE_THRESHOLD: ${{ github.event.inputs.confidence_threshold || '0.25' }}
+        run: |
+          echo "Running gt-audit with model: $MODEL_ONNX"
+          echo "Confidence threshold: $CONFIDENCE_THRESHOLD"
+
+          gt-audit validate . \
+            --model "$MODEL_ONNX" \
+            --confidence "$CONFIDENCE_THRESHOLD" \
+            --output gt-audit-report.json
+
+          # Also generate a timestamped version for history
+          cp gt-audit-report.json "gt-audit-report-${MODEL_TAG}.json"
+
+      - name: Generate audit summary for website
+        run: |
+          python3 << 'PYTHON_SCRIPT'
+          import json
+          from pathlib import Path
+
+          # Load audit report
+          with open("gt-audit-report.json") as f:
+              audit = json.load(f)
+
+          # Extract key metrics for website display
+          summary = audit["summary"]
+
+          website_data = {
+              "generated_at": audit["generated_at"],
+              "model": "${{ env.MODEL_TAG }}",
+              "method": audit["method"],
+              "confidence_threshold": audit["confidence_threshold"],
+              "images_audited": audit["images_audited"],
+              "summary": {
+                  "total_issues": summary["total_issues"],
+                  "high_severity": summary["by_severity"].get("high", 0),
+                  "medium_severity": summary["by_severity"].get("medium", 0),
+                  "low_severity": summary["by_severity"].get("low", 0),
+                  "class_mismatch": summary["by_type"].get("class_mismatch", 0),
+                  "missing_label": summary["by_type"].get("missing_label", 0),
+                  "spurious_label": summary["by_type"].get("spurious_label", 0)
+              },
+              "top_issues": audit["flagged_images"][:20] if audit.get("flagged_images") else []
+          }
+
+          # Save for website
+          Path("src/data").mkdir(parents=True, exist_ok=True)
+          with open("src/data/gt-audit-summary.json", "w") as f:
+              json.dump(website_data, f, indent=2)
+
+          print(f"GT Audit Summary:")
+          print(f"  Images audited: {audit['images_audited']}")
+          print(f"  Total issues: {summary['total_issues']}")
+          print(f"  High severity (class_mismatch): {summary['by_severity'].get('high', 0)}")
+          print(f"  Medium severity (missing_label): {summary['by_severity'].get('medium', 0)}")
+          print(f"  Low severity (spurious_label): {summary['by_severity'].get('low', 0)}")
+          PYTHON_SCRIPT
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add gt-audit-report.json src/data/gt-audit-summary.json
+
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: Update GT audit report for ${{ env.MODEL_TAG }} [skip ci]
+
+            Generated by gt-audit via GitHub Actions
+            Issues: $(jq '.summary.total_issues' gt-audit-report.json)
+            High: $(jq '.summary.by_severity.high // 0' gt-audit-report.json)
+            Medium: $(jq '.summary.by_severity.medium // 0' gt-audit-report.json)
+            Low: $(jq '.summary.by_severity.low // 0' gt-audit-report.json)"
+            git push
+          fi
+
+      - name: Summary
+        run: |
+          echo "## GT Audit Report Generated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Model:** ${{ env.MODEL_TAG }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Confidence:** ${{ github.event.inputs.confidence_threshold || '0.25' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat gt-audit-report.json | jq -r '"| Metric | Count |
+          |--------|-------|
+          | Images Audited | \(.images_audited) |
+          | Total Issues | \(.summary.total_issues) |
+          | High Severity | \(.summary.by_severity.high // 0) |
+          | Medium Severity | \(.summary.by_severity.medium // 0) |
+          | Low Severity | \(.summary.by_severity.low // 0) |"' >> $GITHUB_STEP_SUMMARY
