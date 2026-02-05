@@ -1,21 +1,42 @@
 {
   "current_model": {
-    "name": "E8.1",
-    "version": "v6.1.0",
-    "display_name": "Artifactiq E8.1",
+    "name": "E8.2",
+    "version": "v6.2.0",
+    "display_name": "Artifactiq E8.2",
     "release_date": "2026-02-05",
-    "improvements": "Weighted average retry on 17 failed shards, +1.27% F1, +2.65% recall",
-    "training": "Weighted averaging (80% E8 + 20% per shard) on 17 failed shards",
+    "improvements": "GT audit integration, automated quality reports, transparent dataset validation",
+    "training": "Same weights as E8.1 + gt-audit quality pipeline",
     "metrics": {
       "mAP50": 10.35,
       "precision": 37.72,
       "recall": 25.63,
       "f1": 30.52
     },
-    "download_url": "https://github.com/ARTIFACTIQ/releases/releases/download/v6.1.0/e8_1_wavg_best.pt",
-    "report_url": "/blog/model-quality-pipeline.html"
+    "gt_audit": {
+      "total_issues": 22238,
+      "high": 565,
+      "medium": 20220,
+      "low": 1453
+    },
+    "download_url": "https://github.com/ARTIFACTIQ/releases/releases/download/v6.2.0/e8_2_best.pt",
+    "report_url": "/gt-audit.html"
   },
   "previous_models": [
+    {
+      "name": "E8.1",
+      "version": "v6.1.0",
+      "display_name": "Artifactiq E8.1",
+      "release_date": "2026-02-05",
+      "improvements": "Weighted average retry on 17 failed shards, +1.27% F1, +2.65% recall",
+      "training": "Weighted averaging (80% E8 + 20% per shard) on 17 failed shards",
+      "metrics": {
+        "mAP50": 10.35,
+        "precision": 37.72,
+        "recall": 25.63,
+        "f1": 30.52
+      },
+      "download_url": "https://github.com/ARTIFACTIQ/releases/releases/download/v6.1.0/e8_1_wavg_best.pt"
+    },
     {
       "name": "E8",
       "version": "v6.0.0",

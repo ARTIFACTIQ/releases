@@ -1094,8 +1094,8 @@
                 <div class="prereq-banner" style="background: linear-gradient(135deg, rgba(126, 231, 135, 0.15), rgba(0, 212, 255, 0.15)); border-color: rgba(126, 231, 135, 0.3);">
                     <div class="icon"></div>
                     <div class="text">
-                        <strong style="color: var(--success);">New: Model v6.1.0 (E8.1)</strong> - Improved recall +2.65%, F1 +1.27%! Weighted average retry on 17 shards preserves accuracy while boosting detection.
-                        <a href="/blog/model-quality-pipeline.html">Read the announcement</a>
+                        <strong style="color: var(--success);">New: Model v6.2.0 (E8.2)</strong> - GT audit integration! Transparent dataset quality reports with automated validation.
+                        <a href="/gt-audit.html">View GT Audit Report</a>
                     </div>
                 </div>
 
@@ -1130,7 +1130,7 @@
                             <span class="prompt">$</span>
                             <span class="cmd">artifactiq analyze --input bus.jpg</span>
                         </div>
-                        <div class="terminal-output">Downloading artifactiq-v6.1.0.onnx... done</div>
+                        <div class="terminal-output">Downloading artifactiq-v6.2.0.onnx... done</div>
                         <div class="terminal-output highlight">Detected 4 objects:</div>
                         <div class="terminal-output">  person (89.3%) | person (88.1%) | person (86.8%) | bus (83.8%)</div>
                         <div class="terminal-output">&nbsp;</div>
@@ -1223,7 +1223,7 @@
                         </div>
                         <div class="code-block-body">
 <pre style="margin: 0; color: var(--text-muted);">[model]
-version = "v6.1.0"        # Pin to specific version
+version = "v6.2.0"        # Pin to specific version
 update_policy = "check"   # manual, check, or auto
 
 [engine]
@@ -1248,7 +1248,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                         </div>
                         <div class="code-block-body">
                             <span class="comment"># Use specific Artifactiq model version</span><br>
-                            <span class="prompt">$ </span><span class="command">artifactiq analyze --input photo.jpg --model artifactiq:v6.1.0</span><br><br>
+                            <span class="prompt">$ </span><span class="command">artifactiq analyze --input photo.jpg --model artifactiq:v6.2.0</span><br><br>
                             <span class="comment"># Use YOLOv8 via Axon (requires axon install)</span><br>
                             <span class="prompt">$ </span><span class="command">artifactiq analyze --input photo.jpg --model yolov8n</span><br><br>
                             <span class="comment"># Use custom ONNX file</span><br>
@@ -1288,12 +1288,12 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
             <div style="margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(126, 231, 135, 0.05)); border: 2px solid var(--primary); border-radius: 16px;">
                 <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
                     <span style="color: var(--primary); font-weight: 700; font-size: 1.25rem;">Model Showdown</span>
-                    <span style="background: var(--success); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">E8.1 (v6.1.0) NEW</span>
+                    <span style="background: var(--success); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">E8.2 (v6.2.0) NEW</span>
                     <span style="background: var(--primary); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">4.6x IMPROVEMENT</span>
                     <span style="background: var(--text-muted); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">Stock YOLOv8n</span>
                     <a href="/model-comparison.html" style="margin-left: auto; background: var(--code-bg); color: var(--primary); padding: 0.3rem 0.75rem; border-radius: 4px; font-size: 0.75rem; text-decoration: none; border: 1px solid var(--primary);">📊 Full Comparison →</a>
                 </div>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">E8.1 (v6.1.0) achieves 74x mAP50 improvement over E2 baseline through optimized shard-based training (46 shards x 10 epochs, calibrated training). Now the default model. <a href="/model-comparison.html" style="color: var(--primary);">View transparent comparison →</a></p>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">E8.2 (v6.2.0) adds GT audit integration with transparent dataset quality reports. Same weights as E8.1, now with automated validation. <a href="/gt-audit.html" style="color: var(--primary);">View GT Audit Report →</a></p>
 
                 <!-- Model Comparison Table -->
                 <div style="overflow-x: auto; margin-bottom: 1.5rem;">
@@ -1306,11 +1306,11 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                             <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">Notes</th>
                         </tr>
                         <tr style="background: rgba(126, 231, 135, 0.15);">
-                            <td style="padding: 0.75rem; color: var(--success); font-weight: 600;">E8.1 (v6.1.0)</td>
+                            <td style="padding: 0.75rem; color: var(--success); font-weight: 600;">E8.2 (v6.2.0)</td>
                             <td style="padding: 0.75rem; text-align: center; color: var(--success); font-weight: 700;">0.145%</td>
                             <td style="padding: 0.75rem; text-align: center; color: var(--success); font-weight: 700;">4.2%</td>
-                            <td style="padding: 0.75rem; text-align: center;">46 shards x 10 epochs, calibrated training</td>
-                            <td style="padding: 0.75rem; color: var(--success);">68K images, 4.6x better than E2</td>
+                            <td style="padding: 0.75rem; text-align: center;">E8.1 + GT audit integration</td>
+                            <td style="padding: 0.75rem; color: var(--success);">Transparent quality reports</td>
                         </tr>
                         <tr>
                             <td style="padding: 0.75rem; color: var(--text-muted);">E2 (baseline)</td>
@@ -1372,7 +1372,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 </div>
 
                 <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                    <span style="color: var(--success); font-size: 0.85rem; font-weight: 600;">E8.1 (v6.1.0) is now the default model - auto-downloads on first use</span>
+                    <span style="color: var(--success); font-size: 0.85rem; font-weight: 600;">E8.2 (v6.2.0) is now the default model - auto-downloads on first use</span>
                     <a href="/blog/v5-e7-training-report.html" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">Full E8 training report &rarr;</a>
                 </div>
             </div>
@@ -1964,13 +1964,13 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
     <div id="batchModal" class="batch-modal">
         <div class="batch-modal-content">
             <div class="batch-modal-header">
-                <h2>Raw Inference Output: Stock YOLOv8n vs Artifactiq v6.1.0 (E8.1)</h2>
+                <h2>Raw Inference Output: Stock YOLOv8n vs Artifactiq v6.2.0 (E8.2)</h2>
                 <button class="batch-modal-close" onclick="closeBatchModal()">&times;</button>
             </div>
 
-            <!-- v6.1.0 E8.1 Success Banner -->
+            <!-- v6.2.0 E8.2 Success Banner -->
             <div style="background: rgba(126, 231, 135, 0.1); border: 1px solid rgba(126, 231, 135, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-                <p style="color: var(--success); font-weight: 600; margin-bottom: 0.5rem;">v6.1.0 (E8.1) = Production Model - 74x Improvement!</p>
+                <p style="color: var(--success); font-weight: 600; margin-bottom: 0.5rem;">v6.2.0 (E8.2) = Production Model - 74x Improvement!</p>
                 <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">
                     E8 trained with optimized shard-based approach: 46 shards × 3 epochs on 68K images.<br>
                     <span style="color: var(--success);">mAP50: 0.145% (4.6x better than E2 baseline)</span> · <span style="color: var(--primary);">Recall: 4.2%</span> · <a href="/blog/v5-e7-training-report.html" style="color: var(--primary);">Full report →</a>
@@ -2001,7 +2001,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                     </div>
                 </div>
                 <div style="background: var(--artifactiq-bg); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 1rem;">
-                    <div style="font-weight: 600; color: var(--artifactiq-color); margin-bottom: 0.5rem;">Artifactiq v6.1.0 E8.1 (ONNX)</div>
+                    <div style="font-weight: 600; color: var(--artifactiq-color); margin-bottom: 0.5rem;">Artifactiq v6.2.0 E8.2 (ONNX)</div>
                     <div style="font-size: 0.8rem; color: var(--text-muted);">39 domain classes · <span style="color: var(--success);">46 shards × 3 epochs</span></div>
                     <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem;">
                         Has: Clothing, Shorts, Dress, Jacket, Footwear, Boot, Backpack, Handbag, Sunglasses, Hat, Watch...<br>
@@ -2010,7 +2010,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 </div>
             </div>
             <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
-                <span style="color: var(--primary);">Batch test: 21 images</span> · Stock: general objects · v6.1.0: domain-specific detection · <span style="color: var(--success);">81ms avg</span>
+                <span style="color: var(--primary);">Batch test: 21 images</span> · Stock: general objects · v6.2.0: domain-specific detection · <span style="color: var(--success);">81ms avg</span>
             </p>
 
             <div class="batch-images-grid">
@@ -2027,7 +2027,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">bus 83.8%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.1.0 E8.1</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.2.0 E8.2</div>
                                 <span style="color: var(--warning); font-size: 0.6rem;">39-class domain model</span>
                             </div>
                         </div>
@@ -2047,7 +2047,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 76.3%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.1.0 E8.1</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.2.0 E8.2</div>
                                 <span style="color: var(--warning); font-size: 0.6rem;">39-class domain model</span>
                             </div>
                         </div>
@@ -2065,7 +2065,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 85.2%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.1.0 E8.1</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.2.0 E8.2</div>
                                 <span style="color: var(--warning); font-size: 0.6rem;">39-class domain model</span>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-product); color: #000;">Footwear 5.3%</span>
                             </div>
@@ -2086,7 +2086,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">car 9.7%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.1.0 E8.1</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.2.0 E8.2</div>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">Person 9.9%</span>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-product); color: #000;">Clothing 8.6%</span>
                             </div>
@@ -2107,7 +2107,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--detection-person); color: #fff;">person 14.6%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.1.0 E8.1</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.2.0 E8.2</div>
                                 <span style="color: var(--text-muted); font-size: 0.65rem;">No products @ 5%</span>
                             </div>
                         </div>
@@ -2126,7 +2126,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">handbag 16.6%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.1.0 E8.1</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.2.0 E8.2</div>
                                 <span style="color: var(--text-muted); font-size: 0.65rem;">No products @ 5%</span>
                             </div>
                         </div>
@@ -2146,7 +2146,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">chair 26%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.1.0 E8.1</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.2.0 E8.2</div>
                                 <span style="color: var(--text-muted); font-size: 0.65rem;">No products</span>
                             </div>
                         </div>
@@ -2165,7 +2165,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">bench 6.5%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.1.0 E8.1</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.2.0 E8.2</div>
                                 <span style="color: var(--text-muted); font-size: 0.65rem;">No products</span>
                             </div>
                         </div>
@@ -2184,7 +2184,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">handbag 10.5%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.1.0 E8.1</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.2.0 E8.2</div>
                                 <span style="color: var(--text-muted); font-size: 0.65rem;">Hat/Sunglasses &lt;5%</span>
                             </div>
                         </div>
@@ -2204,7 +2204,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                                 <span class="detection-tag" style="font-size: 0.6rem; background: var(--stock-color); color: #fff;">cup 12.6%</span>
                             </div>
                             <div style="background: var(--artifactiq-bg); padding: 0.5rem; border-radius: 4px; font-size: 0.7rem;">
-                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.1.0 E8.1</div>
+                                <div style="color: var(--artifactiq-color); font-weight: 600; font-size: 0.65rem;">v6.2.0 E8.2</div>
                                 <span style="color: var(--text-muted); font-size: 0.65rem;">No products</span>
                             </div>
                         </div>
@@ -2215,7 +2215,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
             <div style="margin-top: 2rem; padding: 1rem; background: var(--code-bg); border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
                 <div style="color: var(--text-muted); margin-bottom: 0.5rem;"># Model comparison test (conf=0.05):</div>
                 <div style="color: var(--stock-color); margin-bottom: 0.25rem;">artifactiq analyze --input ./images/ --model yolov8n  <span style="color: var(--text-muted);"># Stock COCO model</span></div>
-                <div style="color: var(--artifactiq-color);">artifactiq analyze --input ./images/ --model artifactiq:v6.1.0  <span style="color: var(--text-muted);"># Domain-specific model</span></div>
+                <div style="color: var(--artifactiq-color);">artifactiq analyze --input ./images/ --model artifactiq:v6.2.0  <span style="color: var(--text-muted);"># Domain-specific model</span></div>
             </div>
             <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 1rem;">
                 <span data-model="version"></span> (<span data-model="name"></span>) is the default model with <span data-model="improvement"></span>. Domain-specific 39-class detection for fashion/merchandise. <a href="/blog/v6-e8-training-report.html" style="color: var(--primary);">Training report →</a>
