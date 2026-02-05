@@ -320,7 +320,7 @@
             <a href="/" class="logo">Artifactiq</a>
             <nav>
                 <a href="/">Home</a>
-                <a href="/blog/v5-e7-training-report.html">E7 Report</a>
+                <a href="/gt-audit.html">GT Audit</a>
                 <a href="https://github.com/ARTIFACTIQ">GitHub</a>
             </nav>
         </header>
@@ -333,6 +333,9 @@
             <p>Results generated from <strong>700 randomly sampled images</strong> (10%) from the 7,570 image validation set.</p>
             <p style="margin-top: 0.5rem;">
                 Ground truth labels enable honest evaluation: ✅ True Positives, ❌ False Positives, ⚠️ Missed Detections
+            </p>
+            <p style="margin-top: 0.5rem;">
+                <strong>Note:</strong> Some GT labels may be incorrect. See <a href="/gt-audit.html" style="color: var(--primary);">GT Audit</a> for flagged issues.
             </p>
             <p style="margin-top: 0.5rem;">
                 <strong>Regenerate:</strong> <code>python scripts/generate-val-comparison.py --sample-size 700</code>

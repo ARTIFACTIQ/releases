@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ground Truth Audit | Artifactiq</title>
+    <meta name="description" content="Public audit of ground truth labels - help us improve dataset quality through community feedback.">
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --bg-dark: #0a0a12;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text: #e4e4e4;
+            --text-muted: #888;
+            --code-bg: #0d1117;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+        nav a { color: var(--text-muted); text-decoration: none; margin-left: 1.5rem; }
+        nav a:hover { color: var(--primary); }
+
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--text-muted); margin-bottom: 2rem; }
+
+        .callout {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .callout h3 { color: var(--primary); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .callout p { font-size: 0.85rem; color: var(--text-muted); }
+        .callout a { color: var(--primary); }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .summary-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .summary-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .severity-high { color: var(--error); border-color: var(--error); }
+        .severity-medium { color: var(--warning); border-color: var(--warning); }
+        .severity-low { color: var(--text-muted); }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .filter-group select {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text);
+            padding: 0.4rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .issues-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .issue-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .issue-card.high { border-left: 4px solid var(--error); }
+        .issue-card.medium { border-left: 4px solid var(--warning); }
+        .issue-card.low { border-left: 4px solid var(--text-muted); }
+
+        .issue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        .issue-header:hover { background: rgba(0,0,0,0.3); }
+
+        .issue-filename {
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        .issue-badges {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-high { background: var(--error); color: white; }
+        .badge-medium { background: var(--warning); color: black; }
+        .badge-low { background: var(--text-muted); color: white; }
+        .badge-count { background: var(--bg-card); color: var(--text); border: 1px solid var(--border-color); }
+
+        .issue-content {
+            display: none;
+            padding: 1rem;
+        }
+
+        .issue-content.expanded { display: block; }
+
+        .issue-image-row {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1rem;
+        }
+
+        .issue-image {
+            border-radius: 8px;
+            overflow: hidden;
+            background: #111;
+        }
+
+        .issue-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .issue-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .issue-item {
+            padding: 0.5rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .issue-item.high { border-left: 3px solid var(--error); }
+        .issue-item.medium { border-left: 3px solid var(--warning); }
+        .issue-item.low { border-left: 3px solid var(--text-muted); }
+
+        .issue-type {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding: 1rem;
+        }
+
+        .pagination button {
+            background: var(--primary);
+            color: var(--bg-dark);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .pagination button:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .feedback-cta {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 44, 191, 0.1));
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .feedback-cta h3 { color: var(--primary); margin-bottom: 0.5rem; }
+        .feedback-cta p { color: var(--text-muted); margin-bottom: 1rem; }
+        .feedback-cta a {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--bg-dark);
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .loading { text-align: center; padding: 4rem; color: var(--text-muted); }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .issue-image-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="logo">Artifactiq</a>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/model-comparison.html">Model Comparison</a>
+                <a href="https://github.com/ARTIFACTIQ/releases">GitHub</a>
+            </nav>
+        </header>
+
+        <h1>Ground Truth Audit</h1>
+        <p class="subtitle">Automated quality check of validation dataset labels</p>
+
+        <div class="callout">
+            <h3>Help Improve Our Dataset</h3>
+            <p>This audit flags potential labeling errors in our validation set. We believe in transparency - if our ground truth has issues, you should know. Found a mislabeled image? <a href="https://github.com/ARTIFACTIQ/releases/issues/new?template=gt-correction.md">Submit a correction</a>.</p>
+        </div>
+
+        <div id="audit-container">
+            <div class="loading">Loading audit results...</div>
+        </div>
+
+        <footer>
+            <p>Audit generated using E8.1 model at 25% confidence threshold</p>
+            <p>© 2026 Artifactiq. Committed to transparency in AI.</p>
+        </footer>
+    </div>
+
+    <script>
+        let auditData = null;
+        let currentPage = 0;
+        const PAGE_SIZE = 20;
+
+        async function loadAudit() {
+            const container = document.getElementById('audit-container');
+
+            try {
+                const response = await fetch('src/data/gt-audit-results.json');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                auditData = await response.json();
+                renderAudit(container);
+            } catch (error) {
+                container.innerHTML = `<div class="error"><p><strong>Failed to load</strong></p><p>${error.message}</p></div>`;
+            }
+        }
+
+        function renderAudit(container) {
+            const summary = auditData.summary || {};
+
+            container.innerHTML = `
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="value">${auditData.total_images}</div>
+                        <div class="label">Total Images</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="value">${summary.images_with_issues}</div>
+                        <div class="label">Images with Issues</div>
+                    </div>
+                    <div class="summary-card severity-high">
+                        <div class="value">${summary.by_severity?.high || 0}</div>
+                        <div class="label">High Severity</div>
+                    </div>
+                    <div class="summary-card severity-medium">
+                        <div class="value">${summary.by_severity?.medium || 0}</div>
+                        <div class="label">Medium Severity</div>
+                    </div>
+                    <div class="summary-card severity-low">
+                        <div class="value">${summary.by_severity?.low || 0}</div>
+                        <div class="label">Low Severity</div>
+                    </div>
+                </div>
+
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Severity:</label>
+                        <select id="filter-severity" onchange="renderPage()">
+                            <option value="all">All</option>
+                            <option value="high">High Only</option>
+                            <option value="medium">Medium+</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Issue Type:</label>
+                        <select id="filter-type" onchange="renderPage()">
+                            <option value="all">All Types</option>
+                            <option value="class_mismatch">Class Mismatch</option>
+                            <option value="missing_gt">Missing GT</option>
+                            <option value="phantom_gt">Phantom GT</option>
+                        </select>
+                    </div>
+                    <div style="margin-left: auto; font-size: 0.8rem; color: var(--text-muted);">
+                        Model: ${auditData.model} | Conf: ${(auditData.confidence_threshold * 100).toFixed(0)}%
+                    </div>
+                </div>
+
+                <div id="issues-list" class="issues-list"></div>
+                <div id="pagination" class="pagination"></div>
+
+                <div class="feedback-cta">
+                    <h3>Found a Labeling Error?</h3>
+                    <p>Help us improve the dataset by reporting incorrect labels</p>
+                    <a href="https://github.com/ARTIFACTIQ/releases/issues/new?labels=gt-correction&title=GT%20Correction:">Report Issue</a>
+                </div>
+            `;
+
+            renderPage();
+        }
+
+        function getFilteredImages() {
+            const severityFilter = document.getElementById('filter-severity')?.value || 'all';
+            const typeFilter = document.getElementById('filter-type')?.value || 'all';
+
+            let images = auditData.flagged_images || [];
+
+            if (severityFilter === 'high') {
+                images = images.filter(img =>
+                    img.issues.some(i => i.severity === 'high')
+                );
+            } else if (severityFilter === 'medium') {
+                images = images.filter(img =>
+                    img.issues.some(i => i.severity === 'high' || i.severity === 'medium')
+                );
+            }
+
+            if (typeFilter !== 'all') {
+                images = images.filter(img =>
+                    img.issues.some(i => i.type === typeFilter)
+                );
+            }
+
+            return images;
+        }
+
+        function renderPage() {
+            const images = getFilteredImages();
+            const totalPages = Math.ceil(images.length / PAGE_SIZE);
+            currentPage = Math.min(currentPage, Math.max(0, totalPages - 1));
+
+            const start = currentPage * PAGE_SIZE;
+            const pageImages = images.slice(start, start + PAGE_SIZE);
+
+            const list = document.getElementById('issues-list');
+
+            list.innerHTML = pageImages.map((img, idx) => {
+                const highCount = img.issues.filter(i => i.severity === 'high').length;
+                const medCount = img.issues.filter(i => i.severity === 'medium').length;
+                const maxSeverity = highCount > 0 ? 'high' : (medCount > 0 ? 'medium' : 'low');
+
+                return `
+                    <div class="issue-card ${maxSeverity}">
+                        <div class="issue-header" onclick="toggleIssue(${start + idx})">
+                            <span class="issue-filename">${img.filename}</span>
+                            <div class="issue-badges">
+                                ${highCount > 0 ? `<span class="badge badge-high">${highCount} HIGH</span>` : ''}
+                                ${medCount > 0 ? `<span class="badge badge-medium">${medCount} MED</span>` : ''}
+                                <span class="badge badge-count">${img.issues.length} issues</span>
+                            </div>
+                        </div>
+                        <div class="issue-content" id="issue-${start + idx}">
+                            <div class="issue-image-row">
+                                <div class="issue-image">
+                                    <img src="images/val/${img.filename}" alt="${img.filename}" loading="lazy"
+                                         onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect fill=%22%23222%22 width=%22300%22 height=%22200%22/><text fill=%22%23666%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22>Image not available</text></svg>'">
+                                </div>
+                                <div class="issue-details">
+                                    <div style="margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.75rem;">
+                                        GT: ${img.ground_truth_count} objects | Model: ${img.model_detections} detections
+                                    </div>
+                                    ${img.issues.slice(0, 10).map(issue => `
+                                        <div class="issue-item ${issue.severity}">
+                                            <span class="issue-type">${issue.type.replace('_', ' ')}</span>: ${issue.description}
+                                        </div>
+                                    `).join('')}
+                                    ${img.issues.length > 10 ? `<div class="issue-item">... and ${img.issues.length - 10} more</div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('pagination').innerHTML = `
+                <button onclick="prevPage()" ${currentPage === 0 ? 'disabled' : ''}>← Previous</button>
+                <span>Page ${currentPage + 1} of ${totalPages} (${images.length} images)</span>
+                <button onclick="nextPage()" ${currentPage >= totalPages - 1 ? 'disabled' : ''}>Next →</button>
+            `;
+        }
+
+        function toggleIssue(idx) {
+            const content = document.getElementById(`issue-${idx}`);
+            if (content) {
+                content.classList.toggle('expanded');
+            }
+        }
+
+        function prevPage() { currentPage--; renderPage(); window.scrollTo(0, 300); }
+        function nextPage() { currentPage++; renderPage(); window.scrollTo(0, 300); }
+
+        document.addEventListener('DOMContentLoaded', loadAudit);
+    </script>
+</body>
+</html>
