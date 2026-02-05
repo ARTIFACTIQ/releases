@@ -1,19 +1,19 @@
 {
   "current_model": {
-    "name": "Latest",
-    "version": "v6.0.0",
-    "display_name": "Artifactiq Latest",
-    "release_date": "2026-02-04",
-    "improvements": "See release notes",
-    "training": "Automated release",
+    "name": "E8.1",
+    "version": "v6.1.0",
+    "display_name": "Artifactiq E8.1",
+    "release_date": "2026-02-05",
+    "improvements": "Weighted average retry on 17 failed shards, +1.27% F1, +2.65% recall",
+    "training": "Weighted averaging (80% E8 + 20% per shard) on 17 failed shards",
     "metrics": {
-      "mAP50": 0,
-      "precision": 0,
-      "recall": 0,
-      "total_detections": 74
+      "mAP50": 10.35,
+      "precision": 37.72,
+      "recall": 25.63,
+      "f1": 30.52
     },
-    "download_url": "https://github.com/ARTIFACTIQ/releases/releases/download/v6.0.0/latest_best.pt",
-    "report_url": "/blog/v6.0.0-training-report.html"
+    "download_url": "https://github.com/ARTIFACTIQ/releases/releases/download/v6.1.0/e8_1_wavg_best.pt",
+    "report_url": "/blog/model-quality-pipeline.html"
   },
   "previous_models": [
     {
@@ -25,9 +25,9 @@
       "training": "Calibrated training with val=True (46 shards x 10 epochs)",
       "metrics": {
         "mAP50": 10.35,
-        "precision": 40.05,
-        "recall": 23.65,
-        "f1": 29.74,
+        "precision": 40.67,
+        "recall": 23.50,
+        "f1": 29.79,
         "avg_confidence": 21.6
       },
       "comparison_vs_previous": {
