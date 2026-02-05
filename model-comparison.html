@@ -248,6 +248,29 @@
             font-style: italic;
         }
 
+        .model-result.is-winner {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 3px solid var(--success);
+        }
+
+        .winner-badge {
+            color: var(--success);
+            font-size: 0.9rem;
+            margin-left: 0.3rem;
+            animation: pulse 2s infinite;
+        }
+
+        .tie-badge {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-left: 0.3rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
         .pagination {
             display: flex;
             justify-content: center;
@@ -477,8 +500,31 @@
             `;
         }
 
+        function getWinner(img) {
+            const artifactiqId = getArtifactiqModelId();
+            const artifactiq = img.results?.[artifactiqId]?.evaluation;
+            const stock = img.results?.stock_yolov8n?.evaluation;
+
+            if (!artifactiq || !stock) return null;
+
+            // Calculate score: TP - FP (rewarding correct detections, penalizing false ones)
+            const artifactiqScore = (artifactiq.true_positives || 0) - (artifactiq.false_positives || 0) * 0.5;
+            const stockScore = (stock.true_positives || 0) - (stock.false_positives || 0) * 0.5;
+
+            // Also consider: if both have same score, prefer higher TP
+            if (artifactiqScore > stockScore) return artifactiqId;
+            if (stockScore > artifactiqScore) return 'stock_yolov8n';
+
+            // Tiebreaker: more true positives wins
+            if ((artifactiq.true_positives || 0) > (stock.true_positives || 0)) return artifactiqId;
+            if ((stock.true_positives || 0) > (artifactiq.true_positives || 0)) return 'stock_yolov8n';
+
+            return 'tie';
+        }
+
         function renderImageCard(img, models) {
             const gt = img.ground_truth || {};
+            const winner = getWinner(img);
 
             return `
                 <div class="comparison-card">
@@ -492,22 +538,29 @@
                         <span>${gt.classes?.slice(0,3).join(', ') || 'Unknown'}${gt.classes?.length > 3 ? '...' : ''}</span>
                     </div>
                     <div class="card-results">
-                        ${Object.entries(models).map(([id, model]) => renderModelResult(id, img.results?.[id], model)).join('')}
+                        ${Object.entries(models).map(([id, model]) => renderModelResult(id, img.results?.[id], model, winner)).join('')}
                     </div>
                 </div>
             `;
         }
 
-        function renderModelResult(modelId, result, config) {
+        function renderModelResult(modelId, result, config, winner) {
             if (!result) return `<div class="model-result"><span class="no-detections">No data</span></div>`;
 
             const eval_ = result.evaluation || {};
             const detections = result.detections || [];
+            const isWinner = winner === modelId;
+            const isTie = winner === 'tie';
+
+            // Winner indicator styles
+            const winnerBadge = isWinner
+                ? '<span class="winner-badge" title="Better on this image">▲</span>'
+                : (isTie ? '<span class="tie-badge" title="Tie">=</span>' : '');
 
             return `
-                <div class="model-result">
+                <div class="model-result ${isWinner ? 'is-winner' : ''}">
                     <div class="result-header">
-                        <span class="model-name" style="color: ${config?.color || '#888'}">${config?.name || modelId}</span>
+                        <span class="model-name" style="color: ${config?.color || '#888'}">${config?.name || modelId} ${winnerBadge}</span>
                         <span>${result.count} det</span>
                     </div>
                     <div class="eval-metrics">
