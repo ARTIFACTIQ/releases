@@ -502,22 +502,49 @@
 
         function getWinner(img) {
             const artifactiqId = getArtifactiqModelId();
-            const artifactiq = img.results?.[artifactiqId]?.evaluation;
-            const stock = img.results?.stock_yolov8n?.evaluation;
+            const artifactiq = img.results?.[artifactiqId];
+            const stock = img.results?.stock_yolov8n;
+            const gtClasses = img.ground_truth?.classes || [];
 
-            if (!artifactiq || !stock) return null;
+            if (!artifactiq?.evaluation || !stock?.evaluation) return null;
 
-            // Calculate score: TP - FP (rewarding correct detections, penalizing false ones)
-            const artifactiqScore = (artifactiq.true_positives || 0) - (artifactiq.false_positives || 0) * 0.5;
-            const stockScore = (stock.true_positives || 0) - (stock.false_positives || 0) * 0.5;
+            const aEval = artifactiq.evaluation;
+            const sEval = stock.evaluation;
 
-            // Also consider: if both have same score, prefer higher TP
-            if (artifactiqScore > stockScore) return artifactiqId;
-            if (stockScore > artifactiqScore) return 'stock_yolov8n';
+            // Check if Artifactiq detected any GT class (domain-specific match)
+            const artifactiqDetections = artifactiq.detections || [];
+            const stockDetections = stock.detections || [];
 
-            // Tiebreaker: more true positives wins
-            if ((artifactiq.true_positives || 0) > (stock.true_positives || 0)) return artifactiqId;
-            if ((stock.true_positives || 0) > (artifactiq.true_positives || 0)) return 'stock_yolov8n';
+            const artifactiqMatchesGT = artifactiqDetections.some(det =>
+                gtClasses.some(gt => gt.toLowerCase() === det.label.toLowerCase())
+            );
+
+            // Stock detects generic COCO classes (person, etc.) - not domain-specific
+            // If Artifactiq matches GT class and has TPs, prefer it
+            if (artifactiqMatchesGT && (aEval.true_positives || 0) > 0) {
+                // Artifactiq detected the actual domain class
+                // Only lose if Stock has significantly better metrics AND no FN
+                if ((sEval.true_positives || 0) > (aEval.true_positives || 0) &&
+                    (sEval.false_negatives || 0) === 0 &&
+                    (sEval.false_positives || 0) < (aEval.false_positives || 0)) {
+                    return 'stock_yolov8n';
+                }
+                return artifactiqId;
+            }
+
+            // Fallback: compare by TP count, then by fewer FPs
+            const aTp = aEval.true_positives || 0;
+            const sTp = sEval.true_positives || 0;
+
+            if (aTp > sTp) return artifactiqId;
+            if (sTp > aTp) return 'stock_yolov8n';
+
+            // Same TPs: fewer FPs wins
+            const aFp = aEval.false_positives || 0;
+            const sFp = sEval.false_positives || 0;
+
+            if (aFp < sFp) return artifactiqId;
+            if (sFp < aFp) return 'stock_yolov8n';
 
             return 'tie';
         }
