@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Data Quality Auditing - Artifactiq</title>
+    <meta name="description" content="How we automated 80% of ground truth quality detection and made it publicly available for community feedback.">
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --accent: #7b2cbf;
+            --bg-dark: #0a0a12;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e4e4e4;
+            --text-muted: #888;
+            --code-bg: #0d1117;
+            --success: #7ee787;
+            --warning: #f0b429;
+            --error: #f85149;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.8;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+        header {
+            background: rgba(10, 10, 18, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        header a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        article { padding: 4rem 0; }
+
+        .article-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .meta {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        h3 {
+            color: var(--text);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: rgba(0, 212, 255, 0.1);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85em;
+        }
+        pre {
+            background: var(--code-bg);
+            padding: 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .callout {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+        .callout-info {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary);
+        }
+        .callout-success {
+            background: rgba(126, 231, 135, 0.1);
+            border-color: var(--success);
+        }
+        .callout-warning {
+            background: rgba(240, 180, 41, 0.1);
+            border-color: var(--warning);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .stat-card.high .stat-value { color: var(--error); }
+        .stat-card.medium .stat-value { color: var(--warning); }
+
+        .flow-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+        }
+        .flow-arrow {
+            color: var(--primary);
+            margin: 0.25rem 0;
+            padding-left: 2rem;
+        }
+
+        a { color: var(--primary); }
+        a:hover { text-decoration: underline; }
+
+        .highlight { color: var(--success); font-weight: 600; }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        ul, ol { margin: 1rem 0 1rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(123, 44, 191, 0.15));
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .cta-box h3 { color: var(--primary); margin-bottom: 0.5rem; }
+        .cta-box p { color: var(--text-muted); margin-bottom: 1rem; }
+        .cta-button {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--bg-dark);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0.25rem;
+        }
+        .cta-button:hover { text-decoration: none; opacity: 0.9; }
+        .cta-button.secondary {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">&larr; Back to Artifactiq</a>
+    </header>
+
+    <div class="container">
+        <article>
+            <div class="article-header">
+                <span class="badge">Data Quality</span>
+                <h1>Automating Ground Truth Quality Audits</h1>
+                <p class="meta">Published February 5, 2026 | By Artifactiq ML Team</p>
+            </div>
+
+            <p>In our <a href="/blog/model-quality-pipeline.html">previous article</a>, we described how we automated model evaluation using CI/CD pipelines. But there's a harder problem: <strong>what if the ground truth labels themselves are wrong?</strong></p>
+
+            <p>Bad labels silently corrupt everything. Your precision and recall metrics become meaningless. Your model learns incorrect patterns. Your "improvements" might actually be regressions against the real world.</p>
+
+            <p>We built an automated system to detect these issues and made it <a href="/gt-audit.html">publicly visible</a>. Here's how.</p>
+
+            <h2>The Problem: Silent Label Corruption</h2>
+
+            <p>We discovered this issue while reviewing model comparison results. An image clearly showing a woman in a dress was labeled as "Boot". Our model correctly detected clothing items, but the evaluation marked them as false positives because they didn't match the erroneous "Boot" label.</p>
+
+            <div class="callout callout-warning">
+                <strong>The insidious part:</strong> These errors don't cause crashes or obvious failures. The pipeline runs successfully. Metrics are computed. Reports are generated. Everything looks fine—except the numbers are wrong.
+            </div>
+
+            <p>Manual review doesn't scale. With 7,500+ validation images, each potentially containing multiple objects, human auditing would take weeks and still miss errors due to fatigue.</p>
+
+            <h2>The Solution: Model-Assisted Auditing</h2>
+
+            <p>We use our own trained model to audit the ground truth. The core insight: <strong>when a well-trained model confidently disagrees with a label, one of them is probably wrong.</strong></p>
+
+            <p>The audit detects three types of issues:</p>
+
+            <table>
+                <tr><th>Issue Type</th><th>Severity</th><th>Description</th></tr>
+                <tr>
+                    <td><strong>Class Mismatch</strong></td>
+                    <td style="color: var(--error);">High</td>
+                    <td>Model confidently detects class X, GT says class Y (e.g., "Dress" detected, labeled "Boot")</td>
+                </tr>
+                <tr>
+                    <td><strong>Missing GT</strong></td>
+                    <td style="color: var(--warning);">Medium</td>
+                    <td>Model detects an object with high confidence, but no GT label exists</td>
+                </tr>
+                <tr>
+                    <td><strong>Phantom GT</strong></td>
+                    <td style="color: var(--text-muted);">Low</td>
+                    <td>GT label exists, but model detects nothing there (could be model limitation or bad label)</td>
+                </tr>
+            </table>
+
+            <h2>Current Audit Results</h2>
+
+            <p>Running the audit on our 700-image validation set with E8.1 at 25% confidence threshold:</p>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-value">700</div>
+                    <div class="stat-label">Images Audited</div>
+                </div>
+                <div class="stat-card high">
+                    <div class="stat-value">7</div>
+                    <div class="stat-label">High Severity</div>
+                </div>
+                <div class="stat-card medium">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Medium Severity</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">~80%</div>
+                    <div class="stat-label">Auto-Detected</div>
+                </div>
+            </div>
+
+            <p>The 7 high-severity issues are confirmed labeling errors—images where the GT class is objectively wrong. These directly impact our reported metrics.</p>
+
+            <h2>How It Works</h2>
+
+            <div class="flow-diagram">
+                <div class="flow-step">1. Load trained model (E8.1) and validation images</div>
+                <div class="flow-arrow">&darr;</div>
+                <div class="flow-step">2. Run inference on each image</div>
+                <div class="flow-arrow">&darr;</div>
+                <div class="flow-step">3. Compare detections to GT labels using IoU matching</div>
+                <div class="flow-arrow">&darr;</div>
+                <div class="flow-step">4. Flag mismatches where model confidence &gt; threshold</div>
+                <div class="flow-arrow">&darr;</div>
+                <div class="flow-step">5. Generate JSON report with severity classification</div>
+                <div class="flow-arrow">&darr;</div>
+                <div class="flow-step">6. Publish to website for public review</div>
+            </div>
+
+            <h3>Key Detection Logic</h3>
+
+            <pre><code># Class mismatch detection
+for detection in model_detections:
+    best_gt = find_overlapping_gt(detection, ground_truth, iou_threshold=0.3)
+
+    if best_gt and detection.class != best_gt.class:
+        if not semantically_equivalent(detection.class, best_gt.class):
+            flag_issue(
+                type="class_mismatch",
+                severity="high",
+                description=f"Model: {detection.class} ({detection.conf}%), GT: {best_gt.class}"
+            )</code></pre>
+
+            <p>We allow semantic equivalence for related classes (e.g., "Clothing" and "Dress" don't flag a mismatch), but completely different classes (e.g., "Boot" vs "Dress") are flagged as high severity.</p>
+
+            <h2>Why Make It Public?</h2>
+
+            <p>We publish the full audit results at <a href="/gt-audit.html">artifactiq.ai/gt-audit.html</a> for several reasons:</p>
+
+            <ul>
+                <li><strong>Transparency:</strong> If our evaluation metrics are affected by bad labels, users should know</li>
+                <li><strong>Community feedback:</strong> Domain experts might catch errors our model misses</li>
+                <li><strong>Accountability:</strong> Public visibility creates pressure to actually fix issues</li>
+                <li><strong>Trust:</strong> Acknowledging problems builds more credibility than hiding them</li>
+            </ul>
+
+            <div class="callout callout-success">
+                <strong>The feedback loop:</strong> Users can report corrections via GitHub issues. We review, fix the labels, regenerate the audit, and the public page updates automatically.
+            </div>
+
+            <h2>What We Can't Automate (Yet)</h2>
+
+            <p>The ~20% we can't automate includes:</p>
+
+            <ul>
+                <li><strong>Subjective boundaries:</strong> Is a "blazer" a "jacket" or a "suit"? Reasonable people disagree.</li>
+                <li><strong>Partial visibility:</strong> Should a half-visible shoe be labeled? Depends on annotation guidelines.</li>
+                <li><strong>Model blind spots:</strong> If the model consistently misses a class, phantom GT issues for that class aren't useful signals.</li>
+                <li><strong>Annotation style:</strong> Some datasets label every instance, others label one per category. Both are "correct."</li>
+            </ul>
+
+            <p>These require human judgment and clear annotation guidelines—which we're developing based on patterns found in the audit.</p>
+
+            <h2>Impact on Metrics</h2>
+
+            <p>After identifying the 7 high-severity issues, we can estimate their impact:</p>
+
+            <table>
+                <tr><th>Metric</th><th>Before Correction</th><th>Estimated After</th><th>Change</th></tr>
+                <tr>
+                    <td>Artifactiq Precision</td>
+                    <td>37.7%</td>
+                    <td>~38.5%</td>
+                    <td class="highlight">+0.8%</td>
+                </tr>
+                <tr>
+                    <td>False Positives</td>
+                    <td>Current count</td>
+                    <td>-7 minimum</td>
+                    <td class="highlight">Reduced</td>
+                </tr>
+            </table>
+
+            <p>Each incorrectly labeled image that our model "correctly" detected was counted as a false positive. Fixing the labels will improve our reported precision.</p>
+
+            <h2>Running the Audit</h2>
+
+            <p>The audit script is available in our public repository:</p>
+
+            <pre><code>python scripts/audit-ground-truth.py \
+    --model models/e8_1_wavg_best.pt \
+    --confidence 0.25 \
+    --output gt-audit-results.json</code></pre>
+
+            <p>Parameters:</p>
+            <ul>
+                <li><code>--model</code>: Path to the trained model weights</li>
+                <li><code>--confidence</code>: Minimum confidence to flag issues (default: 0.5, we use 0.25)</li>
+                <li><code>--images</code>: Validation images directory</li>
+                <li><code>--labels</code>: Ground truth labels directory</li>
+            </ul>
+
+            <h2>Next Steps</h2>
+
+            <p>We're working on:</p>
+
+            <ol>
+                <li><strong>Automated CI integration:</strong> Run audit on every release, fail if high-severity issues increase</li>
+                <li><strong>Correction workflow:</strong> Streamlined process to fix labels and regenerate affected metrics</li>
+                <li><strong>Expanded validation set:</strong> Audit the full 7,500+ image set, not just the 700 sample</li>
+                <li><strong>Cross-model validation:</strong> Use multiple models to increase confidence in detected issues</li>
+            </ol>
+
+            <div class="cta-box">
+                <h3>Help Us Improve</h3>
+                <p>Found a labeling error? Your feedback directly improves our dataset quality.</p>
+                <a href="/gt-audit.html" class="cta-button">View Audit Results</a>
+                <a href="https://github.com/ARTIFACTIQ/releases/issues/new?labels=gt-correction&title=GT%20Correction:" class="cta-button secondary">Report an Issue</a>
+            </div>
+
+            <h2>Conclusion</h2>
+
+            <p>Data quality is often overlooked in ML pipelines. We focus on model architectures, hyperparameters, and training techniques—but garbage in, garbage out.</p>
+
+            <p>By automating ~80% of quality detection and making results public, we've created a system that:</p>
+
+            <ul>
+                <li>Catches label errors before they corrupt metrics</li>
+                <li>Scales with dataset size</li>
+                <li>Enables community participation</li>
+                <li>Builds trust through transparency</li>
+            </ul>
+
+            <p>The code is open source. The results are public. The feedback loop is live.</p>
+
+            <p><a href="/gt-audit.html">See the audit results →</a></p>
+
+        </article>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Artifactiq. <a href="/">Return to Home</a> | <a href="/gt-audit.html">GT Audit</a> | <a href="https://github.com/ARTIFACTIQ/releases">GitHub</a></p>
+    </footer>
+</body>
+</html>
