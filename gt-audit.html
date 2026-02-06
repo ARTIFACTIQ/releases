@@ -396,11 +396,13 @@
                 </div>
             `;
 
-            // Update footer with model info
+            // Update footer with generator info
             const footerInfo = document.getElementById('footer-info');
             if (footerInfo) {
                 const genDate = auditData.generated_at ? new Date(auditData.generated_at).toLocaleDateString() : 'Unknown';
-                footerInfo.textContent = `Generated ${genDate} using gt-audit with ${methodLabel} at ${(auditData.confidence_threshold * 100).toFixed(0)}% confidence`;
+                const generator = auditData.generator || 'gt-audit';
+                const version = auditData.generator_version ? ` v${auditData.generator_version}` : '';
+                footerInfo.innerHTML = `Generated ${genDate} by <a href="https://github.com/ARTIFACTIQ/gt-audit" style="color: var(--primary);">${generator}${version}</a> using ${methodLabel} at ${(auditData.confidence_threshold * 100).toFixed(0)}% confidence`;
             }
 
             renderPage();
