@@ -1,5 +1,7 @@
 {
-  "generated_at": "2026-02-05T16:11:10.621711014+00:00",
+  "generator": "gt-audit",
+  "generator_version": "0.2.0",
+  "generated_at": "2026-02-06T05:39:55.426554211+00:00",
   "dataset_path": ".",
   "method": "yolo",
   "confidence_threshold": 0.25,
@@ -12,14 +14,14 @@
     "images_with_issues": 642,
     "total_issues": 1905,
     "by_severity": {
+      "medium": 68,
       "high": 148,
-      "low": 1689,
-      "medium": 68
+      "low": 1689
     },
     "by_type": {
-      "class_mismatch": 148,
+      "missing_label": 68,
       "spurious_label": 1689,
-      "missing_label": 68
+      "class_mismatch": 148
     }
   },
   "flagged_images": [
