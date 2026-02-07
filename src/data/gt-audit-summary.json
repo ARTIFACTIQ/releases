@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-02-05T16:11:10.621711014+00:00",
-  "model": "v6.2.0",
+  "generated_at": "2026-02-07T15:16:39.442005796+00:00",
+  "model": "v6.3.0",
   "method": "yolo",
   "confidence_threshold": 0.25,
   "images_audited": 700,
   "summary": {
-    "total_issues": 1905,
-    "high_severity": 148,
-    "medium_severity": 68,
-    "low_severity": 1689,
-    "class_mismatch": 148,
-    "missing_label": 68,
-    "spurious_label": 1689
+    "total_issues": 1855,
+    "high_severity": 199,
+    "medium_severity": 93,
+    "low_severity": 1563,
+    "class_mismatch": 199,
+    "missing_label": 93,
+    "spurious_label": 1563
   },
   "top_issues": [
     {
@@ -1404,34 +1404,42 @@
           "image": "openimages_extended_014e7aa38eddfd7d.jpg",
           "severity": "high",
           "type": "class_mismatch",
-          "description": "Model detects 'Jacket' (28.9%), GT says 'Man'",
+          "description": "Model detects 'Jacket' (43.2%), GT says 'Man'",
           "gt_class": "Man",
           "detected_class": "Jacket",
-          "confidence": 0.28889853,
-          "iou": 0.3621757,
+          "confidence": 0.4324409,
+          "iou": 0.35699233,
           "line_num": 11
         },
         {
           "image": "openimages_extended_014e7aa38eddfd7d.jpg",
           "severity": "high",
           "type": "class_mismatch",
-          "description": "Model detects 'Boot' (27.5%), GT says 'Woman'",
-          "gt_class": "Woman",
-          "detected_class": "Boot",
-          "confidence": 0.2748052,
-          "iou": 0.5310074,
-          "line_num": 1
-        },
-        {
-          "image": "openimages_extended_014e7aa38eddfd7d.jpg",
-          "severity": "high",
-          "type": "class_mismatch",
-          "description": "Model detects 'Dress' (26.2%), GT says 'Man'",
+          "description": "Model detects 'Dress' (36.8%), GT says 'Man'",
           "gt_class": "Man",
           "detected_class": "Dress",
-          "confidence": 0.26150036,
-          "iou": 0.45670933,
+          "confidence": 0.3684341,
+          "iou": 0.46304598,
           "line_num": 11
+        },
+        {
+          "image": "openimages_extended_014e7aa38eddfd7d.jpg",
+          "severity": "high",
+          "type": "class_mismatch",
+          "description": "Model detects 'Boot' (29.9%), GT says 'Girl'",
+          "gt_class": "Girl",
+          "detected_class": "Boot",
+          "confidence": 0.29867315,
+          "iou": 0.5626036,
+          "line_num": 17
+        },
+        {
+          "image": "openimages_extended_014e7aa38eddfd7d.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Woman' but model detects nothing there",
+          "gt_class": "Woman",
+          "line_num": 1
         },
         {
           "image": "openimages_extended_014e7aa38eddfd7d.jpg",
@@ -1544,14 +1552,6 @@
           "description": "GT has 'Girl' but model detects nothing there",
           "gt_class": "Girl",
           "line_num": 16
-        },
-        {
-          "image": "openimages_extended_014e7aa38eddfd7d.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Girl' but model detects nothing there",
-          "gt_class": "Girl",
-          "line_num": 17
         },
         {
           "image": "openimages_extended_014e7aa38eddfd7d.jpg",
@@ -2067,9 +2067,9 @@
           "image": "openimages_yolo_002ed93e696562e0.jpg",
           "severity": "medium",
           "type": "missing_label",
-          "description": "Model detects 'Jacket' (28.6%) with no matching GT",
+          "description": "Model detects 'Jacket' (36.1%) with no matching GT",
           "detected_class": "Jacket",
-          "confidence": 0.2858771
+          "confidence": 0.3610239
         },
         {
           "image": "openimages_yolo_002ed93e696562e0.jpg",
@@ -2332,19 +2332,8 @@
     {
       "filename": "openimages_extended_005006eaf53fcbac.jpg",
       "gt_count": 31,
-      "detection_count": 1,
+      "detection_count": 0,
       "issues": [
-        {
-          "image": "openimages_extended_005006eaf53fcbac.jpg",
-          "severity": "high",
-          "type": "class_mismatch",
-          "description": "Model detects 'Jacket' (35.6%), GT says 'Man'",
-          "gt_class": "Man",
-          "detected_class": "Jacket",
-          "confidence": 0.35586277,
-          "iou": 0.309746,
-          "line_num": 17
-        },
         {
           "image": "openimages_extended_005006eaf53fcbac.jpg",
           "severity": "low",
@@ -2472,6 +2461,14 @@
           "description": "GT has 'Man' but model detects nothing there",
           "gt_class": "Man",
           "line_num": 16
+        },
+        {
+          "image": "openimages_extended_005006eaf53fcbac.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Man' but model detects nothing there",
+          "gt_class": "Man",
+          "line_num": 17
         },
         {
           "image": "openimages_extended_005006eaf53fcbac.jpg",
@@ -3354,14 +3351,17 @@
     {
       "filename": "openimages_extended_028874cdc502d271.jpg",
       "gt_count": 19,
-      "detection_count": 0,
+      "detection_count": 1,
       "issues": [
         {
           "image": "openimages_extended_028874cdc502d271.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Man' but model detects nothing there",
+          "severity": "high",
+          "type": "class_mismatch",
+          "description": "Model detects 'Jacket' (28.5%), GT says 'Man'",
           "gt_class": "Man",
+          "detected_class": "Jacket",
+          "confidence": 0.28472322,
+          "iou": 0.3741348,
           "line_num": 1
         },
         {
@@ -3507,160 +3507,6 @@
           "description": "GT has 'Clothing' but model detects nothing there",
           "gt_class": "Clothing",
           "line_num": 19
-        }
-      ]
-    },
-    {
-      "filename": "openimages_extended_000da31a7ecb441a.jpg",
-      "gt_count": 17,
-      "detection_count": 2,
-      "issues": [
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "medium",
-          "type": "missing_label",
-          "description": "Model detects 'Jacket' (37.1%) with no matching GT",
-          "detected_class": "Jacket",
-          "confidence": 0.37079483
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "high",
-          "type": "class_mismatch",
-          "description": "Model detects 'Boot' (31.0%), GT says 'Woman'",
-          "gt_class": "Woman",
-          "detected_class": "Boot",
-          "confidence": 0.31015566,
-          "iou": 0.43241328,
-          "line_num": 9
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Boy' but model detects nothing there",
-          "gt_class": "Boy",
-          "line_num": 1
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Woman' but model detects nothing there",
-          "gt_class": "Woman",
-          "line_num": 2
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Woman' but model detects nothing there",
-          "gt_class": "Woman",
-          "line_num": 3
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Woman' but model detects nothing there",
-          "gt_class": "Woman",
-          "line_num": 4
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Woman' but model detects nothing there",
-          "gt_class": "Woman",
-          "line_num": 5
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Woman' but model detects nothing there",
-          "gt_class": "Woman",
-          "line_num": 6
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Woman' but model detects nothing there",
-          "gt_class": "Woman",
-          "line_num": 7
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Woman' but model detects nothing there",
-          "gt_class": "Woman",
-          "line_num": 8
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Woman' but model detects nothing there",
-          "gt_class": "Woman",
-          "line_num": 10
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Woman' but model detects nothing there",
-          "gt_class": "Woman",
-          "line_num": 11
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Man' but model detects nothing there",
-          "gt_class": "Man",
-          "line_num": 12
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Man' but model detects nothing there",
-          "gt_class": "Man",
-          "line_num": 13
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Man' but model detects nothing there",
-          "gt_class": "Man",
-          "line_num": 14
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Man' but model detects nothing there",
-          "gt_class": "Man",
-          "line_num": 15
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Man' but model detects nothing there",
-          "gt_class": "Man",
-          "line_num": 16
-        },
-        {
-          "image": "openimages_extended_000da31a7ecb441a.jpg",
-          "severity": "low",
-          "type": "spurious_label",
-          "description": "GT has 'Footwear' but model detects nothing there",
-          "gt_class": "Footwear",
-          "line_num": 17
         }
       ]
     },
@@ -3816,28 +3662,20 @@
       ]
     },
     {
-      "filename": "openimages_extended_02b1b0f01ce833a3.jpg",
-      "gt_count": 16,
-      "detection_count": 1,
+      "filename": "openimages_extended_000da31a7ecb441a.jpg",
+      "gt_count": 17,
+      "detection_count": 0,
       "issues": [
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
-          "severity": "medium",
-          "type": "missing_label",
-          "description": "Model detects 'Jacket' (30.9%) with no matching GT",
-          "detected_class": "Jacket",
-          "confidence": 0.30935043
-        },
-        {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Woman' but model detects nothing there",
-          "gt_class": "Woman",
+          "description": "GT has 'Boy' but model detects nothing there",
+          "gt_class": "Boy",
           "line_num": 1
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
           "description": "GT has 'Woman' but model detects nothing there",
@@ -3845,7 +3683,7 @@
           "line_num": 2
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
           "description": "GT has 'Woman' but model detects nothing there",
@@ -3853,7 +3691,7 @@
           "line_num": 3
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
           "description": "GT has 'Woman' but model detects nothing there",
@@ -3861,7 +3699,7 @@
           "line_num": 4
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
           "description": "GT has 'Woman' but model detects nothing there",
@@ -3869,7 +3707,7 @@
           "line_num": 5
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
           "description": "GT has 'Woman' but model detects nothing there",
@@ -3877,7 +3715,7 @@
           "line_num": 6
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
           "description": "GT has 'Woman' but model detects nothing there",
@@ -3885,7 +3723,7 @@
           "line_num": 7
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
           "description": "GT has 'Woman' but model detects nothing there",
@@ -3893,7 +3731,7 @@
           "line_num": 8
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
           "description": "GT has 'Woman' but model detects nothing there",
@@ -3901,23 +3739,23 @@
           "line_num": 9
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Man' but model detects nothing there",
-          "gt_class": "Man",
+          "description": "GT has 'Woman' but model detects nothing there",
+          "gt_class": "Woman",
           "line_num": 10
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Man' but model detects nothing there",
-          "gt_class": "Man",
+          "description": "GT has 'Woman' but model detects nothing there",
+          "gt_class": "Woman",
           "line_num": 11
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
           "description": "GT has 'Man' but model detects nothing there",
@@ -3925,7 +3763,7 @@
           "line_num": 12
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
           "description": "GT has 'Man' but model detects nothing there",
@@ -3933,27 +3771,178 @@
           "line_num": 13
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Girl' but model detects nothing there",
-          "gt_class": "Girl",
+          "description": "GT has 'Man' but model detects nothing there",
+          "gt_class": "Man",
           "line_num": 14
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Girl' but model detects nothing there",
-          "gt_class": "Girl",
+          "description": "GT has 'Man' but model detects nothing there",
+          "gt_class": "Man",
           "line_num": 15
         },
         {
-          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Girl' but model detects nothing there",
-          "gt_class": "Girl",
+          "description": "GT has 'Man' but model detects nothing there",
+          "gt_class": "Man",
+          "line_num": 16
+        },
+        {
+          "image": "openimages_extended_000da31a7ecb441a.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Footwear' but model detects nothing there",
+          "gt_class": "Footwear",
+          "line_num": 17
+        }
+      ]
+    },
+    {
+      "filename": "openimages_extended_0085a03f4a2b199f.jpg",
+      "gt_count": 16,
+      "detection_count": 1,
+      "issues": [
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "medium",
+          "type": "missing_label",
+          "description": "Model detects 'Jacket' (27.0%) with no matching GT",
+          "detected_class": "Jacket",
+          "confidence": 0.2695107
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Person' but model detects nothing there",
+          "gt_class": "Person",
+          "line_num": 1
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Person' but model detects nothing there",
+          "gt_class": "Person",
+          "line_num": 2
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Person' but model detects nothing there",
+          "gt_class": "Person",
+          "line_num": 3
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Person' but model detects nothing there",
+          "gt_class": "Person",
+          "line_num": 4
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Person' but model detects nothing there",
+          "gt_class": "Person",
+          "line_num": 5
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Person' but model detects nothing there",
+          "gt_class": "Person",
+          "line_num": 6
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Person' but model detects nothing there",
+          "gt_class": "Person",
+          "line_num": 7
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Person' but model detects nothing there",
+          "gt_class": "Person",
+          "line_num": 8
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Person' but model detects nothing there",
+          "gt_class": "Person",
+          "line_num": 9
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Person' but model detects nothing there",
+          "gt_class": "Person",
+          "line_num": 10
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Person' but model detects nothing there",
+          "gt_class": "Person",
+          "line_num": 11
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Clothing' but model detects nothing there",
+          "gt_class": "Clothing",
+          "line_num": 12
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Clothing' but model detects nothing there",
+          "gt_class": "Clothing",
+          "line_num": 13
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Clothing' but model detects nothing there",
+          "gt_class": "Clothing",
+          "line_num": 14
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Clothing' but model detects nothing there",
+          "gt_class": "Clothing",
+          "line_num": 15
+        },
+        {
+          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Clothing' but model detects nothing there",
+          "gt_class": "Clothing",
           "line_num": 16
         }
       ]
@@ -4102,136 +4091,136 @@
       ]
     },
     {
-      "filename": "openimages_extended_0085a03f4a2b199f.jpg",
+      "filename": "openimages_extended_02b1b0f01ce833a3.jpg",
       "gt_count": 16,
       "detection_count": 0,
       "issues": [
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Person' but model detects nothing there",
-          "gt_class": "Person",
+          "description": "GT has 'Woman' but model detects nothing there",
+          "gt_class": "Woman",
           "line_num": 1
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Person' but model detects nothing there",
-          "gt_class": "Person",
+          "description": "GT has 'Woman' but model detects nothing there",
+          "gt_class": "Woman",
           "line_num": 2
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Person' but model detects nothing there",
-          "gt_class": "Person",
+          "description": "GT has 'Woman' but model detects nothing there",
+          "gt_class": "Woman",
           "line_num": 3
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Person' but model detects nothing there",
-          "gt_class": "Person",
+          "description": "GT has 'Woman' but model detects nothing there",
+          "gt_class": "Woman",
           "line_num": 4
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Person' but model detects nothing there",
-          "gt_class": "Person",
+          "description": "GT has 'Woman' but model detects nothing there",
+          "gt_class": "Woman",
           "line_num": 5
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Person' but model detects nothing there",
-          "gt_class": "Person",
+          "description": "GT has 'Woman' but model detects nothing there",
+          "gt_class": "Woman",
           "line_num": 6
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Person' but model detects nothing there",
-          "gt_class": "Person",
+          "description": "GT has 'Woman' but model detects nothing there",
+          "gt_class": "Woman",
           "line_num": 7
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Person' but model detects nothing there",
-          "gt_class": "Person",
+          "description": "GT has 'Woman' but model detects nothing there",
+          "gt_class": "Woman",
           "line_num": 8
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Person' but model detects nothing there",
-          "gt_class": "Person",
+          "description": "GT has 'Woman' but model detects nothing there",
+          "gt_class": "Woman",
           "line_num": 9
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Person' but model detects nothing there",
-          "gt_class": "Person",
+          "description": "GT has 'Man' but model detects nothing there",
+          "gt_class": "Man",
           "line_num": 10
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Person' but model detects nothing there",
-          "gt_class": "Person",
+          "description": "GT has 'Man' but model detects nothing there",
+          "gt_class": "Man",
           "line_num": 11
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Clothing' but model detects nothing there",
-          "gt_class": "Clothing",
+          "description": "GT has 'Man' but model detects nothing there",
+          "gt_class": "Man",
           "line_num": 12
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Clothing' but model detects nothing there",
-          "gt_class": "Clothing",
+          "description": "GT has 'Man' but model detects nothing there",
+          "gt_class": "Man",
           "line_num": 13
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Clothing' but model detects nothing there",
-          "gt_class": "Clothing",
+          "description": "GT has 'Girl' but model detects nothing there",
+          "gt_class": "Girl",
           "line_num": 14
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Clothing' but model detects nothing there",
-          "gt_class": "Clothing",
+          "description": "GT has 'Girl' but model detects nothing there",
+          "gt_class": "Girl",
           "line_num": 15
         },
         {
-          "image": "openimages_extended_0085a03f4a2b199f.jpg",
+          "image": "openimages_extended_02b1b0f01ce833a3.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Clothing' but model detects nothing there",
-          "gt_class": "Clothing",
+          "description": "GT has 'Girl' but model detects nothing there",
+          "gt_class": "Girl",
           "line_num": 16
         }
       ]
@@ -4245,9 +4234,9 @@
           "image": "openimages_extended_00209998b801428e.jpg",
           "severity": "medium",
           "type": "missing_label",
-          "description": "Model detects 'Jacket' (26.3%) with no matching GT",
+          "description": "Model detects 'Jacket' (26.7%) with no matching GT",
           "detected_class": "Jacket",
-          "confidence": 0.2625511
+          "confidence": 0.267156
         },
         {
           "image": "openimages_extended_00209998b801428e.jpg",
@@ -4475,116 +4464,113 @@
       ]
     },
     {
-      "filename": "openimages_extended_0018349b38fdc5b1.jpg",
-      "gt_count": 11,
-      "detection_count": 3,
+      "filename": "openimages_extended_0220dd3248f8b94b.jpg",
+      "gt_count": 13,
+      "detection_count": 0,
       "issues": [
         {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
-          "severity": "medium",
-          "type": "missing_label",
-          "description": "Model detects 'Jeans' (48.6%) with no matching GT",
-          "detected_class": "Jeans",
-          "confidence": 0.4864378
-        },
-        {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
-          "severity": "medium",
-          "type": "missing_label",
-          "description": "Model detects 'Jacket' (32.5%) with no matching GT",
-          "detected_class": "Jacket",
-          "confidence": 0.32461894
-        },
-        {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
-          "severity": "high",
-          "type": "class_mismatch",
-          "description": "Model detects 'Jacket' (25.1%), GT says 'Girl'",
-          "gt_class": "Girl",
-          "detected_class": "Jacket",
-          "confidence": 0.2513486,
-          "iou": 0.5402738,
-          "line_num": 10
-        },
-        {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Sunglasses' but model detects nothing there",
-          "gt_class": "Sunglasses",
+          "description": "GT has 'Jacket' but model detects nothing there",
+          "gt_class": "Jacket",
           "line_num": 1
         },
         {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Sunglasses' but model detects nothing there",
-          "gt_class": "Sunglasses",
+          "description": "GT has 'Footwear' but model detects nothing there",
+          "gt_class": "Footwear",
           "line_num": 2
         },
         {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Sunglasses' but model detects nothing there",
-          "gt_class": "Sunglasses",
+          "description": "GT has 'Jacket' but model detects nothing there",
+          "gt_class": "Jacket",
           "line_num": 3
         },
         {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Sunglasses' but model detects nothing there",
-          "gt_class": "Sunglasses",
+          "description": "GT has 'Jacket' but model detects nothing there",
+          "gt_class": "Jacket",
           "line_num": 4
         },
         {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Sunglasses' but model detects nothing there",
-          "gt_class": "Sunglasses",
+          "description": "GT has 'Man' but model detects nothing there",
+          "gt_class": "Man",
           "line_num": 5
         },
         {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Sunglasses' but model detects nothing there",
-          "gt_class": "Sunglasses",
+          "description": "GT has 'Man' but model detects nothing there",
+          "gt_class": "Man",
           "line_num": 6
         },
         {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Sunglasses' but model detects nothing there",
-          "gt_class": "Sunglasses",
+          "description": "GT has 'Man' but model detects nothing there",
+          "gt_class": "Man",
           "line_num": 7
         },
         {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Sunglasses' but model detects nothing there",
-          "gt_class": "Sunglasses",
+          "description": "GT has 'Footwear' but model detects nothing there",
+          "gt_class": "Footwear",
           "line_num": 8
         },
         {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Sunglasses' but model detects nothing there",
-          "gt_class": "Sunglasses",
+          "description": "GT has 'Footwear' but model detects nothing there",
+          "gt_class": "Footwear",
           "line_num": 9
         },
         {
-          "image": "openimages_extended_0018349b38fdc5b1.jpg",
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
           "severity": "low",
           "type": "spurious_label",
-          "description": "GT has 'Girl' but model detects nothing there",
-          "gt_class": "Girl",
+          "description": "GT has 'Footwear' but model detects nothing there",
+          "gt_class": "Footwear",
+          "line_num": 10
+        },
+        {
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Footwear' but model detects nothing there",
+          "gt_class": "Footwear",
           "line_num": 11
+        },
+        {
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Footwear' but model detects nothing there",
+          "gt_class": "Footwear",
+          "line_num": 12
+        },
+        {
+          "image": "openimages_extended_0220dd3248f8b94b.jpg",
+          "severity": "low",
+          "type": "spurious_label",
+          "description": "GT has 'Jeans' but model detects nothing there",
+          "gt_class": "Jeans",
+          "line_num": 13
         }
       ]
     }
