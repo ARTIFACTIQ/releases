@@ -162,8 +162,9 @@ jobs:
             exit 0
           fi
 
-          # Create branch and PR
+          # Create branch and PR (delete stale remote branch if exists)
           BRANCH="gt-audit-${{ env.MODEL_TAG }}"
+          git push origin --delete "$BRANCH" 2>/dev/null || true
           git checkout -b "$BRANCH"
 
           TOTAL=$(jq '.summary.total_issues' gt-audit-report.json)
