@@ -1094,7 +1094,7 @@
                 <div class="prereq-banner" style="background: linear-gradient(135deg, rgba(126, 231, 135, 0.15), rgba(0, 212, 255, 0.15)); border-color: rgba(126, 231, 135, 0.3);">
                     <div class="icon"></div>
                     <div class="text">
-                        <strong style="color: var(--success);">New: Model v6.2.0 (E8.2)</strong> - GT audit integration! Transparent dataset quality reports with automated validation.
+                        <strong style="color: var(--success);">New: Model v6.3.0 (E9)</strong> - Weighted average anchoring! +22% mAP50 improvement over E8.1 with catastrophic forgetting prevention.
                         <a href="/gt-audit.html">View GT Audit Report</a>
                     </div>
                 </div>
@@ -1130,7 +1130,7 @@
                             <span class="prompt">$</span>
                             <span class="cmd">artifactiq analyze --input bus.jpg</span>
                         </div>
-                        <div class="terminal-output">Downloading artifactiq-v6.2.0.onnx... done</div>
+                        <div class="terminal-output">Downloading artifactiq-v6.3.0.onnx... done</div>
                         <div class="terminal-output highlight">Detected 4 objects:</div>
                         <div class="terminal-output">  person (89.3%) | person (88.1%) | person (86.8%) | bus (83.8%)</div>
                         <div class="terminal-output">&nbsp;</div>
@@ -1223,7 +1223,7 @@
                         </div>
                         <div class="code-block-body">
 <pre style="margin: 0; color: var(--text-muted);">[model]
-version = "v6.2.0"        # Pin to specific version
+version = "v6.3.0"        # Pin to specific version
 update_policy = "check"   # manual, check, or auto
 
 [engine]
@@ -1248,7 +1248,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                         </div>
                         <div class="code-block-body">
                             <span class="comment"># Use specific Artifactiq model version</span><br>
-                            <span class="prompt">$ </span><span class="command">artifactiq analyze --input photo.jpg --model artifactiq:v6.2.0</span><br><br>
+                            <span class="prompt">$ </span><span class="command">artifactiq analyze --input photo.jpg --model artifactiq:v6.3.0</span><br><br>
                             <span class="comment"># Use YOLOv8 via Axon (requires axon install)</span><br>
                             <span class="prompt">$ </span><span class="command">artifactiq analyze --input photo.jpg --model yolov8n</span><br><br>
                             <span class="comment"># Use custom ONNX file</span><br>
@@ -1288,12 +1288,12 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
             <div style="margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(126, 231, 135, 0.05)); border: 2px solid var(--primary); border-radius: 16px;">
                 <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
                     <span style="color: var(--primary); font-weight: 700; font-size: 1.25rem;">Model Showdown</span>
-                    <span style="background: var(--success); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">E8.2 (v6.2.0) NEW</span>
-                    <span style="background: var(--primary); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">4.6x IMPROVEMENT</span>
+                    <span style="background: var(--success); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">E9 (v6.3.0) NEW</span>
+                    <span style="background: var(--primary); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">+22% vs E8.1</span>
                     <span style="background: var(--text-muted); color: var(--bg-dark); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">Stock YOLOv8n</span>
                     <a href="/model-comparison.html" style="margin-left: auto; background: var(--code-bg); color: var(--primary); padding: 0.3rem 0.75rem; border-radius: 4px; font-size: 0.75rem; text-decoration: none; border: 1px solid var(--primary);">📊 Full Comparison →</a>
                 </div>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">E8.2 (v6.2.0) adds GT audit integration with transparent dataset quality reports. Same weights as E8.1, now with automated validation. <a href="/gt-audit.html" style="color: var(--primary);">View GT Audit Report →</a></p>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">E9 (v6.3.0) uses weighted average anchoring to prevent catastrophic forgetting. +22% mAP50 over E8.1 baseline. <a href="/gt-audit.html" style="color: var(--primary);">View GT Audit Report →</a></p>
 
                 <!-- Model Comparison Table -->
                 <div style="overflow-x: auto; margin-bottom: 1.5rem;">
@@ -1306,11 +1306,11 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                             <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">Notes</th>
                         </tr>
                         <tr style="background: rgba(126, 231, 135, 0.15);">
-                            <td style="padding: 0.75rem; color: var(--success); font-weight: 600;">E8.2 (v6.2.0)</td>
-                            <td style="padding: 0.75rem; text-align: center; color: var(--success); font-weight: 700;">0.145%</td>
-                            <td style="padding: 0.75rem; text-align: center; color: var(--success); font-weight: 700;">4.2%</td>
-                            <td style="padding: 0.75rem; text-align: center;">E8.1 + GT audit integration</td>
-                            <td style="padding: 0.75rem; color: var(--success);">Transparent quality reports</td>
+                            <td style="padding: 0.75rem; color: var(--success); font-weight: 600;">E9 (v6.3.0)</td>
+                            <td style="padding: 0.75rem; text-align: center; color: var(--success); font-weight: 700;">4.03%</td>
+                            <td style="padding: 0.75rem; text-align: center; color: var(--success); font-weight: 700;">4.1%</td>
+                            <td style="padding: 0.75rem; text-align: center;">46 shards x 10 epochs + wavg retry</td>
+                            <td style="padding: 0.75rem; color: var(--success);">+22% mAP50 vs E8.1</td>
                         </tr>
                         <tr>
                             <td style="padding: 0.75rem; color: var(--text-muted);">E2 (baseline)</td>
@@ -1372,7 +1372,7 @@ device = "auto"           # auto, cpu, cuda, mps</pre>
                 </div>
 
                 <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                    <span style="color: var(--success); font-size: 0.85rem; font-weight: 600;">E8.2 (v6.2.0) is now the default model - auto-downloads on first use</span>
+                    <span style="color: var(--success); font-size: 0.85rem; font-weight: 600;">E9 (v6.3.0) is now the default model - auto-downloads on first use</span>
                     <a href="/blog/v5-e7-training-report.html" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">Full E8 training report &rarr;</a>
                 </div>
             </div>
